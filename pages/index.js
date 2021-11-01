@@ -9,7 +9,7 @@ export default function Home() {
 					<Heading textAlign='center' mb='4'>
 						Resto App
 					</Heading>
-					<Text textAlign='center' px='8'>
+					<Text textAlign='center' px='8' maxW='md'>
 						Dus sunt laborum exercitation cillum sint minim qui esse consequat
 						dolor cupidatat tempor esse sint. Incididunt do ea ut occaecat nisi
 						nulla minim sit adipisicing commodo officia non ad.
