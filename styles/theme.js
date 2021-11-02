@@ -10,11 +10,9 @@ export const theme = extendTheme({
 			baseStyle: { _focus: { boxShadow: 'none' } },
 		},
 		Input: {
-			baseStyle: {
+			baseStyle: {	
+				border:'none',
 				_focus: {
-					boxShadow: 'none',
-					border: '1px solid',
-					borderColor: 'slate.500',
 				},
 			},
 		},
