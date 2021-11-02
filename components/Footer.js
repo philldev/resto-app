@@ -12,7 +12,7 @@ export default function Footer() {
 					href='https://twitter.com/DeddyWolley'
 					target='_blank'
 				>
-					👋 I made this
+					<span>👋 I made this</span>
 				</Button>
 				<Button
 					variant='link'
@@ -20,7 +20,7 @@ export default function Footer() {
 					href='https://github.com/philldev/resto-app'
 					target='_blank'
 				>
-					👉 Github Repo{' '}
+					<span>👉 Github Repo</span>
 				</Button>
 			</Flex>
 		</Flex>
