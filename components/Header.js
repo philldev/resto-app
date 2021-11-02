@@ -1,19 +1,21 @@
 import { Button } from '@chakra-ui/button'
-import { Box, Flex, Heading, HStack } from '@chakra-ui/layout'
-import Link from 'next/link'
+import { Box, Flex, HStack, Link } from '@chakra-ui/layout'
+import NextLink from 'next/link'
 
 export default function Header() {
 	return (
 		<Box pos='fixed' left='0' top='0' w='full'>
 			<Flex w='full' h='16' alignItems='center' px='4'>
-				<Heading fontSize='lg'>Resto App</Heading>
+				<Link as={NextLink} fontSize='lg' href='/'>
+					RestoApp
+				</Link>
 				<HStack alignItems='center' ml='auto'>
-					<Link href='/login' passHref>
+					<NextLink href='/login' passHref>
 						<Button>Login</Button>
-					</Link>
-					<Link href='/signup' passHref>
+					</NextLink>
+					<NextLink href='/signup' passHref>
 						<Button>Signup</Button>
-					</Link>
+					</NextLink>
 				</HStack>
 			</Flex>
 		</Box>
