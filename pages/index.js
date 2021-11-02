@@ -1,7 +1,9 @@
 import { Button } from '@chakra-ui/button'
-import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout'
-import Link from 'next/link'
+import { Box, Flex, Heading, Text } from '@chakra-ui/layout'
 import Head from 'next/head'
+import Link from 'next/link'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 
 export default function HomePage() {
 	return (
@@ -10,19 +12,7 @@ export default function HomePage() {
 				<title>Home</title>
 			</Head>
 			<Box w='full' h='100vh' bg='gray.800'>
-				<Box pos='fixed' left='0' top='0' w='full'>
-					<Flex w='full' h='16' alignItems='center' px='4'>
-						<Heading fontSize='lg'>Resto App</Heading>
-						<HStack alignItems='center' ml='auto'>
-							<Link href='/login' passHref>
-								<Button>Login</Button>
-							</Link>
-							<Link href='/signup' passHref>
-								<Button>Signup</Button>
-							</Link>
-						</HStack>
-					</Flex>
-				</Box>
+				<Header />
 				<Flex
 					alignItems='center'
 					flexDir='column'
@@ -46,27 +36,7 @@ export default function HomePage() {
 						</Link>
 					</Flex>
 				</Flex>
-				<Flex position='fixed' bottom='0' left='0' w='full'>
-					<Flex justifyContent='center' alignItems='center' w='full' h='10'>
-						<Button
-							variant='link'
-							as='a'
-							mr='4'
-							href='https://twitter.com/DeddyWolley'
-							target='_blank'
-						>
-							👋 I made this
-						</Button>
-						<Button
-							variant='link'
-							as='a'
-							href='https://github.com/philldev/resto-app'
-							target='_blank'
-						>
-							👉 Github Repo{' '}
-						</Button>
-					</Flex>
-				</Flex>
+				<Footer />
 			</Box>
 		</>
 	)

@@ -1,5 +1,7 @@
-import { Box } from '@chakra-ui/layout'
+import { Flex } from '@chakra-ui/layout'
 import Head from 'next/head'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 
 export default function LoginPage() {
 	return (
@@ -7,7 +9,15 @@ export default function LoginPage() {
 			<Head>
 				<title>Login to Resto App</title>
 			</Head>
-			<Box d='grid' placeItems='center' w='full' h='100vh' bg='gray.800'></Box>
+			<Header />
+			<Flex
+				alignItems='center'
+				flexDir='column'
+				justifyContent='center'
+				pt='16'
+				minH='calc(100vh - var(--chakra-space-10))'
+			></Flex>
+			<Footer />
 		</>
 	)
 }
