@@ -54,7 +54,7 @@ export default function SignupPage() {
 						<Text as='span'>Have account? </Text>
 						<Link
 							as={NextLink}
-							href='/signup'
+							href='/login'
 							color='teal.400'
 							fontWeight='bold'
 							ml='2'
