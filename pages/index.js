@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button'
 import { Box, Flex, Heading, Text, VStack } from '@chakra-ui/layout'
 
-export default function Home() {
+export default function HomePage() {
 	return (
 		<Box d='grid' placeItems='center' w='full' h='100vh' bg='gray.800'>
 			<Box>
