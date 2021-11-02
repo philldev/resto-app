@@ -1,20 +1,20 @@
 import { Button } from '@chakra-ui/button'
 import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout'
+import Link from 'next/link'
 
 export default function HomePage() {
 	return (
 		<Box w='full' h='100vh' bg='gray.800'>
 			<Box pos='fixed' left='0' top='0' w='full'>
-				<Flex
-					w='full'
-					h='16'
-					alignItems='center'
-					px='4'
-				>
+				<Flex w='full' h='16' alignItems='center' px='4'>
 					<Heading fontSize='lg'>Resto App</Heading>
 					<HStack alignItems='center' ml='auto'>
-						<Button>Login</Button>
-						<Button>Signup</Button>
+						<Link href='/login' passHref>
+							<Button>Login</Button>
+						</Link>
+						<Link href='/signup' passHref>
+							<Button>Signup</Button>
+						</Link>
 					</HStack>
 				</Flex>
 			</Box>
@@ -36,7 +36,9 @@ export default function HomePage() {
 					</Text>
 				</Box>
 				<Flex justifyContent='center'>
-					<Button>Get Started</Button>
+					<Link href='/signup' passHref>
+						<Button as='a'>Get Started</Button>
+					</Link>
 				</Flex>
 			</Flex>
 			<Flex position='fixed' bottom='0' left='0' w='full'>
