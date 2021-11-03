@@ -8,9 +8,9 @@ const createUsersRef = () => doc(db, 'users', createDocId())
 
 const getUserRef = (id) => doc(db, 'users', id)
 
-export const createUser = async ({ email, password }) => {
+const createUser = async ({ email, password, uid }) => {
 	try {
-		const userRef = createUsersRef()
+		const userRef = getUserRef(uid)
 		const userData = {
 			id: userRef.id,
 			email,
@@ -24,7 +24,7 @@ export const createUser = async ({ email, password }) => {
 }
 
 // TODO: Get a User
-export const getUser = async (id, { listen = false, callback = () => {} }) => {
+const getUser = async (id, { listen = false, callback = () => {} }) => {
 	try {
 		if (listen) {
 			const unsub = onSnapshot(getUserRef(id), (doc) => {
@@ -45,3 +45,5 @@ export const getUser = async (id, { listen = false, callback = () => {} }) => {
 // TODO: Update User
 
 // TODO: Delete User
+
+export { createUser, getUser }

@@ -1,4 +1,10 @@
-import { getAuth } from 'firebase/auth'
+import {
+	getAuth,
+	onAuthStateChanged as fbOnAuthStateChanged,
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+	signOut,
+} from 'firebase/auth'
 import firebaseApp from './app'
 
 const auth = getAuth(firebaseApp)
@@ -29,4 +35,14 @@ const signin = async ({ email, password }) => {
 	}
 }
 
-export { signin, signup }
+const signout = async () => {
+	try {
+		await signOut()
+	} catch (error) {
+		throw error
+	}
+}
+
+const onAuthStateChanged = (callback) => fbOnAuthStateChanged(auth, callback)
+
+export { signin, signup, onAuthStateChanged, signout }
