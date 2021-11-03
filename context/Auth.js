@@ -45,7 +45,11 @@ export const AuthProvider = ({ children }) => {
 			unsub()
 		}
 	}, [])
-	const value = { user, signup, signin, signout }
+	
+	const value = React.useMemo(() => {
+		user, signup, signin, signout
+	}, [user])
+
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
