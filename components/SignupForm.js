@@ -23,7 +23,6 @@ export default function SignupForm() {
 			setIsLoading(true)
 			await signup(data)
 		} catch (error) {
-			console.log(error.code === 'auth/email-already-in-use')
 			if (error.code === 'auth/email-already-in-use') {
 				setError(
 					'email',
