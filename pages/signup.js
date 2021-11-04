@@ -1,10 +1,15 @@
 import { Box, Link, Text, VStack } from '@chakra-ui/layout'
 import Head from 'next/head'
 import NextLink from 'next/link'
+import LoaderPage from '../components/common/LoaderPage'
 import Page from '../components/common/Page'
 import SignupForm from '../components/SignupForm'
+import useAuthRoute from '../hooks/useAuthRoute'
 
 export default function SignupPage() {
+	const user = useAuthRoute()
+	if (user === undefined) return <LoaderPage />
+	if (user) return null
 	return (
 		<>
 			<Head>
@@ -14,7 +19,7 @@ export default function SignupPage() {
 				<SignupForm />
 				<VStack mt='4'>
 					<Box>
-						<Text as='span'>Have account?</Text>
+						<Text as='span'>Have account? </Text>
 						<Link
 							as={NextLink}
 							href='/login'

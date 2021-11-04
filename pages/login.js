@@ -1,10 +1,15 @@
 import { Box, Link, Text, VStack } from '@chakra-ui/layout'
 import Head from 'next/head'
 import NextLink from 'next/link'
+import LoaderPage from '../components/common/LoaderPage'
 import Page from '../components/common/Page'
 import LoginForm from '../components/LoginForm'
+import useAuthRoute from '../hooks/useAuthRoute'
 
 export default function LoginPage() {
+	const user = useAuthRoute()
+	if (user === undefined) return <LoaderPage />
+	if (user) return null
 	return (
 		<>
 			<Head>
