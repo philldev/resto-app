@@ -7,12 +7,12 @@ import {
 } from 'firebase/auth'
 import firebaseApp from './app'
 
-const auth = getAuth(firebaseApp)
+export const fbAuth = getAuth(firebaseApp)
 
 const signup = async ({ email, password }) => {
 	try {
 		const userCredentials = await createUserWithEmailAndPassword(
-			auth,
+			fbAuth,
 			email,
 			password
 		)
@@ -25,7 +25,7 @@ const signup = async ({ email, password }) => {
 const signin = async ({ email, password }) => {
 	try {
 		const userCredential = await signInWithEmailAndPassword(
-			auth,
+			fbAuth,
 			email,
 			password
 		)
@@ -43,6 +43,4 @@ const signout = async () => {
 	}
 }
 
-const onAuthStateChanged = (callback) => fbOnAuthStateChanged(auth, callback)
-
-export { signin, signup, onAuthStateChanged, signout }
+export { signin, signup,  signout }

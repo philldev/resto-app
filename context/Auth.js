@@ -1,5 +1,4 @@
-import { Box } from '@chakra-ui/layout'
-import { CircularProgress } from '@chakra-ui/progress'
+import { onAuthStateChanged } from '@firebase/auth'
 import * as React from 'react'
 import * as AuthApi from '../firebase/auth'
 import * as UserApi from '../firebase/user'
@@ -31,11 +30,10 @@ export const AuthProvider = ({ children }) => {
 		}
 	}
 	React.useEffect(() => {
-		const unsub = AuthApi.onAuthStateChanged(async (user) => {
+		const unsub = onAuthStateChanged(AuthApi.fbAuth, async (user) => {
 			if (user) {
 				try {
 					const userData = await UserApi.getUser(user.uid)
-					console.log(userData);
 					setUser(userData)
 				} catch (error) {
 					console.log('error auth')
