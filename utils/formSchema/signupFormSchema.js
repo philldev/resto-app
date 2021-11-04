@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
 
 const SignupSchema = yup
 	.object({
