@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }) => {
 			throw error
 		}
 	}
-	const signin = async () => {
+	const signin = async ({ email, password }) => {
 		try {
-			await AuthApi.signout({ email, password })
+			await AuthApi.signin({ email, password })
 		} catch (error) {
 			throw error
 		}

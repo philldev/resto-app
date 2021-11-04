@@ -2,7 +2,9 @@ import { Button } from '@chakra-ui/button'
 import { Input } from '@chakra-ui/input'
 import { Box, Heading, Text, VStack } from '@chakra-ui/layout'
 import { useForm } from 'react-hook-form'
+import { useAuth } from '../context/auth'
 import { signinResolver } from '../utils/formSchema/signinFormSchema'
+import * as React from 'react'
 
 export default function LoginForm() {
 	const {
@@ -12,7 +14,24 @@ export default function LoginForm() {
 	} = useForm({
 		resolver: signinResolver,
 	})
-	const onSubmit = (data) => console.log(data)
+
+	const { signin } = useAuth()
+	const [isLoading, setIsLoading] = React.useState(false)
+	const [generalErr, setGeneralErr] = React.useState(null)
+	
+	const onSubmit = async (data) => {
+		try {
+			console.log(data)
+			setIsLoading(true)
+			await signin(data)
+		} catch (error) {
+			setIsLoading(false)
+			console.log(error)
+			if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+				setGeneralErr('Wrong email or password!')
+			}
+		}
+	}
 
 	return (
 		<VStack
@@ -56,9 +75,14 @@ export default function LoginForm() {
 					</Text>
 				</Box>
 			</VStack>
-			<Button w='full' type='submit'>
+			<Button isLoading={isLoading} w='full' type='submit'>
 				Continue
 			</Button>
+			{generalErr && (
+				<Box bg='red.400' rounded='sm' p='2' w='full'>
+					<Text fontSize='sm'>Error : {generalErr}</Text>
+				</Box>
+			)}
 		</VStack>
 	)
 }
