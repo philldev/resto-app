@@ -15,8 +15,8 @@ export default function Sidebar() {
 			borderRightStyle='solid'
 			borderRightColor='gray.700'
 		>
-			<Heading px='4' mb='6' pt='4'>
-				Resto Logo
+			<Heading px='4' mb='6' pt='4' color='teal.400'>
+				Resto App
 			</Heading>
 			<VStack alignItems='flex-start' px='4'>
 				<SidebarLink href='/app'>Home</SidebarLink>

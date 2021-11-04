@@ -18,15 +18,13 @@ export default function LoginForm() {
 	const { signin } = useAuth()
 	const [isLoading, setIsLoading] = React.useState(false)
 	const [generalErr, setGeneralErr] = React.useState(null)
-	
+
 	const onSubmit = async (data) => {
 		try {
-			console.log(data)
 			setIsLoading(true)
 			await signin(data)
 		} catch (error) {
 			setIsLoading(false)
-			console.log(error)
 			if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
 				setGeneralErr('Wrong email or password!')
 			}

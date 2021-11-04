@@ -1,9 +1,14 @@
 import { Box } from '@chakra-ui/layout'
+import { chakra } from '@chakra-ui/system'
 
-export default function MainWrapper({ children }) {
+function MainWrapperComp({ children, ...rest }) {
 	return (
-		<Box pl='80' h='full' flex='1' flexShrink='0'>
+		<Box pl='80' h='full' flex='1' flexShrink='0' {...rest}>
 			{children}
 		</Box>
 	)
 }
+
+const MainWrapper = chakra(MainWrapperComp)
+
+export default MainWrapper
