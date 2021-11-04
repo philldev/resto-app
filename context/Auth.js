@@ -1,3 +1,5 @@
+import { Box } from '@chakra-ui/layout'
+import { CircularProgress } from '@chakra-ui/progress'
 import * as React from 'react'
 import * as AuthApi from '../firebase/auth'
 import * as UserApi from '../firebase/user'
@@ -5,7 +7,7 @@ import * as UserApi from '../firebase/user'
 const AuthContext = React.createContext(null)
 
 export const AuthProvider = ({ children }) => {
-	const [user, setUser] = React.useState(null)
+	const [user, setUser] = React.useState(undefined)
 	const signup = async ({ email, password }) => {
 		try {
 			const newUserCred = await AuthApi.signup({ email, password })
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
 			if (user) {
 				try {
 					const userData = await UserApi.getUser(user.uid)
+					console.log(userData);
 					setUser(userData)
 				} catch (error) {
 					console.log('error auth')
@@ -45,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 			unsub()
 		}
 	}, [])
-	
+
 	const value = React.useMemo(() => {
 		user, signup, signin, signout
 	}, [user])

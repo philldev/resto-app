@@ -1,10 +1,10 @@
-import { doc, getDoc, onSnapshot, setDoc } from '@firebase/firestore'
+import { collection, doc, getDoc, onSnapshot, setDoc } from '@firebase/firestore'
 import db from './firestore'
 import { createDocId } from './helper'
 
-const userCollection = collection(db, 'users')
+// const userCollection = collection(db, 'users')
 
-const createUsersRef = () => doc(db, 'users', createDocId())
+// const createUsersRef = () => doc(db, 'users', createDocId())
 
 const getUserRef = (id) => doc(db, 'users', id)
 
