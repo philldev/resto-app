@@ -1,7 +1,9 @@
+import * as React from 'react'
 import { Button } from '@chakra-ui/button'
 import { Input } from '@chakra-ui/input'
 import { Box, Heading, Text, VStack } from '@chakra-ui/layout'
 import { useForm } from 'react-hook-form'
+import { useAuth } from '../context/auth'
 import { signupResolver } from '../utils/formSchema/signupFormSchema'
 
 export default function SignupForm() {
@@ -9,10 +11,29 @@ export default function SignupForm() {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setError,
 	} = useForm({
 		resolver: signupResolver,
 	})
-	const onSubmit = (data) => console.log(data)
+
+	const { signup } = useAuth()
+	const [isLoading, setIsLoading] = React.useState()
+	const onSubmit = async (data) => {
+		try {
+			setIsLoading(true)
+			await signup(data)
+		} catch (error) {
+			console.log(error.code === 'auth/email-already-in-use')
+			if (error.code === 'auth/email-already-in-use') {
+				setError(
+					'email',
+					{ message: 'Email already in use' },
+					{ shouldFocus: true }
+				)
+			}
+			setIsLoading(false)
+		}
+	}
 
 	return (
 		<VStack
@@ -56,7 +77,7 @@ export default function SignupForm() {
 					</Text>
 				</Box>
 			</VStack>
-			<Button w='full' type='submit'>
+			<Button isLoading={isLoading} w='full' type='submit'>
 				Continue
 			</Button>
 		</VStack>

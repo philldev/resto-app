@@ -37,10 +37,10 @@ const signin = async ({ email, password }) => {
 
 const signout = async () => {
 	try {
-		await signOut()
+		await signOut(fbAuth)
 	} catch (error) {
 		throw error
 	}
 }
 
-export { signin, signup,  signout }
+export { signin, signup, signout }

@@ -24,7 +24,7 @@ const createUser = async ({ email, password, uid }) => {
 }
 
 // TODO: Get a User
-const getUser = async (id, { listen = false, callback = () => {} }) => {
+const getUser = async (id, { listen = false, callback = () => {} } = {}) => {
 	try {
 		if (listen) {
 			const unsub = onSnapshot(getUserRef(id), (doc) => {

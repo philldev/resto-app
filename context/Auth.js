@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 					const userData = await UserApi.getUser(user.uid)
 					setUser(userData)
 				} catch (error) {
-					console.log('error auth')
+					console.log(error)
 				}
 			} else {
 				setUser(null)
@@ -47,9 +47,12 @@ export const AuthProvider = ({ children }) => {
 		}
 	}, [])
 
-	const value = React.useMemo(() => {
-		user, signup, signin, signout
-	}, [user])
+	const value = {
+		user,
+		signup,
+		signin,
+		signout,
+	}
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
