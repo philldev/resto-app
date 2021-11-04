@@ -14,9 +14,31 @@ export default function App() {
 	if (user)
 		return (
 			<Page>
-				<Heading>App</Heading>
-				<Box>
-					<Button onClick={signout}>Logout</Button>
+				<Box pos='relative' w='100vw' h='100vh'>
+					<Box
+						pos='fixed'
+						left='0'
+						top='0'
+						h='full'
+						w='80'
+						bg='gray.800'
+						borderRightWidth='1px'
+						borderRightStyle='solid'
+						borderRightColor='gray.700'
+					>
+						Sidebar
+					</Box>
+					<Box pl='80' h='full' flex='1' flexShrink='0'>
+						<Box
+							h='20'
+							borderBottomWidth='1px'
+							borderBottomStyle='solid'
+							borderBottomColor='gray.700'
+						>
+							Topbar
+						</Box>
+						<Box>MainContent</Box>
+					</Box>
 				</Box>
 			</Page>
 		)

@@ -14,7 +14,7 @@ export default function Page({
 				flexDir='column'
 				alignItems='center'
 				justifyContent='center'
-				pt='16'
+				pt={isHeaderDisplayed ?'16' : '0'}
 				minH={
 					isHeaderDisplayed ? 'calc(100vh - var(--chakra-space-10))' : '100vh'
 				}
