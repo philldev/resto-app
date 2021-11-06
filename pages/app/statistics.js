@@ -10,7 +10,7 @@ function Statistics() {
 	return (
 		<Page>
 			<Grid
-				gridTemplateColumns='250px 1fr .5fr'
+				gridTemplateColumns='250px 1fr'
 				w='100vw'
 				h='100vh'
 				overflow='hidden'
