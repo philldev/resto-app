@@ -1,30 +1,16 @@
-import { Button } from '@chakra-ui/button'
-import { Box, HStack, Text, VStack } from '@chakra-ui/layout'
-import { Divider } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/layout'
+import OrderInfo from './OrderInfo'
 import OrderItem from './OrderItem'
+import OrderTotals from './OrderTotals'
 
 export default function OrderBar() {
 	return (
-		<Box p='4'>
-			<Text fontSize='xl' mb='4' fontWeight='bold'>
-				Orders #34562
-			</Text>
-			<HStack spacing='3' mb='4'>
-				<Button colorScheme='teal'>Dine In</Button>
-				<Button>To Go</Button>
-				<Button>Delivery</Button>
-			</HStack>
-			<Box d='flex'>
-				<Text mr='auto'>Item</Text>
-				<Text w='40px' mr='4'>
-					Qty
-				</Text>
-				<Text w='40px'>Price</Text>
-			</Box>
-			<Divider my='4' />
-			<VStack>
+		<Box d='flex' flexDir='column' h='full' overflowY='auto'>
+			<OrderInfo />
+			<VStack p='4' pt='0' flex='1' overflowY='auto'>
 				<OrderItem />
 			</VStack>
+			<OrderTotals />
 		</Box>
 	)
 }

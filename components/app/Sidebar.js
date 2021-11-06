@@ -1,15 +1,10 @@
-import { Box, Flex, Heading, Link, VStack } from '@chakra-ui/layout'
-import NextLink from 'next/link'
+import { Box, Heading, VStack } from '@chakra-ui/layout'
 import SidebarLink from './SidebarLink'
 
 export default function Sidebar() {
 	return (
 		<Box
-			pos='fixed'
-			left='0'
-			top='0'
 			h='full'
-			w='80'
 			bg='gray.800'
 			borderRightWidth='1px'
 			borderRightStyle='solid'

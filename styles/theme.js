@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme } from '@chakra-ui/react'
 
 export const theme = extendTheme({
 	config: {
@@ -10,11 +10,13 @@ export const theme = extendTheme({
 			baseStyle: { _focus: { boxShadow: 'none' } },
 		},
 		Input: {
-			baseStyle: {	
-				border:'none',
-				_focus: {
-				},
+			baseStyle: {
+				border: 'none',
+				_focus: {},
 			},
+		},
+		Tab: {
+			baseStyle: { _focus: { boxShadow: 'none' } },
 		},
 	},
 	fonts: {

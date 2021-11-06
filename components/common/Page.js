@@ -11,10 +11,11 @@ export default function Page({
 		<>
 			{isHeaderDisplayed && <Header />}
 			<Flex
+				overflow='hidden'
 				flexDir='column'
 				alignItems='center'
 				justifyContent='center'
-				pt={isHeaderDisplayed ?'16' : '0'}
+				pt={isHeaderDisplayed ? '16' : '0'}
 				minH={
 					isHeaderDisplayed ? 'calc(100vh - var(--chakra-space-10))' : '100vh'
 				}
