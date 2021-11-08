@@ -1,4 +1,7 @@
-import { Grid } from '@chakra-ui/layout'
+import { Button } from '@chakra-ui/button'
+import { Input } from '@chakra-ui/input'
+import { Box, Flex, Grid, Heading, Text } from '@chakra-ui/layout'
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import * as React from 'react'
 import MainTopbar from '../../../components/app/MainTopbar'
 import MainWrapper from '../../../components/app/MainWrapper'
@@ -16,8 +19,65 @@ function Menu() {
 				overflow='hidden'
 			>
 				<Sidebar />
-				<MainWrapper>
+				<MainWrapper d='flex' flexDir='column' alignItems='center'>
 					<MainTopbar />
+					<Flex flex='1 0' flexDir='column' pt='4' w='full' maxW='container.lg' overflow='hidden'>
+						<Flex flexDir='column' overflowY='auto' flex='1 0'>
+							<Flex mb='3' alignItems='center'>
+								<Heading fontSize='2xl' >
+									Menu
+								</Heading>
+								<Input placeholder='Search menu' maxW='64' ml='auto' />
+							</Flex>
+							<Tabs d='flex' flexDir='column' overflowY='auto'>
+								<TabList>
+									<Tab>All</Tab>
+									<Tab>Makanan</Tab>
+									<Tab>Minuman</Tab>
+								</TabList>
+								<TabPanels overflowY='auto'>
+									{new Array(3).fill(0).map((item, index) => (
+										<TabPanel overflowY='auto' key={index}>
+											<Grid overflowY='auto' templateColumns='1fr 1fr 1fr' gap='3'>
+												{new Array(100).fill(0).map((item, index) => (
+													<Flex
+														p='2'
+														borderWidth='1px'
+														borderColor='gray.700'
+														rounded='md'
+														key={index}
+													>
+														<Box
+															h='24'
+															bg='gray.500'
+															w='24'
+															flexShrink='0'
+															mr='2'
+															rounded='sm'
+														></Box>
+														<Flex
+															flexDir='column'
+															justifyContent='center'
+															flex='1 0'
+														>
+															<Text fontWeight='bold'>Menu name</Text>
+															<Text mb='2'>Rp 10K</Text>
+															<Button w='full' variant='outline'>
+																Edit
+															</Button>
+														</Flex>
+													</Flex>
+												))}
+											</Grid>
+										</TabPanel>
+									))}
+								</TabPanels>
+							</Tabs>
+						</Flex>
+						<Box p='4'>
+							<Button w='full'>Add Menu</Button>
+						</Box>
+					</Flex>
 				</MainWrapper>
 			</Grid>
 		</Page>
