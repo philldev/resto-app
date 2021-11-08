@@ -43,7 +43,11 @@ function App() {
 										Add Order +
 									</Button>
 								</NextLink>
-								<Button w='full'>Add Product +</Button>
+								<NextLink href='/app/menu/create-menu' passHref>
+									<Button as='a' w='full'>
+										Add Product +
+									</Button>
+								</NextLink>
 							</VStack>
 						</Box>
 					</Grid>
