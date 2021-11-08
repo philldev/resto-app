@@ -41,9 +41,9 @@ function CreateOrder() {
 				overflow='hidden'
 			>
 				<Sidebar />
-				<MainWrapper d='flex' flexDir='column'>
+				<MainWrapper d='flex' flexDir='column' alignItems='center'>
 					<MainTopbar />
-					<Flex flexDir='column' flex='1' overflow='hidden'>
+					<Flex flexDir='column' flex='1' overflow='hidden' maxW='container.lg' w='100%'>
 						<Flex
 							flexDir='column'
 							flex='1'

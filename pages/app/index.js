@@ -45,7 +45,7 @@ function App() {
 								</NextLink>
 								<NextLink href='/app/menu/create-menu' passHref>
 									<Button as='a' w='full'>
-										Add Product +
+										Add Menu +
 									</Button>
 								</NextLink>
 							</VStack>
