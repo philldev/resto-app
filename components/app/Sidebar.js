@@ -15,7 +15,7 @@ export default function Sidebar() {
 			</Heading>
 			<VStack alignItems='flex-start' px='4'>
 				<SidebarLink href='/app'>Home</SidebarLink>
-				<SidebarLink href='/app/order-history'>Orders</SidebarLink>
+				<SidebarLink href='/app/orders'>Orders</SidebarLink>
 				<SidebarLink href='/app/products'>Products</SidebarLink>
 				<SidebarLink href='/app/statistics'>Statistics</SidebarLink>
 				<SidebarLink href='/app/settings'>Settings</SidebarLink>

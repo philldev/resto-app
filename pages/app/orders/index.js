@@ -1,10 +1,10 @@
 import { Grid } from '@chakra-ui/layout'
 import * as React from 'react'
-import MainTopbar from '../../components/app/MainTopbar'
-import MainWrapper from '../../components/app/MainWrapper'
-import Sidebar from '../../components/app/Sidebar'
-import Page from '../../components/common/Page'
-import withProtectedRoute from '../../components/hoc/withProtectedRoute'
+import MainTopbar from '../../../components/app/MainTopbar'
+import MainWrapper from '../../../components/app/MainWrapper'
+import Sidebar from '../../../components/app/Sidebar'
+import Page from '../../../components/common/Page'
+import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 
 function OrderHistory() {
 	return (
