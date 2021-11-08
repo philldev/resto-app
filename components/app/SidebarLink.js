@@ -2,10 +2,9 @@ import { Link } from '@chakra-ui/layout'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-export default function SidebarLink({ href, children }) {
+export default function SidebarLink({ href, children, isRoot }) {
 	const router = useRouter()
-
-	const isActive = router.pathname === href
+	const isActive = isRoot ? href === router.pathname : router.pathname.includes(href)
 
 	return (
 		<NextLink href={href} passHref>

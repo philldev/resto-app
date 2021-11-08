@@ -1,7 +1,5 @@
 import { Button } from '@chakra-ui/button'
-import { Badge, Box, Flex, Grid, Heading, VStack } from '@chakra-ui/layout'
-import { Stat, StatHelpText, StatLabel, StatNumber } from '@chakra-ui/stat'
-import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
+import { Box, Grid, Heading, VStack } from '@chakra-ui/layout'
 import * as React from 'react'
 import Stats from '../../components/app/home/Stats'
 import TodayOrders from '../../components/app/home/TodayOrders'
@@ -10,6 +8,7 @@ import MainWrapper from '../../components/app/MainWrapper'
 import Sidebar from '../../components/app/Sidebar'
 import Page from '../../components/common/Page'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
+import NextLink from 'next/link'
 
 function App() {
 	return (
@@ -39,8 +38,12 @@ function App() {
 								Shortcuts
 							</Heading>
 							<VStack>
-								<Button w='full'>New Order +</Button>
-								<Button w='full'>New Product +</Button>
+								<NextLink href='/app/orders/create-order' passHref>
+									<Button as='a' w='full'>
+										Add Order +
+									</Button>
+								</NextLink>
+								<Button w='full'>Add Product +</Button>
 							</VStack>
 						</Box>
 					</Grid>

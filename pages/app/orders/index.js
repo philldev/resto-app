@@ -6,7 +6,7 @@ import Sidebar from '../../../components/app/Sidebar'
 import Page from '../../../components/common/Page'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 
-function OrderHistory() {
+function Orders() {
 	return (
 		<Page>
 			<Grid
@@ -24,4 +24,4 @@ function OrderHistory() {
 	)
 }
 
-export default withProtectedRoute(OrderHistory)
+export default withProtectedRoute(Orders)

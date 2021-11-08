@@ -14,7 +14,7 @@ export default function Sidebar() {
 				Resto App
 			</Heading>
 			<VStack alignItems='flex-start' px='4'>
-				<SidebarLink href='/app'>Home</SidebarLink>
+				<SidebarLink href='/app' isRoot>Home</SidebarLink>
 				<SidebarLink href='/app/orders'>Orders</SidebarLink>
 				<SidebarLink href='/app/products'>Products</SidebarLink>
 				<SidebarLink href='/app/statistics'>Statistics</SidebarLink>
