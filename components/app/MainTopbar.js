@@ -6,12 +6,13 @@ export default function MainTopbar() {
 	return (
 		<Box
 			h='20'
+			w='full'
 			borderBottomWidth='1px'
 			borderBottomStyle='solid'
 			borderBottomColor='gray.700'
 			d='flex'
 			alignItems='center'
-			p='4'
+			px='4'
 		>
 			<Box>
 				<Text fontWeight='bold' fontSize='2xl'>
