@@ -1,5 +1,5 @@
 import { Input } from '@chakra-ui/input'
-import { Box, Grid, Heading, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Grid, Heading, Text, VStack } from '@chakra-ui/layout'
 import { Select, Textarea, Button } from '@chakra-ui/react'
 import * as React from 'react'
 import MainTopbar from '../../../components/app/MainTopbar'
@@ -19,21 +19,20 @@ function CreateMenu() {
 			>
 				<Sidebar />
 				<MainWrapper d='flex' flexDir='column' alignItems='center'>
-					<MainTopbar />
-					<Box p='4' maxW='container.lg' w='100%'>
-						<Heading fontSize='2xl' mb='3'>
+					<Flex flexDir='column' alignItems='center' p='4' w='100%'>
+						<Heading fontSize='2xl' mb='3' w='full'>
 							Create Menu +
 						</Heading>
-						<Grid templateColumns='1fr 2fr' gap='4'>
-							<Box>
-								<Text mb='1' fontSize='sm'>
-									Photo
-								</Text>
-								<Grid h='52' bg='gray.700' rounded='md' placeItems='center'>
-									Upload photo +
-								</Grid>
-							</Box>
+						<Grid gap='4' maxW='xl' w='full' py='4'>
 							<VStack alignItems='stretch' spacing='3'>
+								<Box>
+									<Text mb='1' fontSize='sm'>
+										Photo
+									</Text>
+									<Grid h='52' bg='gray.700' rounded='md' placeItems='center'>
+										Upload photo +
+									</Grid>
+								</Box>
 								<Box w='full'>
 									<Text mb='1' fontSize='sm'>
 										Name
@@ -86,7 +85,7 @@ function CreateMenu() {
 								<Button>Create Menu</Button>
 							</VStack>
 						</Grid>
-					</Box>
+					</Flex>
 				</MainWrapper>
 			</Grid>
 		</Page>

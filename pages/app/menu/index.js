@@ -8,6 +8,7 @@ import MainWrapper from '../../../components/app/MainWrapper'
 import Sidebar from '../../../components/app/Sidebar'
 import Page from '../../../components/common/Page'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import NextLink from 'next/link'
 
 function Menu() {
 	return (
@@ -20,13 +21,15 @@ function Menu() {
 			>
 				<Sidebar />
 				<MainWrapper d='flex' flexDir='column' alignItems='center'>
-					<MainTopbar />
-					<Flex flex='1 0' flexDir='column' pt='4' w='full' maxW='container.lg' overflow='hidden'>
-						<Flex flexDir='column' overflowY='auto' flex='1 0'>
+					<Flex
+						flex='1 0'
+						flexDir='column'
+						w='full'
+						overflow='hidden'
+					>
+						<Flex flexDir='column' overflowY='auto' flex='1 0' p='4' rounded='md'>
 							<Flex mb='3' alignItems='center'>
-								<Heading fontSize='2xl' >
-									Menu
-								</Heading>
+								<Heading fontSize='2xl'>Menu</Heading>
 								<Input placeholder='Search menu' maxW='64' ml='auto' />
 							</Flex>
 							<Tabs d='flex' flexDir='column' overflowY='auto'>
@@ -38,7 +41,11 @@ function Menu() {
 								<TabPanels overflowY='auto'>
 									{new Array(3).fill(0).map((item, index) => (
 										<TabPanel overflowY='auto' key={index}>
-											<Grid overflowY='auto' templateColumns='1fr 1fr 1fr' gap='3'>
+											<Grid
+												overflowY='auto'
+												templateColumns='1fr 1fr 1fr'
+												gap='3'
+											>
 												{new Array(100).fill(0).map((item, index) => (
 													<Flex
 														p='2'
@@ -75,7 +82,9 @@ function Menu() {
 							</Tabs>
 						</Flex>
 						<Box p='4'>
-							<Button w='full'>Add Menu</Button>
+							<NextLink href='/app/menu/create-menu' passHref>
+								<Button as='a' w='full'>Add Menu</Button>
+							</NextLink>
 						</Box>
 					</Flex>
 				</MainWrapper>

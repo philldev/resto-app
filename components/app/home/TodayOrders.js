@@ -3,8 +3,7 @@ import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 
 function TodayOrders() {
 	return (
-		<Box>
-			<Heading fontSize='2xl' mb='2'>Today Orders</Heading>
+		<Box flex='1'>
 			<Table variant='simple'>
 				<Thead>
 					<Tr>

@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button'
-import { Box, Grid, Heading, VStack } from '@chakra-ui/layout'
+import { Box, Divider, Flex, Grid, Heading, VStack } from '@chakra-ui/layout'
 import * as React from 'react'
 import Stats from '../../components/app/home/Stats'
 import TodayOrders from '../../components/app/home/TodayOrders'
@@ -25,16 +25,16 @@ function App() {
 					<Grid
 						templateColumns={'1fr 20%'}
 						gap='4'
-						maxW='container.lg'
 						w='100%'
 						p='4'
+						flex='1'
 					>
-						<Box flex='1 0'>
+						<Flex flexDir='column' flex='1' bg='gray.900' p='4' rounded='md'>
 							<Stats />
 							<TodayOrders />
-						</Box>
-						<Box>
-							<Heading fontSize='2xl' mb='3'>
+						</Flex>
+						<Box bg='gray.900' flexShrink='0' p='4' rounded='md'>
+							<Heading fontSize='xl' mb='3'>
 								Shortcuts
 							</Heading>
 							<VStack>
@@ -48,6 +48,7 @@ function App() {
 										Add Menu +
 									</Button>
 								</NextLink>
+								<Divider />
 							</VStack>
 						</Box>
 					</Grid>
