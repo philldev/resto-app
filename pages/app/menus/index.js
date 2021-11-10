@@ -18,21 +18,33 @@ function Menus() {
 				<Tabs variant='enclosed' flex='1' overflowY='auto' overflowX='auto'>
 					<TabList flex='0' overflowX='auto' overflowY='hidden'>
 						{menuCategories.map((item) => (
-							<Tab _active={{
-								boxShadow:'none'
-							}} _focus={{
-								boxShadow:'none'
-							}} key={item.id}>{item.name}</Tab>
+							<Tab
+								_active={{
+									boxShadow: 'none',
+								}}
+								_focus={{
+									boxShadow: 'none',
+								}}
+								key={item.id}
+							>
+								{item.name}
+							</Tab>
 						))}
 					</TabList>
-					<TabPanels d='flex' h='calc(100% - 42px)' flexDir='column' flex='1' overflowY='auto'>
+					<TabPanels
+						bg='gray.900'
+						d='flex'
+						h='calc(100% - 42px)'
+						flexDir='column'
+						flex='1'
+						overflowY='auto'
+					>
 						{menuCategories.map((cat) => (
 							<TabPanel
 								key={cat.id}
 								display='grid'
 								gridTemplateColumns='1fr 1fr'
 								gridGap='4'
-								bg='gray.900'
 							>
 								{menus
 									.filter((i) => i.categoryId === cat.id)
@@ -47,7 +59,9 @@ function Menus() {
 												/>
 											</Box>
 											<Box p='4' bg='gray.800'>
-												<Text fontWeight='bold' mb='1'>{i.name}</Text>
+												<Text fontWeight='bold' mb='1'>
+													{i.name}
+												</Text>
 												<Text>Rp {i.price}</Text>
 											</Box>
 										</Box>
