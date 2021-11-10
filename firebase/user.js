@@ -1,6 +1,5 @@
-import { collection, doc, getDoc, onSnapshot, setDoc } from '@firebase/firestore'
+import { doc, getDoc, onSnapshot, setDoc } from '@firebase/firestore'
 import db from './firestore'
-import { createDocId } from './helper'
 
 // const userCollection = collection(db, 'users')
 
@@ -47,3 +46,4 @@ const getUser = async (id, { listen = false, callback = () => {} } = {}) => {
 // TODO: Delete User
 
 export { createUser, getUser }
+

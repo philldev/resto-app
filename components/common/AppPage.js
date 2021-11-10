@@ -23,7 +23,7 @@ export const AppPage = ({ children, displayHeader = true }) => {
 						<Box fontSize='xl'>Resto Name</Box>
 					</Flex>
 				)}
-				<Flex flex='1 0' p='4'>
+				<Flex flex='1 0' overflow='hidden'>
 					{children}
 				</Flex>
 				<Flex
@@ -34,8 +34,8 @@ export const AppPage = ({ children, displayHeader = true }) => {
 				>
 					<Grid fontSize='sm' w='full' templateColumns='repeat(5,1fr)'>
 						<BottomNavItem isRoot href='/app' Icon={DashboardIcon} label='Home' />
-						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
+						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
 						<BottomNavItem href='/app/stats' Icon={ChartPieIcon} label='Statistik' />
 						<BottomNavItem href='/app/restaurant' Icon={HomeIcon} label='Resto' />
 					</Grid>
