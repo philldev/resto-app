@@ -1,4 +1,11 @@
-import { AddIcon, PlusSquareIcon, SearchIcon } from '@chakra-ui/icons'
+import * as React from 'react'
+import {
+	AddIcon,
+	DeleteIcon,
+	EditIcon,
+	PlusSquareIcon,
+	SearchIcon,
+} from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
@@ -8,6 +15,12 @@ import { createDocId } from '../../../firebase/helper/createDocId'
 import Image from 'next/image'
 import { Button } from '@chakra-ui/button'
 import {
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -29,9 +42,18 @@ function Menus() {
 				</Flex>
 				<Tabs variant='soft-rounded' flex='1' overflowY='auto' overflowX='auto'>
 					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
-					<Box w='10' h='10' flexShrink='0' alignItems='center' justifyContent='center' mr='2' d='flex' as='button'>
-						<SearchIcon />
-					</Box>
+						<Box
+							w='10'
+							h='10'
+							flexShrink='0'
+							alignItems='center'
+							justifyContent='center'
+							mr='2'
+							d='flex'
+							as='button'
+						>
+							<SearchIcon />
+						</Box>
 						<Tab
 							_active={{
 								boxShadow: 'none',
@@ -64,11 +86,7 @@ function Menus() {
 						flex='1'
 						overflowY='auto'
 					>
-						<TabPanel
-							display='grid'
-							gridTemplateColumns='1fr 1fr'
-							gridGap='4'
-						>
+						<TabPanel display='grid' gridTemplateColumns='1fr 1fr' gridGap='4'>
 							{menus.map((menu) => (
 								<MenuItem menu={menu} key={menu.id} />
 							))}
@@ -129,15 +147,14 @@ const MenuItem = ({ menu }) => {
 const MenuDetail = ({ menu }) => {
 	return (
 		<Flex pb='4' flexDir='column'>
-			<Flex>
+			<Flex mb='4'>
 				<Box
-					w='50%'
+					w='30%'
 					mr='4'
+					h='20'
 					pos='relative'
-					h='28'
 					rounded='xl'
 					overflow='hidden'
-					mb='4'
 				>
 					<Image
 						layout='fill'
@@ -153,15 +170,77 @@ const MenuDetail = ({ menu }) => {
 					<Text textAlign='left'>Rp {menu.price}</Text>
 				</Box>
 			</Flex>
-			<VStack>
-				<Button w='full' colorScheme='gray' variant='outline'>
-					Edit
-				</Button>
-				<Button w='full' colorScheme='gray' variant='outline'>
-					Hapus
-				</Button>
-			</VStack>
+			<HStack>
+				<EditMenu menu={menu} />
+				<DeleteMenu menu={menu} />
+			</HStack>
 		</Flex>
+	)
+}
+
+const DeleteMenu = ({ menu }) => {
+	const [isOpen, setIsOpen] = React.useState(false)
+	const onClose = () => setIsOpen(false)
+	const onOpen = () => setIsOpen(true)
+
+	const cancelRef = React.useRef()
+	return (
+		<>
+		<Button onClick={onOpen} leftIcon={<DeleteIcon />} colorScheme='gray' variant='outline'>
+			Hapus
+		</Button>
+		  <AlertDialog
+			isCentered
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent mx='4' bg='gray.800'>
+            <AlertDialogHeader fontSize="lg">
+              Hapus Menu <Text as='span' fontWeight='bold'>{menu.name}</Text>
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure? You can&apos;t undo this action afterwards.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Tidak
+              </Button>
+              <Button colorScheme="red" onClick={onClose} ml={3}>
+                Ya
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+			</>
+	)
+}
+
+const EditMenu = ({ menu }) => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<Button
+				onClick={onOpen}
+				leftIcon={<EditIcon />}
+				colorScheme='gray'
+				variant='outline'
+			>
+				Edit
+			</Button>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Edit Menu</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<MenuForm menu={menu} isEditing />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
 	)
 }
 
@@ -202,7 +281,7 @@ const AddMenu = () => {
 					<ModalHeader>Tambah Menu</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<AddMenuForm />
+						<MenuForm />
 					</ModalBody>
 				</ModalContent>
 			</Modal>
@@ -210,7 +289,8 @@ const AddMenu = () => {
 	)
 }
 
-const AddMenuForm = () => {
+const MenuForm = ({ isEditing, menu }) => {
+	console.log(menu)
 	return (
 		<Flex flexDir='column' pb='4'>
 			<VStack spacing='0' mb='4'>
@@ -221,6 +301,7 @@ const AddMenuForm = () => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name menu'
+						value={menu?.name}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
 				</FormControl>
@@ -232,6 +313,7 @@ const AddMenuForm = () => {
 						border='none'
 						type='number'
 						placeholder='Masukan harga menu'
+						value={menu?.price}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
 				</FormControl>
@@ -239,24 +321,44 @@ const AddMenuForm = () => {
 					<FormLabel>Kategori*</FormLabel>
 					<Select placeholder='Pilih Kategori'>
 						{menuCategories.map((i) => (
-							<option key={i.id}>{i.name}</option>
+							<option selected={i.id === menu?.categoryId} key={i.id}>
+								{i.name}
+							</option>
 						))}
 					</Select>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
 				</FormControl>
 				<FormControl w='full'>
 					<FormLabel>Foto</FormLabel>
-					<Button w='full' variant='outline'>
-						Upload Foto
-					</Button>
+					{isEditing && menu?.imageURL ? (
+						<Box
+							w='30%'
+							mr='4'
+							h='20'
+							pos='relative'
+							rounded='xl'
+							overflow='hidden'
+						>
+							<Image
+								layout='fill'
+								objectFit='cover'
+								src={menu.imageURL}
+								alt={menu.name}
+							/>
+						</Box>
+					) : (
+						<Button w='full' variant='outline'>
+							Upload Foto
+						</Button>
+					)}
 					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
 				</FormControl>
 			</VStack>
 			<VStack>
 				<Button w='full' colorScheme='teal'>
-					Tambah Menu
+					{isEditing ? 'Edit' : 'Tambah'}
 				</Button>
-				<Button w='full' variant='outline' colorScheme='red'>
+				<Button w='full' variant='outline'>
 					Batal
 				</Button>
 			</VStack>
