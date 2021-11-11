@@ -182,7 +182,6 @@ const DeleteMenu = ({ menu }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
 	const onClose = () => setIsOpen(false)
 	const onOpen = () => setIsOpen(true)
-
 	const cancelRef = React.useRef()
 	return (
 		<>
@@ -290,7 +289,6 @@ const AddMenu = () => {
 }
 
 const MenuForm = ({ isEditing, menu }) => {
-	console.log(menu)
 	return (
 		<Flex flexDir='column' pb='4'>
 			<VStack spacing='0' mb='4'>
