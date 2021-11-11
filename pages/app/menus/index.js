@@ -23,6 +23,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
+import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { createDocId } from '../../../firebase/helper/createDocId'
 
@@ -30,8 +31,9 @@ function Menus() {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-				<Flex alignItems='center' justifyContent='space-between' p='4'>
+				<Flex alignItems='center' justifyContent='space-between' p='4' pb='0'>
 					<Box fontSize='xl'>Menu</Box>
+					<CogIcon w='6' h='6' />
 				</Flex>
 				<Tabs variant='soft-rounded' flex='1' overflowY='auto' overflowX='auto'>
 					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
