@@ -1,6 +1,6 @@
-import { AddIcon, SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, PlusSquareIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
@@ -68,9 +68,12 @@ function Menus() {
 						))}
 					</TabPanels>
 				</Tabs>
-				<Flex p='4' borderTop='1px solid' borderTopColor='gray.700'>
-					<AddMenu />
-				</Flex>
+				<Box py='4' borderTop='1px solid' borderTopColor='gray.700' overflowX='auto'>
+					<HStack w='max-content' px='4' overflowX='auto'>
+						<AddMenu />
+						<Button colorScheme='teal' size='sm' leftIcon={<AddIcon/>}>Tambah Kategori</Button>
+					</HStack>
+				</Box>
 			</Flex>
 		</AppPage>
 	)
@@ -86,18 +89,44 @@ const MenuItem = ({ menu }) => {
 				<ModalContent bg='gray.800' mx='4'>
 					<ModalHeader>Detail Menu</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody></ModalBody>
-					<ModalFooter></ModalFooter>
+					<ModalBody>
+						<MenuDetail menu={menu} />
+					</ModalBody>
 				</ModalContent>
 			</Modal>
 		</>
 	)
 }
 
+const MenuDetail = ({ menu }) => {
+	return (
+		<Flex pb='4' flexDir='column'>
+			<Flex>
+				<Box w='50%'mr='4' pos='relative' h='28' rounded='xl' overflow='hidden' mb='4'>
+					<Image
+						layout='fill'
+						objectFit='cover'
+						src={menu.imageURL}
+						alt={menu.name}
+					/>
+				</Box>
+				<Box>
+					<Text fontWeight='bold'textAlign='left'>{menu.name}</Text>
+					<Text textAlign='left'>Rp {menu.price}</Text>
+				</Box>
+			</Flex>
+			<VStack>
+				<Button w='full' colorScheme='gray' variant='outline'>Edit</Button>
+				<Button w='full' colorScheme='gray' variant='outline'>Hapus</Button>
+			</VStack>
+		</Flex>
+	)
+}
+
 const MenuCard = ({ menu, ...props }) => {
 	return (
 		<Box as='button' textAlign='left' rounded='xl' overflow='hidden' {...props}>
-			<Box pos='relative' h='28'>
+			<Box pos='relative' h='20'>
 				<Image
 					layout='fill'
 					objectFit='cover'
@@ -105,8 +134,8 @@ const MenuCard = ({ menu, ...props }) => {
 					alt={menu.name}
 				/>
 			</Box>
-			<Box p='4' bg='gray.800'>
-				<Text fontWeight='bold' mb='1'>
+			<Box py='2' px='4' bg='gray.800'>
+				<Text fontWeight='bold'>
 					{menu.name}
 				</Text>
 				<Text>Rp {menu.price}</Text>
@@ -123,7 +152,6 @@ const AddMenu = () => {
 				size='sm'
 				onClick={onOpen}
 				colorScheme='teal'
-				w='full'
 				leftIcon={<AddIcon />}
 			>
 				Tambah Menu
@@ -185,8 +213,12 @@ const AddMenuForm = () => {
 				</FormControl>
 			</VStack>
 			<VStack>
-				<Button w='full' colorScheme='teal'>Tambah Menu</Button>
-				<Button w='full' variant='outline' colorScheme='red'>Batal</Button>
+				<Button w='full' colorScheme='teal'>
+					Tambah Menu
+				</Button>
+				<Button w='full' variant='outline' colorScheme='red'>
+					Batal
+				</Button>
 			</VStack>
 		</Flex>
 	)
