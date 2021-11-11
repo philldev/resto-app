@@ -1,6 +1,6 @@
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Text } from '@chakra-ui/layout'
+import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
@@ -17,6 +17,8 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/modal'
 import { useDisclosure } from '@chakra-ui/hooks'
+import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
+import { Select } from '@chakra-ui/select'
 
 function Menus() {
 	return (
@@ -118,7 +120,7 @@ const AddMenu = () => {
 	return (
 		<>
 			<Button
-			size='sm'
+				size='sm'
 				onClick={onOpen}
 				colorScheme='teal'
 				w='full'
@@ -131,11 +133,62 @@ const AddMenu = () => {
 				<ModalContent bg='gray.800' mx='4'>
 					<ModalHeader>Tambah Menu</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody></ModalBody>
-					<ModalFooter></ModalFooter>
+					<ModalBody>
+						<AddMenuForm />
+					</ModalBody>
 				</ModalContent>
 			</Modal>
 		</>
+	)
+}
+
+const AddMenuForm = () => {
+	return (
+		<Flex flexDir='column' pb='4'>
+			<VStack spacing='0' mb='4'>
+				<FormControl w='full'>
+					<FormLabel>Nama*</FormLabel>
+					<Input
+						w='full'
+						bg='gray.700'
+						border='none'
+						placeholder='Masukan name menu'
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+				<FormControl w='full'>
+					<FormLabel>Harga*</FormLabel>
+					<Input
+						w='full'
+						bg='gray.700'
+						border='none'
+						type='number'
+						placeholder='Masukan harga menu'
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+				<FormControl id='country'>
+					<FormLabel>Kategori*</FormLabel>
+					<Select placeholder='Pilih Kategori'>
+						{menuCategories.map((i) => (
+							<option key={i.id}>{i.name}</option>
+						))}
+					</Select>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+				<FormControl w='full'>
+					<FormLabel>Foto</FormLabel>
+					<Button w='full' variant='outline'>
+						Upload Foto
+					</Button>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+			</VStack>
+			<VStack>
+				<Button w='full' colorScheme='teal'>Tambah Menu</Button>
+				<Button w='full' variant='outline' colorScheme='red'>Batal</Button>
+			</VStack>
+		</Flex>
 	)
 }
 
