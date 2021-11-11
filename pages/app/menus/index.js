@@ -1,4 +1,4 @@
-import { SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import { Box, Flex, Text } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
@@ -6,17 +6,28 @@ import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { createDocId } from '../../../firebase/helper/createDocId'
 import Image from 'next/image'
+import { Button } from '@chakra-ui/button'
+import {
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
+} from '@chakra-ui/modal'
+import { useDisclosure } from '@chakra-ui/hooks'
 
 function Menus() {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-				<Flex alignItems='center' justifyContent='space-between' py='2' px='4'>
+				<Flex alignItems='center' justifyContent='space-between' p='4'>
 					<Box fontSize='xl'>Menu</Box>
 					<SearchIcon />
 				</Flex>
-				<Tabs variant='enclosed' flex='1' overflowY='auto' overflowX='auto'>
-					<TabList flex='0' overflowX='auto' overflowY='hidden'>
+				<Tabs variant='soft-rounded' flex='1' overflowY='auto' overflowX='auto'>
+					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
 						{menuCategories.map((item) => (
 							<Tab
 								_active={{
@@ -34,7 +45,7 @@ function Menus() {
 					<TabPanels
 						bg='gray.900'
 						d='flex'
-						h='calc(100% - 42px)'
+						h='calc(100% - 56px)'
 						flexDir='column'
 						flex='1'
 						overflowY='auto'
@@ -48,30 +59,83 @@ function Menus() {
 							>
 								{menus
 									.filter((i) => i.categoryId === cat.id)
-									.map((i) => (
-										<Box rounded='xl' key={i.id} overflow='hidden'>
-											<Box pos='relative' h='28'>
-												<Image
-													layout='fill'
-													objectFit='cover'
-													src={i.imageURL}
-													alt={i.name}
-												/>
-											</Box>
-											<Box p='4' bg='gray.800'>
-												<Text fontWeight='bold' mb='1'>
-													{i.name}
-												</Text>
-												<Text>Rp {i.price}</Text>
-											</Box>
-										</Box>
+									.map((menu) => (
+										<MenuItem menu={menu} key={menu.id} />
 									))}
 							</TabPanel>
 						))}
 					</TabPanels>
 				</Tabs>
+				<Flex p='4' borderTop='1px solid' borderTopColor='gray.700'>
+					<AddMenu />
+				</Flex>
 			</Flex>
 		</AppPage>
+	)
+}
+
+const MenuItem = ({ menu }) => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<MenuCard onClick={onOpen} menu={menu} />
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Detail Menu</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody></ModalBody>
+					<ModalFooter></ModalFooter>
+				</ModalContent>
+			</Modal>
+		</>
+	)
+}
+
+const MenuCard = ({ menu, ...props }) => {
+	return (
+		<Box as='button' textAlign='left' rounded='xl' overflow='hidden' {...props}>
+			<Box pos='relative' h='28'>
+				<Image
+					layout='fill'
+					objectFit='cover'
+					src={menu.imageURL}
+					alt={menu.name}
+				/>
+			</Box>
+			<Box p='4' bg='gray.800'>
+				<Text fontWeight='bold' mb='1'>
+					{menu.name}
+				</Text>
+				<Text>Rp {menu.price}</Text>
+			</Box>
+		</Box>
+	)
+}
+
+const AddMenu = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<Button
+			size='sm'
+				onClick={onOpen}
+				colorScheme='teal'
+				w='full'
+				leftIcon={<AddIcon />}
+			>
+				Tambah Menu
+			</Button>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Tambah Menu</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody></ModalBody>
+					<ModalFooter></ModalFooter>
+				</ModalContent>
+			</Modal>
+		</>
 	)
 }
 
@@ -83,14 +147,6 @@ const menuCategories = [
 	{
 		id: createDocId(),
 		name: 'Minuman',
-	},
-	{
-		id: createDocId(),
-		name: 'Cemilan',
-	},
-	{
-		id: createDocId(),
-		name: 'Cemilan',
 	},
 	{
 		id: createDocId(),
