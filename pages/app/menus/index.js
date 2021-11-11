@@ -26,10 +26,22 @@ function Menus() {
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
 				<Flex alignItems='center' justifyContent='space-between' p='4'>
 					<Box fontSize='xl'>Menu</Box>
-					<SearchIcon />
 				</Flex>
 				<Tabs variant='soft-rounded' flex='1' overflowY='auto' overflowX='auto'>
 					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
+					<Box w='10' h='10' flexShrink='0' alignItems='center' justifyContent='center' mr='2' d='flex' as='button'>
+						<SearchIcon />
+					</Box>
+						<Tab
+							_active={{
+								boxShadow: 'none',
+							}}
+							_focus={{
+								boxShadow: 'none',
+							}}
+						>
+							Semua
+						</Tab>
 						{menuCategories.map((item) => (
 							<Tab
 								_active={{
@@ -52,6 +64,15 @@ function Menus() {
 						flex='1'
 						overflowY='auto'
 					>
+						<TabPanel
+							display='grid'
+							gridTemplateColumns='1fr 1fr'
+							gridGap='4'
+						>
+							{menus.map((menu) => (
+								<MenuItem menu={menu} key={menu.id} />
+							))}
+						</TabPanel>
 						{menuCategories.map((cat) => (
 							<TabPanel
 								key={cat.id}
@@ -68,10 +89,17 @@ function Menus() {
 						))}
 					</TabPanels>
 				</Tabs>
-				<Box py='4' borderTop='1px solid' borderTopColor='gray.700' overflowX='auto'>
+				<Box
+					py='4'
+					borderTop='1px solid'
+					borderTopColor='gray.700'
+					overflowX='auto'
+				>
 					<HStack w='max-content' px='4' overflowX='auto'>
 						<AddMenu />
-						<Button colorScheme='teal' size='sm' leftIcon={<AddIcon/>}>Tambah Kategori</Button>
+						<Button colorScheme='teal' size='sm' leftIcon={<AddIcon />}>
+							Tambah Kategori
+						</Button>
 					</HStack>
 				</Box>
 			</Flex>
@@ -102,7 +130,15 @@ const MenuDetail = ({ menu }) => {
 	return (
 		<Flex pb='4' flexDir='column'>
 			<Flex>
-				<Box w='50%'mr='4' pos='relative' h='28' rounded='xl' overflow='hidden' mb='4'>
+				<Box
+					w='50%'
+					mr='4'
+					pos='relative'
+					h='28'
+					rounded='xl'
+					overflow='hidden'
+					mb='4'
+				>
 					<Image
 						layout='fill'
 						objectFit='cover'
@@ -111,13 +147,19 @@ const MenuDetail = ({ menu }) => {
 					/>
 				</Box>
 				<Box>
-					<Text fontWeight='bold'textAlign='left'>{menu.name}</Text>
+					<Text fontWeight='bold' textAlign='left'>
+						{menu.name}
+					</Text>
 					<Text textAlign='left'>Rp {menu.price}</Text>
 				</Box>
 			</Flex>
 			<VStack>
-				<Button w='full' colorScheme='gray' variant='outline'>Edit</Button>
-				<Button w='full' colorScheme='gray' variant='outline'>Hapus</Button>
+				<Button w='full' colorScheme='gray' variant='outline'>
+					Edit
+				</Button>
+				<Button w='full' colorScheme='gray' variant='outline'>
+					Hapus
+				</Button>
 			</VStack>
 		</Flex>
 	)
@@ -135,9 +177,7 @@ const MenuCard = ({ menu, ...props }) => {
 				/>
 			</Box>
 			<Box py='2' px='4' bg='gray.800'>
-				<Text fontWeight='bold'>
-					{menu.name}
-				</Text>
+				<Text fontWeight='bold'>{menu.name}</Text>
 				<Text>Rp {menu.price}</Text>
 			</Box>
 		</Box>
