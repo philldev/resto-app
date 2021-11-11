@@ -1,19 +1,9 @@
-import * as React from 'react'
-import {
-	AddIcon,
-	DeleteIcon,
-	EditIcon,
-	PlusSquareIcon,
-	SearchIcon,
-} from '@chakra-ui/icons'
+import { Button } from '@chakra-ui/button'
+import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
+import { useDisclosure } from '@chakra-ui/hooks'
+import { AddIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout'
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
-import { AppPage } from '../../../components/common/AppPage'
-import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
-import { createDocId } from '../../../firebase/helper/createDocId'
-import Image from 'next/image'
-import { Button } from '@chakra-ui/button'
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -25,13 +15,16 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
-import { useDisclosure } from '@chakra-ui/hooks'
-import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { Select } from '@chakra-ui/select'
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import Image from 'next/image'
+import * as React from 'react'
+import { AppPage } from '../../../components/common/AppPage'
+import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { createDocId } from '../../../firebase/helper/createDocId'
 
 function Menus() {
 	return (
@@ -115,9 +108,7 @@ function Menus() {
 				>
 					<HStack w='max-content' px='4' overflowX='auto'>
 						<AddMenu />
-						<Button colorScheme='teal' size='sm' leftIcon={<AddIcon />}>
-							Tambah Kategori
-						</Button>
+						<AddMenuCategory />
 					</HStack>
 				</Box>
 			</Flex>
@@ -185,35 +176,43 @@ const DeleteMenu = ({ menu }) => {
 	const cancelRef = React.useRef()
 	return (
 		<>
-		<Button onClick={onOpen} leftIcon={<DeleteIcon />} colorScheme='gray' variant='outline'>
-			Hapus
-		</Button>
-		  <AlertDialog
-			isCentered
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent mx='4' bg='gray.800'>
-            <AlertDialogHeader fontSize="lg">
-              Hapus Menu <Text as='span' fontWeight='bold'>{menu.name}</Text>
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              Are you sure? You can&apos;t undo this action afterwards.
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Tidak
-              </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
-                Ya
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-			</>
+			<Button
+				onClick={onOpen}
+				leftIcon={<DeleteIcon />}
+				colorScheme='gray'
+				variant='outline'
+			>
+				Hapus
+			</Button>
+			<AlertDialog
+				isCentered
+				isOpen={isOpen}
+				leastDestructiveRef={cancelRef}
+				onClose={onClose}
+			>
+				<AlertDialogOverlay>
+					<AlertDialogContent mx='4' bg='gray.800'>
+						<AlertDialogHeader fontSize='lg'>
+							Hapus Menu{' '}
+							<Text as='span' fontWeight='bold'>
+								{menu.name}
+							</Text>
+						</AlertDialogHeader>
+						<AlertDialogBody>
+							Are you sure? You can&apos;t undo this action afterwards.
+						</AlertDialogBody>
+						<AlertDialogFooter>
+							<Button ref={cancelRef} onClick={onClose}>
+								Tidak
+							</Button>
+							<Button colorScheme='red' onClick={onClose} ml={3}>
+								Ya
+							</Button>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialog>
+		</>
 	)
 }
 
@@ -285,6 +284,60 @@ const AddMenu = () => {
 				</ModalContent>
 			</Modal>
 		</>
+	)
+}
+
+const AddMenuCategory = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<Button
+				size='sm'
+				onClick={onOpen}
+				colorScheme='teal'
+				leftIcon={<AddIcon />}
+			>
+				Tambah Kategori
+			</Button>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Tambah Kategori</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<MenuCategoryForm />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
+	)
+}
+
+const MenuCategoryForm = ({ isEditing, menu }) => {
+	return (
+		<Flex flexDir='column' pb='4'>
+			<VStack spacing='0' mb='4'>
+				<FormControl w='full'>
+					<FormLabel>Nama*</FormLabel>
+					<Input
+						w='full'
+						bg='gray.700'
+						border='none'
+						placeholder='Masukan name kategori'
+						value={menu?.name}
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+			</VStack>
+			<VStack>
+				<Button w='full' colorScheme='teal'>
+					{isEditing ? 'Edit' : 'Tambah'}
+				</Button>
+				<Button w='full' variant='outline'>
+					Batal
+				</Button>
+			</VStack>
+		</Flex>
 	)
 }
 
