@@ -104,21 +104,7 @@ function Menus() {
 									>
 										{cat.name}
 									</Box>
-									<Menu>
-										<MenuButton
-											as={IconButton}
-											icon={<DotsHorizontal h='6' w='6' />}
-											alignItems='center'
-											justifyContent='center'
-											d='flex'
-											variant='ghost'
-										/>
-
-										<MenuList>
-											<MenuItemChakra>Ubah Nama Kategori</MenuItemChakra>
-											<MenuItemChakra>Hapus Kategori</MenuItemChakra>
-										</MenuList>
-									</Menu>
+									<CategorySettings category={cat} />
 								</Flex>
 								<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
 									{menus
@@ -144,6 +130,85 @@ function Menus() {
 				</Box>
 			</Flex>
 		</AppPage>
+	)
+}
+
+const CategorySettings = ({ category }) => {
+	return (
+		<Menu>
+			<MenuButton
+				as={IconButton}
+				icon={<DotsHorizontal h='6' w='6' />}
+				alignItems='center'
+				justifyContent='center'
+				d='flex'
+				variant='ghost'
+			/>
+
+			<MenuList>
+				<EditMenuCategory category={category} />
+				<DeleteMenuCategory category={category} />
+			</MenuList>
+		</Menu>
+	)
+}
+
+const EditMenuCategory = ({ category }) => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<MenuItemChakra onClick={onOpen}>Ubah Nama Kategori</MenuItemChakra>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Edit Kategori</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<MenuCategoryForm isEditing category={category} />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
+	)
+}
+
+const DeleteMenuCategory = ({ category }) => {
+	const [isOpen, setIsOpen] = React.useState(false)
+	const onClose = () => setIsOpen(false)
+	const onOpen = () => setIsOpen(true)
+	const cancelRef = React.useRef()
+	return (
+		<>
+			<MenuItemChakra onClick={onOpen}>Hapus Kategori</MenuItemChakra>
+			<AlertDialog
+				isCentered
+				isOpen={isOpen}
+				leastDestructiveRef={cancelRef}
+				onClose={onClose}
+			>
+				<AlertDialogOverlay>
+					<AlertDialogContent mx='4' bg='gray.800'>
+						<AlertDialogHeader fontSize='lg'>
+							Hapus Kategori{' '}
+							<Text as='span' fontWeight='bold'>
+								{category.name}
+							</Text>
+						</AlertDialogHeader>
+						<AlertDialogBody>
+							Are you sure? You can&apos;t undo this action afterwards.
+						</AlertDialogBody>
+						<AlertDialogFooter>
+							<Button ref={cancelRef} onClick={onClose}>
+								Tidak
+							</Button>
+							<Button colorScheme='red' onClick={onClose} ml={3}>
+								Ya
+							</Button>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialog>
+		</>
 	)
 }
 
@@ -344,7 +409,7 @@ const AddMenuCategory = () => {
 	)
 }
 
-const MenuCategoryForm = ({ isEditing, menu }) => {
+const MenuCategoryForm = ({ isEditing, category }) => {
 	return (
 		<Flex flexDir='column' pb='4'>
 			<VStack spacing='0' mb='4'>
@@ -355,7 +420,7 @@ const MenuCategoryForm = ({ isEditing, menu }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name kategori'
-						value={menu?.name}
+						value={category?.name}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
 				</FormControl>
