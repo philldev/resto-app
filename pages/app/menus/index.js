@@ -1,9 +1,15 @@
-import { Button } from '@chakra-ui/button'
+import { Button, IconButton } from '@chakra-ui/button'
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
+import {
+	Menu,
+	MenuButton,
+	MenuList,
+	MenuItem as MenuItemChakra,
+} from '@chakra-ui/menu'
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -16,7 +22,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Select } from '@chakra-ui/select'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
@@ -24,6 +30,7 @@ import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
+import { DotsHorizontal } from '../../../components/common/icons/DotsHorizontal'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { createDocId } from '../../../firebase/helper/createDocId'
 
@@ -87,17 +94,39 @@ function Menus() {
 							))}
 						</TabPanel>
 						{menuCategories.map((cat) => (
-							<TabPanel
-								key={cat.id}
-								display='grid'
-								gridTemplateColumns='1fr 1fr'
-								gridGap='4'
-							>
-								{menus
-									.filter((i) => i.categoryId === cat.id)
-									.map((menu) => (
-										<MenuItem menu={menu} key={menu.id} />
-									))}
+							<TabPanel key={cat.id}>
+								<Flex justifyContent='space-between'>
+									<Box
+										mb='4'
+										fontSize='2xl'
+										fontWeight='bold'
+										textTransform='uppercase'
+									>
+										{cat.name}
+									</Box>
+									<Menu>
+										<MenuButton
+											as={IconButton}
+											icon={<DotsHorizontal h='6' w='6' />}
+											alignItems='center'
+											justifyContent='center'
+											d='flex'
+											variant='ghost'
+										/>
+
+										<MenuList>
+											<MenuItemChakra>Ubah Nama Kategori</MenuItemChakra>
+											<MenuItemChakra>Hapus Kategori</MenuItemChakra>
+										</MenuList>
+									</Menu>
+								</Flex>
+								<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
+									{menus
+										.filter((i) => i.categoryId === cat.id)
+										.map((menu) => (
+											<MenuItem menu={menu} key={menu.id} />
+										))}
+								</Grid>
 							</TabPanel>
 						))}
 					</TabPanels>
