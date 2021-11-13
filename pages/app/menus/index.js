@@ -43,7 +43,7 @@ function Menus() {
 					<Box fontSize='xl'>Menu</Box>
 					<CogIcon w='6' h='6' />
 				</Flex>
-				<Tabs variant='soft-rounded' flex='1' overflowY='auto' overflowX='auto'>
+				<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
 					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
 						<Box
 							w='10'

@@ -31,22 +31,12 @@ export const AuthProvider = ({ children }) => {
 		}
 	}
 
-	const addUserResto = async (newResto) => {
-		try {
-			const resto = await RestoApi.createResto({ resto : newResto, user })
-			setUser((p) => ({ ...p, restaurantList: [...p.restaurantList, resto] }))
-		} catch (error) {
-			throw error
-		}
-	}
-
 	React.useEffect(() => {
 		const unsub = onAuthStateChanged(AuthApi.fbAuth, async (user) => {
 			if (user) {
 				try {
 					const userData = await UserApi.getUser(user.uid)
-					const restaurantList = await RestoApi.getRestoList(user.uid)
-					setUser({ ...userData, restaurantList })
+					setUser(userData)
 				} catch (error) {
 					console.log(error)
 				}
@@ -64,7 +54,6 @@ export const AuthProvider = ({ children }) => {
 		signup,
 		signin,
 		signout,
-		addUserResto
 	}
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

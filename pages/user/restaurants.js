@@ -24,6 +24,7 @@ import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { useAuth } from '../../context/auth'
 import { createDocId } from '../../firebase/helper/createDocId'
 import { RestoFormResolver } from '../../utils/formSchema/restoFormSchema'
+import { useUserResto } from '../../context/Resto'
 
 const restaurants = [
 	{
@@ -42,6 +43,7 @@ const restaurants = [
 
 function RestaurantsPage() {
 	const { user } = useAuth()
+	const { restoList } = useUserResto()
 	return (
 		<Page>
 			<Flex flexDir='column' w='100vw' h='100vh' overflow='hidden'>
@@ -54,7 +56,7 @@ function RestaurantsPage() {
 				</Flex>
 				<Flex flexDir='column' flex='1' p='4' bg='gray.900' overflowY='auto'>
 					<AddResto />
-					{user.restaurantList.map((item, index) => (
+					{restoList.map((item, index) => (
 						<Flex
 							p='4'
 							w='full'
@@ -126,7 +128,6 @@ const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
 	const [isLoading, setIsLoading] = React.useState()
 	const { addUserResto } = useAuth()
 	const onSubmit = async (data) => {
-		console.log('hey')
 		try {
 			setIsLoading(true)
 			if (isEditing) {
@@ -135,7 +136,7 @@ const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
 			}
 			onSuccess()
 		} catch (error) {
-			console.log(error);
+			console.log(error)
 			setIsLoading(false)
 		}
 	}
