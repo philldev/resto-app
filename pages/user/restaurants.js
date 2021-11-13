@@ -25,6 +25,7 @@ import { useAuth } from '../../context/auth'
 import { createDocId } from '../../firebase/helper/createDocId'
 import { RestoFormResolver } from '../../utils/formSchema/restoFormSchema'
 import { useUserResto } from '../../context/Resto'
+import { useRouter } from 'next/router'
 
 const restaurants = [
 	{
@@ -43,7 +44,8 @@ const restaurants = [
 
 function RestaurantsPage() {
 	const { user } = useAuth()
-	const { restoList } = useUserResto()
+	const { restoList, selectResto } = useUserResto()
+	const router = useRouter()
 	return (
 		<Page>
 			<Flex flexDir='column' w='100vw' h='100vh' overflow='hidden'>
@@ -58,10 +60,16 @@ function RestaurantsPage() {
 					<AddResto />
 					{restoList.map((item, index) => (
 						<Flex
+							onClick={() => {
+								selectResto(item)
+								router.push('/app')
+							}}
 							p='4'
 							w='full'
 							textAlign='left'
 							as='button'
+							border='1px solid'
+							borderColor='gray.700'
 							key={index}
 							rounded='md'
 							_focus={{
