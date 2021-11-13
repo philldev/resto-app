@@ -26,6 +26,7 @@ import { createDocId } from '../../firebase/helper/createDocId'
 import { RestoFormResolver } from '../../utils/formSchema/restoFormSchema'
 import { useUserResto } from '../../context/Resto'
 import { useRouter } from 'next/router'
+import { RestoForm } from '../../components/RestoForm'
 
 const restaurants = [
 	{
@@ -121,73 +122,6 @@ const AddResto = () => {
 				</ModalContent>
 			</Modal>
 		</>
-	)
-}
-
-const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: resto,
-		resolver: RestoFormResolver,
-	})
-	const [isLoading, setIsLoading] = React.useState()
-	const { addUserResto } = useAuth()
-	const onSubmit = async (data) => {
-		try {
-			setIsLoading(true)
-			if (isEditing) {
-			} else {
-				await addUserResto(data)
-			}
-			onSuccess()
-		} catch (error) {
-			console.log(error)
-			setIsLoading(false)
-		}
-	}
-	return (
-		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
-			<VStack spacing='2' mb='4'>
-				<FormControl w='full'>
-					<FormLabel>Nama*</FormLabel>
-					<Input
-						w='full'
-						bg='gray.700'
-						border='none'
-						placeholder='Masukan name kategori'
-						{...register('name')}
-					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.name?.message}
-					</FormHelperText>
-				</FormControl>
-				<FormControl w='full'>
-					<FormLabel>Alamat*</FormLabel>
-					<Textarea
-						w='full'
-						bg='gray.700'
-						border='none'
-						placeholder='Masukan name kategori'
-						{...register('address')}
-					/>
-
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.address?.message}
-					</FormHelperText>
-				</FormControl>
-			</VStack>
-			<VStack>
-				<Button type='submit' isLoading={isLoading} w='full' colorScheme='teal'>
-					{isEditing ? 'Edit' : 'Tambah'}
-				</Button>
-				<Button onClick={onCancel} w='full' variant='outline'>
-					Batal
-				</Button>
-			</VStack>
-		</Flex>
 	)
 }
 

@@ -32,6 +32,7 @@ import { AppPage } from '../../../components/common/AppPage'
 import { BackBtn } from '../../../components/common/BackBtn'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import { DotsHorizontal } from '../../../components/common/icons/DotsHorizontal'
+import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { createDocId } from '../../../firebase/helper/createDocId'
 
@@ -40,7 +41,10 @@ function Menus() {
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
 				<Flex alignItems='center' justifyContent='space-between' p='4' pb='0'>
-					<Box fontSize='xl'>Menu</Box>
+					<Flex alignItems='center'>
+						<MenuIcon mr='2' flex='1' w='6' h='6' />
+						<Text fontSize='xl'>Menu</Text> 
+					</Flex>
 					<CogIcon w='6' h='6' />
 				</Flex>
 				<Tabs variant='soft-rounded' flex='1' overflow='hidden'>

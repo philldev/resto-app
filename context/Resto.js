@@ -29,6 +29,7 @@ export const UserRestoProvider = ({ children }) => {
 			try {
 				const restaurantList = await RestoApi.getRestoList(user.id)
 				setRestoList(restaurantList)
+				setCurrentResto(null)
 				setInitLoading(false)
 			} catch (error) {
 				console.log(error)
