@@ -6,9 +6,7 @@ import { Input } from '@chakra-ui/input'
 import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
 	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem as MenuItemChakra,
+	MenuButton, MenuItem as MenuItemChakra, MenuList
 } from '@chakra-ui/menu'
 import {
 	AlertDialog,
@@ -22,33 +20,38 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
 import { Select } from '@chakra-ui/select'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
-import { BackBtn } from '../../../components/common/BackBtn'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import { DotsHorizontal } from '../../../components/common/icons/DotsHorizontal'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
-import { createDocId } from '../../../firebase/helper/createDocId'
 
 function Menus() {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-				<Flex alignItems='center' justifyContent='space-between' p='4' pb='0'>
+				<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
 					<Flex alignItems='center'>
 						<MenuIcon mr='2' flex='1' w='6' h='6' />
-						<Text fontSize='xl'>Menu</Text> 
+						<Text fontSize='xl'>Menu</Text>
 					</Flex>
 					<CogIcon w='6' h='6' />
 				</Flex>
 				<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
-					<TabList flex='0' overflowX='auto' overflowY='hidden' p='2' px='4'>
+					<TabList
+						alignItems='center'
+						flex='0'
+						overflowX='auto'
+						overflowY='hidden'
+						p='2'
+						px='4'
+					>
 						<Box
 							w='10'
 							h='10'
@@ -71,6 +74,11 @@ function Menus() {
 						>
 							Semua
 						</Tab>
+						{menuCategories.length === 0 && (
+							<Text ml='4' color='gray.400'>
+								Belum ada kategori
+							</Text>
+						)}
 						{menuCategories.map((item) => (
 							<Tab
 								_active={{
@@ -94,6 +102,7 @@ function Menus() {
 						overflowY='auto'
 					>
 						<TabPanel display='grid' gridTemplateColumns='1fr 1fr' gridGap='4'>
+							{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
 							{menus.map((menu) => (
 								<MenuItem menu={menu} key={menu.id} />
 							))}
@@ -367,6 +376,7 @@ const AddMenu = () => {
 	return (
 		<>
 			<Button
+			disabled={menuCategories.length === 0}
 				size='sm'
 				onClick={onOpen}
 				colorScheme='teal'
@@ -519,141 +529,141 @@ const MenuForm = ({ isEditing, menu }) => {
 }
 
 const menuCategories = [
-	{
-		id: createDocId(),
-		name: 'Makanan',
-	},
-	{
-		id: createDocId(),
-		name: 'Minuman',
-	},
-	{
-		id: createDocId(),
-		name: 'Cemilan',
-	},
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Makanan',
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Minuman',
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Cemilan',
+	// },
 ]
 
 const menus = [
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[0].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[0].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[0].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[0].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[0].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[1].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[1].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[1].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[1].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[1].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[2].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[2].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[2].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[2].id,
-	},
-	{
-		id: createDocId(),
-		name: 'Food 1',
-		price: 10000,
-		imageURL:
-			'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-		categoryId: menuCategories[2].id,
-	},
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[0].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[0].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[0].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[0].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[0].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[1].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[1].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[1].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[1].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[1].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[2].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[2].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[2].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[2].id,
+	// },
+	// {
+	// 	id: createDocId(),
+	// 	name: 'Food 1',
+	// 	price: 10000,
+	// 	imageURL:
+	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
+	// 	categoryId: menuCategories[2].id,
+	// },
 ]
 
 export default withProtectedRoute(Menus)
