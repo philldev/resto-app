@@ -11,9 +11,12 @@ function UserPage() {
 				<Flex alignItems='center' justifyContent='space-between' p='4' pb='0'>
 					<Flex alignItems='center'>
 						<BackBtn to='/user' mr='2' />
-						<Box fontSize='xl'>User</Box>
+						<Box fontSize='xl'>Settings</Box>
 					</Flex>
 					<CogIcon w='6' h='6' />
+				</Flex>
+				<Flex flex='1'>
+					
 				</Flex>
 			</Flex>
 		</Page>
