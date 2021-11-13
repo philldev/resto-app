@@ -11,7 +11,7 @@ export default function useProtectedRoute() {
 			router.push('/login')
 		}
 		if (
-			!user.restaurantList &&
+			!user?.restaurantList &&
 			!router.pathname.includes('/user/restaurants') &&
 			!router.pathname.includes('/user')
 		) {

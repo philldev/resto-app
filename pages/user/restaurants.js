@@ -1,6 +1,18 @@
 import { Button } from '@chakra-ui/button'
+import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
+import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon } from '@chakra-ui/icons'
-import { Box, Flex, Text } from '@chakra-ui/layout'
+import { Input } from '@chakra-ui/input'
+import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import {
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
+} from '@chakra-ui/modal'
+import { Textarea } from '@chakra-ui/textarea'
 import { BackBtn } from '../../components/common/BackBtn'
 import { CogIcon } from '../../components/common/icons/CogIcon'
 import { HomeIcon } from '../../components/common/icons/HomeIcon'
@@ -37,9 +49,7 @@ function RestaurantsPage() {
 					<CogIcon w='6' h='6' />
 				</Flex>
 				<Flex flexDir='column' flex='1' p='4' bg='gray.900' overflowY='auto'>
-					<Button minH='10' flexShrink='0' mb='4' leftIcon={<AddIcon />}>
-						Tambah Restoran
-					</Button>
+					<AddResto />
 					{restaurants.map((item, index) => (
 						<Flex
 							p='4'
@@ -70,6 +80,72 @@ function RestaurantsPage() {
 				</Flex>
 			</Flex>
 		</Page>
+	)
+}
+
+const AddResto = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	return (
+		<>
+			<Button
+				onClick={onOpen}
+				minH='10'
+				flexShrink='0'
+				mb='4'
+				leftIcon={<AddIcon />}
+			>
+				Tambah Restoran
+			</Button>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Tambah Resto</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<RestoForm />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
+	)
+}
+
+const RestoForm = ({ isEditing, resto }) => {
+	return (
+		<Flex flexDir='column' pb='4'>
+			<VStack spacing='0' mb='4'>
+				<FormControl w='full'>
+					<FormLabel>Nama*</FormLabel>
+					<Input
+						w='full'
+						bg='gray.700'
+						border='none'
+						placeholder='Masukan name kategori'
+						value={resto?.name}
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+				<FormControl w='full'>
+					<FormLabel>Alamat*</FormLabel>
+					<Textarea
+						w='full'
+						bg='gray.700'
+						border='none'
+						placeholder='Masukan name kategori'
+						value={resto?.address}
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+			</VStack>
+			<VStack>
+				<Button w='full' colorScheme='teal'>
+					{isEditing ? 'Edit' : 'Tambah'}
+				</Button>
+				<Button w='full' variant='outline'>
+					Batal
+				</Button>
+			</VStack>
+		</Flex>
 	)
 }
 
