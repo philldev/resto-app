@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ChevronLeftIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
-import { Box, Flex, Text } from '@chakra-ui/layout'
+import { Flex, Text } from '@chakra-ui/layout'
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -16,6 +16,8 @@ import {
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
+import { useRouter } from 'next/router'
+import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
 import { HomeIcon } from '../../../components/common/icons/HomeIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
@@ -24,6 +26,7 @@ import { useUserResto } from '../../../context/Resto'
 
 function Restaurant() {
 	const { currentResto } = useUserResto()
+	const router = useRouter()
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flexDir='column' flex='1'>
@@ -38,7 +41,7 @@ function Restaurant() {
 						<Flex
 							flexDir='column'
 							p='4'
-							bg='gray.800'
+							bg='gray.700'
 							borderBottom='5px solid'
 							borderBottomColor='teal.500'
 						>
@@ -50,6 +53,9 @@ function Restaurant() {
 						<EditResto resto={currentResto} />
 						<DeleteResto resto={currentResto} />
 						<Button
+							onClick={() => {
+								router.push('/user/restaurants')
+							}}
 							variant='ghost'
 							rounded='none'
 							textAlign='left'
