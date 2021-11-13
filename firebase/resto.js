@@ -1,4 +1,5 @@
 import {
+	collection,
 	doc,
 	getDocs,
 	onSnapshot,
@@ -7,18 +8,20 @@ import {
 	where,
 } from '@firebase/firestore'
 import db from './firestore'
+import { createDocId } from './helper/createDocId'
 
-const createRestoRef = () => doc(db, 'users', createDocId())
+const createRestoRef = () => doc(db, 'restaurants', createDocId())
 
 const createResto = async ({ resto, user }) => {
 	try {
 		const restoRef = createRestoRef()
 		const restoData = {
-			id: restoRef.id,
 			...resto,
+			id: restoRef.id,
 			userId: user.id,
 		}
 		await setDoc(restoRef, restoData)
+		return restoData
 	} catch (error) {
 		throw error
 	}

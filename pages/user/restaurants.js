@@ -1,4 +1,6 @@
 import { Button } from '@chakra-ui/button'
+import * as RestoApi from '../../firebase/resto'
+import * as React from 'react'
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon } from '@chakra-ui/icons'
@@ -13,6 +15,7 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Textarea } from '@chakra-ui/textarea'
+import { useForm } from 'react-hook-form'
 import { BackBtn } from '../../components/common/BackBtn'
 import { CogIcon } from '../../components/common/icons/CogIcon'
 import { HomeIcon } from '../../components/common/icons/HomeIcon'
@@ -20,6 +23,7 @@ import Page from '../../components/common/Page'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { useAuth } from '../../context/auth'
 import { createDocId } from '../../firebase/helper/createDocId'
+import { RestoFormResolver } from '../../utils/formSchema/restoFormSchema'
 
 const restaurants = [
 	{
@@ -50,7 +54,7 @@ function RestaurantsPage() {
 				</Flex>
 				<Flex flexDir='column' flex='1' p='4' bg='gray.900' overflowY='auto'>
 					<AddResto />
-					{restaurants.map((item, index) => (
+					{user.restaurantList.map((item, index) => (
 						<Flex
 							p='4'
 							w='full'
@@ -102,7 +106,7 @@ const AddResto = () => {
 					<ModalHeader>Tambah Resto</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<RestoForm />
+						<RestoForm onSuccess={onClose} onCancel={onClose} />
 					</ModalBody>
 				</ModalContent>
 			</Modal>
@@ -110,10 +114,34 @@ const AddResto = () => {
 	)
 }
 
-const RestoForm = ({ isEditing, resto }) => {
+const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: resto,
+		resolver: RestoFormResolver,
+	})
+	const [isLoading, setIsLoading] = React.useState()
+	const { addUserResto } = useAuth()
+	const onSubmit = async (data) => {
+		console.log('hey')
+		try {
+			setIsLoading(true)
+			if (isEditing) {
+			} else {
+				await addUserResto(data)
+			}
+			onSuccess()
+		} catch (error) {
+			console.log(error);
+			setIsLoading(false)
+		}
+	}
 	return (
-		<Flex flexDir='column' pb='4'>
-			<VStack spacing='0' mb='4'>
+		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
+			<VStack spacing='2' mb='4'>
 				<FormControl w='full'>
 					<FormLabel>Nama*</FormLabel>
 					<Input
@@ -121,9 +149,11 @@ const RestoForm = ({ isEditing, resto }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name kategori'
-						value={resto?.name}
+						{...register('name')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.name?.message}
+					</FormHelperText>
 				</FormControl>
 				<FormControl w='full'>
 					<FormLabel>Alamat*</FormLabel>
@@ -132,16 +162,19 @@ const RestoForm = ({ isEditing, resto }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name kategori'
-						value={resto?.address}
+						{...register('address')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.address?.message}
+					</FormHelperText>
 				</FormControl>
 			</VStack>
 			<VStack>
-				<Button w='full' colorScheme='teal'>
+				<Button type='submit' isLoading={isLoading} w='full' colorScheme='teal'>
 					{isEditing ? 'Edit' : 'Tambah'}
 				</Button>
-				<Button w='full' variant='outline'>
+				<Button onClick={onCancel} w='full' variant='outline'>
 					Batal
 				</Button>
 			</VStack>

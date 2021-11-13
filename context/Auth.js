@@ -2,6 +2,7 @@ import { onAuthStateChanged } from '@firebase/auth'
 import * as React from 'react'
 import * as AuthApi from '../firebase/auth'
 import * as UserApi from '../firebase/user'
+import * as RestoApi from '../firebase/resto'
 
 const AuthContext = React.createContext(null)
 
@@ -29,12 +30,23 @@ export const AuthProvider = ({ children }) => {
 			throw error
 		}
 	}
+
+	const addUserResto = async (newResto) => {
+		try {
+			const resto = await RestoApi.createResto({ resto : newResto, user })
+			setUser((p) => ({ ...p, restaurantList: [...p.restaurantList, resto] }))
+		} catch (error) {
+			throw error
+		}
+	}
+
 	React.useEffect(() => {
 		const unsub = onAuthStateChanged(AuthApi.fbAuth, async (user) => {
 			if (user) {
 				try {
 					const userData = await UserApi.getUser(user.uid)
-					setUser(userData)
+					const restaurantList = await RestoApi.getRestoList(user.uid)
+					setUser({ ...userData, restaurantList })
 				} catch (error) {
 					console.log(error)
 				}
@@ -52,6 +64,7 @@ export const AuthProvider = ({ children }) => {
 		signup,
 		signin,
 		signout,
+		addUserResto
 	}
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
