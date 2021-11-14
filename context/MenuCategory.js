@@ -18,6 +18,32 @@ export const MenuCategoryProvider = ({ children }) => {
 		}
 	}
 
+	const updateMenuCategory = async (menuCategory) => {
+		try {
+			await MenuApi.updateMenuCategory({
+				menuCategory,
+				restoId: currentResto.id,
+			})
+			setMenuCategories((p) =>
+				p.map((item) => (item.id === menuCategory.id ? menuCategory : item))
+			)
+		} catch (error) {
+			throw error
+		}
+	}
+
+	const deleteMenuCategory = async (menuCategory) => {
+		try {
+			await MenuApi.deleteMenuCategory({
+				menuCategory,
+				restoId: currentResto.id,
+			})
+			setMenuCategories((p) => p.filter((item) => item.id !== menuCategory.id))
+		} catch (error) {
+			throw error
+		}
+	}
+
 	React.useEffect(() => {
 		if (currentResto) {
 			const fetchData = async () => {
@@ -37,6 +63,8 @@ export const MenuCategoryProvider = ({ children }) => {
 		menuCategories,
 		initLoading,
 		addMenuCategory,
+		updateMenuCategory,
+		deleteMenuCategory,
 	}
 
 	return (

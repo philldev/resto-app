@@ -90,28 +90,7 @@ function Menus() {
 							</Tab>
 							<MenuCategoryTabList />
 						</TabList>
-						<TabPanels
-							bg='gray.900'
-							d='flex'
-							h='calc(100% - 56px)'
-							flexDir='column'
-							flex='1'
-							overflowY='auto'
-						>
-							<TabPanel
-								display='grid'
-								gridTemplateColumns='1fr 1fr'
-								gridGap='4'
-							>
-								{menus.length === 0 && (
-									<Text color='gray.500'>Belum ada menu</Text>
-								)}
-								{menus.map((menu) => (
-									<MenuItem menu={menu} key={menu.id} />
-								))}
-							</TabPanel>
-							<MenuCategoryPanelList />
-						</TabPanels>
+						<MenuPanels />
 					</Tabs>
 					<Box
 						py='4'
@@ -130,11 +109,24 @@ function Menus() {
 	)
 }
 
-const MenuCategoryPanelList = () => {
+const MenuPanels = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	if (initLoading) return null
 	return (
-		<>
+		<TabPanels
+			bg='gray.900'
+			d='flex'
+			h='calc(100% - 56px)'
+			flexDir='column'
+			flex='1'
+			overflowY='auto'
+		>
+			<TabPanel display='grid' gridTemplateColumns='1fr 1fr' gridGap='4'>
+				{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
+				{menus.map((menu) => (
+					<MenuItem menu={menu} key={menu.id} />
+				))}
+			</TabPanel>
 			{menuCategories.map((cat) => (
 				<TabPanel key={cat.id}>
 					<Flex justifyContent='space-between'>
@@ -157,7 +149,7 @@ const MenuCategoryPanelList = () => {
 					</Grid>
 				</TabPanel>
 			))}
-		</>
+		</TabPanels>
 	)
 }
 
@@ -233,6 +225,19 @@ const DeleteMenuCategory = ({ category }) => {
 	const onClose = () => setIsOpen(false)
 	const onOpen = () => setIsOpen(true)
 	const cancelRef = React.useRef()
+	const [isLoading, setIsLoading] = React.useState(false)
+	const { deleteMenuCategory } = useMenuCategory()
+
+	const onDelete = async () => {
+		try {
+			setIsLoading(true)
+			await deleteMenuCategory(category)
+			onClose()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
 	return (
 		<>
 			<MenuItemChakra onClick={onOpen}>Hapus Kategori</MenuItemChakra>
@@ -257,7 +262,7 @@ const DeleteMenuCategory = ({ category }) => {
 							<Button ref={cancelRef} onClick={onClose}>
 								Tidak
 							</Button>
-							<Button colorScheme='red' onClick={onClose} ml={3}>
+							<Button colorScheme='red' onClick={onDelete} ml={3}>
 								Ya
 							</Button>
 						</AlertDialogFooter>
@@ -467,7 +472,7 @@ const AddMenuCategory = () => {
 }
 
 const MenuCategoryForm = ({ isEditing, category, onSuccess, onCancel }) => {
-	const { addMenuCategory } = useMenuCategory()
+	const { addMenuCategory, updateMenuCategory } = useMenuCategory()
 	const {
 		register,
 		handleSubmit,
@@ -481,6 +486,7 @@ const MenuCategoryForm = ({ isEditing, category, onSuccess, onCancel }) => {
 		try {
 			setIsLoading(true)
 			if (isEditing) {
+				await updateMenuCategory(data)
 			} else {
 				await addMenuCategory(data)
 			}
