@@ -24,6 +24,17 @@ export const UserRestoProvider = ({ children }) => {
 		}
 	}
 
+	const updateUserResto = async (restoId, updatedResto) => {
+		try {
+			await RestoApi.updateResto({ restoId, updatedResto })
+			setRestoList((p) =>
+				p.map((resto) => (resto.id === restoId ? updatedResto : resto))
+			)
+		} catch (error) {
+			throw error
+		}
+	}
+
 	React.useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -47,6 +58,7 @@ export const UserRestoProvider = ({ children }) => {
 		currentResto,
 		restoList,
 		initLoading,
+		updateUserResto,
 	}
 
 	return (

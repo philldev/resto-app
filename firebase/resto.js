@@ -11,6 +11,7 @@ import db from './firestore'
 import { createDocId } from './helper/createDocId'
 
 const createRestoRef = () => doc(db, 'restaurants', createDocId())
+const getRestoRef = (id) => doc(db, 'restaurants', id)
 
 const createResto = async ({ resto, user }) => {
 	try {
@@ -22,6 +23,16 @@ const createResto = async ({ resto, user }) => {
 		}
 		await setDoc(restoRef, restoData)
 		return restoData
+	} catch (error) {
+		throw error
+	}
+}
+
+const updateResto = async ({ restoId, updatedResto }) => {
+	try {
+		const restoRef = getRestoRef(restoId)
+		await setDoc(restoRef, updatedResto, { merge: true })
+		return updatedResto
 	} catch (error) {
 		throw error
 	}
@@ -58,4 +69,4 @@ const getRestoList = async (
 	}
 }
 
-export { createResto, getRestoList }
+export { createResto, getRestoList, updateResto }
