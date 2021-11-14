@@ -38,6 +38,18 @@ export const UserRestoProvider = ({ children }) => {
 		}
 	}
 
+	const deleteUserResto = async (restoId) => {
+		try {
+			await RestoApi.deleteResto({ restoId })
+			setRestoList((p) => p.filter((resto) => resto.id !== restoId))
+			if (currentResto.id === restoId) {
+				setCurrentResto(null)
+			}
+		} catch (error) {
+			throw error
+		}
+	}
+
 	React.useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -62,6 +74,7 @@ export const UserRestoProvider = ({ children }) => {
 		restoList,
 		initLoading,
 		updateUserResto,
+		deleteUserResto,
 	}
 
 	return (

@@ -27,7 +27,7 @@ import { useUserResto } from '../../../context/Resto'
 function Restaurant() {
 	const { currentResto } = useUserResto()
 	const router = useRouter()
-	if(!currentResto) return null
+	if (!currentResto) return null
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flexDir='column' flex='1'>
@@ -77,6 +77,20 @@ const DeleteResto = ({ resto }) => {
 	const onClose = () => setIsOpen(false)
 	const onOpen = () => setIsOpen(true)
 	const cancelRef = React.useRef()
+	const { deleteUserResto, currentResto } = useUserResto()
+	const [isLoading, setIsLoading] = React.useState(false)
+
+	const onDelete = async () => {
+		setIsLoading(true)
+		try {
+			await deleteUserResto(resto.id)
+			if (currentResto.id !== resto.id) onClose()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
+
 	return (
 		<>
 			<Button
@@ -107,10 +121,15 @@ const DeleteResto = ({ resto }) => {
 							Are you sure? You can&apos;t undo this action afterwards.
 						</AlertDialogBody>
 						<AlertDialogFooter>
-							<Button ref={cancelRef} onClick={onClose}>
+							<Button isLoading={isLoading} ref={cancelRef} onClick={onClose}>
 								Tidak
 							</Button>
-							<Button colorScheme='red' onClick={onClose} ml={3}>
+							<Button
+								isLoading={isLoading}
+								colorScheme='red'
+								onClick={onDelete}
+								ml={3}
+							>
 								Ya
 							</Button>
 						</AlertDialogFooter>

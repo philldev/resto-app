@@ -1,5 +1,6 @@
 import {
 	collection,
+	deleteDoc,
 	doc,
 	getDocs,
 	onSnapshot,
@@ -38,6 +39,15 @@ const updateResto = async ({ restoId, updatedResto }) => {
 	}
 }
 
+const deleteResto = async ({ restoId }) => {
+	try {
+		const restoRef = getRestoRef(restoId)
+		await deleteDoc(restoRef)
+	} catch (error) {
+		throw error
+	}
+}
+
 const getRestoList = async (
 	userId,
 	{ listen = false, callback = (restos = []) => {} } = {}
@@ -69,4 +79,4 @@ const getRestoList = async (
 	}
 }
 
-export { createResto, getRestoList, updateResto }
+export { createResto, getRestoList, updateResto, deleteResto }
