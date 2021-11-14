@@ -6,6 +6,7 @@ import { Textarea } from '@chakra-ui/textarea'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../context/auth'
+import { useUserResto } from '../context/Resto'
 import { RestoFormResolver } from '../utils/formSchema/restoFormSchema'
 
 export const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
@@ -18,11 +19,12 @@ export const RestoForm = ({ isEditing, resto, onSuccess, onCancel }) => {
 		resolver: RestoFormResolver,
 	})
 	const [isLoading, setIsLoading] = React.useState()
-	const { addUserResto } = useAuth()
+	const { addUserResto, updateUserResto } = useUserResto()
 	const onSubmit = async (data) => {
 		try {
 			setIsLoading(true)
 			if (isEditing) {
+				updateUserResto(resto.id, data)
 			} else {
 				await addUserResto(data)
 			}

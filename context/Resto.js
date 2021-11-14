@@ -30,6 +30,9 @@ export const UserRestoProvider = ({ children }) => {
 			setRestoList((p) =>
 				p.map((resto) => (resto.id === restoId ? updatedResto : resto))
 			)
+			if (currentResto.id === restoId) {
+				setCurrentResto(updatedResto)
+			}
 		} catch (error) {
 			throw error
 		}

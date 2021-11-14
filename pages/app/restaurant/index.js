@@ -27,6 +27,7 @@ import { useUserResto } from '../../../context/Resto'
 function Restaurant() {
 	const { currentResto } = useUserResto()
 	const router = useRouter()
+	if(!currentResto) return null
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flexDir='column' flex='1'>
