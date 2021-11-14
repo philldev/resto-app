@@ -39,6 +39,7 @@ const updateResto = async ({ restoId, updatedResto }) => {
 	}
 }
 
+
 const deleteResto = async ({ restoId }) => {
 	try {
 		const restoRef = getRestoRef(restoId)

@@ -6,7 +6,9 @@ import { Input } from '@chakra-ui/input'
 import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
 	Menu,
-	MenuButton, MenuItem as MenuItemChakra, MenuList
+	MenuButton,
+	MenuItem as MenuItemChakra,
+	MenuList,
 } from '@chakra-ui/menu'
 import {
 	AlertDialog,
@@ -20,66 +22,62 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Select } from '@chakra-ui/select'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Image from 'next/image'
 import * as React from 'react'
+import { useForm } from 'react-hook-form'
 import { AppPage } from '../../../components/common/AppPage'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import { DotsHorizontal } from '../../../components/common/icons/DotsHorizontal'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import {
+	MenuCategoryProvider,
+	useMenuCategory,
+} from '../../../context/MenuCategory'
+import { useUserResto } from '../../../context/Resto'
+import { MenuCategoryResolver } from '../../../utils/formSchema/menuCategorySchema'
 
 function Menus() {
+	const { currentResto } = useUserResto()
+	if (!currentResto) return null
 	return (
 		<AppPage displayHeader={false}>
-			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-				<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
-					<Flex alignItems='center'>
-						<MenuIcon mr='2' flex='1' w='6' h='6' />
-						<Text fontSize='xl'>Menu</Text>
-					</Flex>
-					<CogIcon w='6' h='6' />
-				</Flex>
-				<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
-					<TabList
-						alignItems='center'
-						flex='0'
-						overflowX='auto'
-						overflowY='hidden'
-						p='2'
-						px='4'
-					>
-						<Box
-							w='10'
-							h='10'
-							flexShrink='0'
-							alignItems='center'
-							justifyContent='center'
-							mr='2'
-							d='flex'
-							as='button'
-						>
-							<SearchIcon />
-						</Box>
-						<Tab
-							_active={{
-								boxShadow: 'none',
-							}}
-							_focus={{
-								boxShadow: 'none',
-							}}
-						>
-							Semua
-						</Tab>
-						{menuCategories.length === 0 && (
-							<Text ml='4' color='gray.400'>
-								Belum ada kategori
+			<MenuCategoryProvider>
+				<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
+					<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
+						<Flex alignItems='center'>
+							<MenuIcon mr='2' flex='1' w='6' h='6' />
+							<Text fontSize='xl'>
+								<strong>{currentResto.name}</strong> Menu
 							</Text>
-						)}
-						{menuCategories.map((item) => (
+						</Flex>
+						<CogIcon w='6' h='6' />
+					</Flex>
+					<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
+						<TabList
+							alignItems='center'
+							flex='0'
+							overflowX='auto'
+							overflowY='hidden'
+							p='2'
+							px='4'
+						>
+							<Box
+								w='10'
+								h='10'
+								flexShrink='0'
+								alignItems='center'
+								justifyContent='center'
+								mr='2'
+								d='flex'
+								as='button'
+							>
+								<SearchIcon />
+							</Box>
 							<Tab
 								_active={{
 									boxShadow: 'none',
@@ -87,63 +85,107 @@ function Menus() {
 								_focus={{
 									boxShadow: 'none',
 								}}
-								key={item.id}
 							>
-								{item.name}
+								Semua
 							</Tab>
-						))}
-					</TabList>
-					<TabPanels
-						bg='gray.900'
-						d='flex'
-						h='calc(100% - 56px)'
-						flexDir='column'
-						flex='1'
-						overflowY='auto'
+							<MenuCategoryTabList />
+						</TabList>
+						<TabPanels
+							bg='gray.900'
+							d='flex'
+							h='calc(100% - 56px)'
+							flexDir='column'
+							flex='1'
+							overflowY='auto'
+						>
+							<TabPanel
+								display='grid'
+								gridTemplateColumns='1fr 1fr'
+								gridGap='4'
+							>
+								{menus.length === 0 && (
+									<Text color='gray.500'>Belum ada menu</Text>
+								)}
+								{menus.map((menu) => (
+									<MenuItem menu={menu} key={menu.id} />
+								))}
+							</TabPanel>
+							<MenuCategoryPanelList />
+						</TabPanels>
+					</Tabs>
+					<Box
+						py='4'
+						borderTop='1px solid'
+						borderTopColor='gray.700'
+						overflowX='auto'
 					>
-						<TabPanel display='grid' gridTemplateColumns='1fr 1fr' gridGap='4'>
-							{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
-							{menus.map((menu) => (
+						<HStack w='max-content' px='4' overflowX='auto'>
+							<AddMenu />
+							<AddMenuCategory />
+						</HStack>
+					</Box>
+				</Flex>
+			</MenuCategoryProvider>
+		</AppPage>
+	)
+}
+
+const MenuCategoryPanelList = () => {
+	const { menuCategories, initLoading } = useMenuCategory()
+	if (initLoading) return null
+	return (
+		<>
+			{menuCategories.map((cat) => (
+				<TabPanel key={cat.id}>
+					<Flex justifyContent='space-between'>
+						<Box
+							mb='4'
+							fontSize='2xl'
+							fontWeight='bold'
+							textTransform='uppercase'
+						>
+							{cat.name}
+						</Box>
+						<CategorySettings category={cat} />
+					</Flex>
+					<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
+						{menus
+							.filter((i) => i.categoryId === cat.id)
+							.map((menu) => (
 								<MenuItem menu={menu} key={menu.id} />
 							))}
-						</TabPanel>
-						{menuCategories.map((cat) => (
-							<TabPanel key={cat.id}>
-								<Flex justifyContent='space-between'>
-									<Box
-										mb='4'
-										fontSize='2xl'
-										fontWeight='bold'
-										textTransform='uppercase'
-									>
-										{cat.name}
-									</Box>
-									<CategorySettings category={cat} />
-								</Flex>
-								<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
-									{menus
-										.filter((i) => i.categoryId === cat.id)
-										.map((menu) => (
-											<MenuItem menu={menu} key={menu.id} />
-										))}
-								</Grid>
-							</TabPanel>
-						))}
-					</TabPanels>
-				</Tabs>
-				<Box
-					py='4'
-					borderTop='1px solid'
-					borderTopColor='gray.700'
-					overflowX='auto'
+					</Grid>
+				</TabPanel>
+			))}
+		</>
+	)
+}
+
+const MenuCategoryTabList = () => {
+	const { menuCategories, initLoading } = useMenuCategory()
+
+	if (initLoading) return null
+	return (
+		<>
+			{menuCategories.length === 0 && (
+				<Text ml='4' color='gray.400'>
+					Belum ada kategori
+				</Text>
+			)}
+			{menuCategories.map((item) => (
+				<Tab
+					_active={{
+						boxShadow: 'none',
+					}}
+					_focus={{
+						boxShadow: 'none',
+					}}
+					key={item.id}
 				>
-					<HStack w='max-content' px='4' overflowX='auto'>
-						<AddMenu />
-						<AddMenuCategory />
-					</HStack>
-				</Box>
-			</Flex>
-		</AppPage>
+					{item.name}
+				</Tab>
+			))}
+		</>
 	)
 }
 
@@ -376,7 +418,7 @@ const AddMenu = () => {
 	return (
 		<>
 			<Button
-			disabled={menuCategories.length === 0}
+				disabled={menuCategories.length === 0}
 				size='sm'
 				onClick={onOpen}
 				colorScheme='teal'
@@ -416,7 +458,7 @@ const AddMenuCategory = () => {
 					<ModalHeader>Tambah Kategori</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<MenuCategoryForm />
+						<MenuCategoryForm onSuccess={onClose} onCancel={onClose} />
 					</ModalBody>
 				</ModalContent>
 			</Modal>
@@ -424,9 +466,32 @@ const AddMenuCategory = () => {
 	)
 }
 
-const MenuCategoryForm = ({ isEditing, category }) => {
+const MenuCategoryForm = ({ isEditing, category, onSuccess, onCancel }) => {
+	const { addMenuCategory } = useMenuCategory()
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: category,
+		resolver: MenuCategoryResolver,
+	})
+	const [isLoading, setIsLoading] = React.useState()
+	const onSubmit = async (data) => {
+		try {
+			setIsLoading(true)
+			if (isEditing) {
+			} else {
+				await addMenuCategory(data)
+			}
+			onSuccess()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
 	return (
-		<Flex flexDir='column' pb='4'>
+		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
 			<VStack spacing='0' mb='4'>
 				<FormControl w='full'>
 					<FormLabel>Nama*</FormLabel>
@@ -435,16 +500,23 @@ const MenuCategoryForm = ({ isEditing, category }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name kategori'
-						value={category?.name}
+						{...register('name')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.name?.message}
+					</FormHelperText>
 				</FormControl>
 			</VStack>
 			<VStack>
-				<Button w='full' colorScheme='teal'>
+				<Button isLoading={isLoading} type='submit' w='full' colorScheme='teal'>
 					{isEditing ? 'Edit' : 'Tambah'}
 				</Button>
-				<Button w='full' variant='outline'>
+				<Button
+					isLoading={isLoading}
+					onClick={onCancel}
+					w='full'
+					variant='outline'
+				>
 					Batal
 				</Button>
 			</VStack>
