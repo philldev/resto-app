@@ -38,9 +38,13 @@ import {
 	MenuCategoryProvider,
 	useMenuCategory,
 } from '../../../context/MenuCategory'
-import { MenusProvider } from '../../../context/Menus'
+import { MenusProvider, useMenus } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
 import { MenuCategoryResolver } from '../../../utils/formSchema/menuCategorySchema'
+import { MenuResolver } from '../../../utils/formSchema/menuSchema'
+
+const PLACEHOLDER_MENU_IMG =
+	'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80'
 
 function Menus() {
 	const { currentResto } = useUserResto()
@@ -119,6 +123,7 @@ function Menus() {
 
 const MenuPanels = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
+	const { menus } = useMenus()
 	if (initLoading) return null
 	return (
 		<TabPanels
@@ -270,7 +275,12 @@ const DeleteMenuCategory = ({ category }) => {
 							<Button ref={cancelRef} onClick={onClose}>
 								Tidak
 							</Button>
-							<Button colorScheme='red' onClick={onDelete} ml={3}>
+							<Button
+								isLoading={isLoading}
+								colorScheme='red'
+								onClick={onDelete}
+								ml={3}
+							>
 								Ya
 							</Button>
 						</AlertDialogFooter>
@@ -315,7 +325,7 @@ const MenuDetail = ({ menu }) => {
 					<Image
 						layout='fill'
 						objectFit='cover'
-						src={menu.imageURL}
+						src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
 						alt={menu.name}
 					/>
 				</Box>
@@ -339,6 +349,19 @@ const DeleteMenu = ({ menu }) => {
 	const onClose = () => setIsOpen(false)
 	const onOpen = () => setIsOpen(true)
 	const cancelRef = React.useRef()
+	const { deleteMenu } = useMenus()
+	const [isLoading, setIsLoading] = React.useState(false)
+	const onDelete = async () => {
+		try {
+			setIsLoading(true)
+			await deleteMenu(menu)
+			onClose()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
+
 	return (
 		<>
 			<Button
@@ -370,7 +393,12 @@ const DeleteMenu = ({ menu }) => {
 							<Button ref={cancelRef} onClick={onClose}>
 								Tidak
 							</Button>
-							<Button colorScheme='red' onClick={onClose} ml={3}>
+							<Button
+								onClick={onDelete}
+								isLoading={isLoading}
+								colorScheme='red'
+								ml={3}
+							>
 								Ya
 							</Button>
 						</AlertDialogFooter>
@@ -414,7 +442,7 @@ const MenuCard = ({ menu, ...props }) => {
 				<Image
 					layout='fill'
 					objectFit='cover'
-					src={menu.imageURL}
+					src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
 					alt={menu.name}
 				/>
 			</Box>
@@ -428,6 +456,7 @@ const MenuCard = ({ menu, ...props }) => {
 
 const AddMenu = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { menuCategories } = useMenuCategory()
 	return (
 		<>
 			<Button
@@ -445,7 +474,7 @@ const AddMenu = () => {
 					<ModalHeader>Tambah Menu</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						<MenuForm />
+						<MenuForm onSuccess={onClose} onCancel={onClose} />
 					</ModalBody>
 				</ModalContent>
 			</Modal>
@@ -538,9 +567,36 @@ const MenuCategoryForm = ({ isEditing, category, onSuccess, onCancel }) => {
 	)
 }
 
-const MenuForm = ({ isEditing, menu }) => {
+const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
+	const { addMenu, updateMenu } = useMenus()
+	const { menuCategories } = useMenuCategory()
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: menu,
+		resolver: MenuResolver,
+	})
+
+	const [isLoading, setIsLoading] = React.useState()
+	const onSubmit = async (data) => {
+		try {
+			setIsLoading(true)
+			if (isEditing) {
+				await updateMenu(data)
+			} else {
+				await addMenu(data)
+			}
+			onSuccess()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
+
 	return (
-		<Flex flexDir='column' pb='4'>
+		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
 			<VStack spacing='0' mb='4'>
 				<FormControl w='full'>
 					<FormLabel>Nama*</FormLabel>
@@ -549,9 +605,11 @@ const MenuForm = ({ isEditing, menu }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan name menu'
-						value={menu?.name}
+						{...register('name')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.name?.message}
+					</FormHelperText>
 				</FormControl>
 				<FormControl w='full'>
 					<FormLabel>Harga*</FormLabel>
@@ -561,20 +619,28 @@ const MenuForm = ({ isEditing, menu }) => {
 						border='none'
 						type='number'
 						placeholder='Masukan harga menu'
-						value={menu?.price}
+						{...register('price')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.price?.message}
+					</FormHelperText>
 				</FormControl>
 				<FormControl id='country'>
 					<FormLabel>Kategori*</FormLabel>
-					<Select placeholder='Pilih Kategori'>
+					<Select placeholder='Pilih Kategori' {...register('categoryId')}>
 						{menuCategories.map((i) => (
-							<option selected={i.id === menu?.categoryId} key={i.id}>
+							<option
+								value={i.id}
+								selected={i.id === menu?.categoryId}
+								key={i.id}
+							>
 								{i.name}
 							</option>
 						))}
 					</Select>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.categoryId?.message}
+					</FormHelperText>
 				</FormControl>
 				<FormControl w='full'>
 					<FormLabel>Foto</FormLabel>
@@ -603,10 +669,10 @@ const MenuForm = ({ isEditing, menu }) => {
 				</FormControl>
 			</VStack>
 			<VStack>
-				<Button w='full' colorScheme='teal'>
+				<Button type='submit' isLoading={isLoading} w='full' colorScheme='teal'>
 					{isEditing ? 'Edit' : 'Tambah'}
 				</Button>
-				<Button w='full' variant='outline'>
+				<Button onClick={onCancel} w='full' variant='outline'>
 					Batal
 				</Button>
 			</VStack>

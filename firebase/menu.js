@@ -76,10 +76,10 @@ const updateMenu = async ({ restoId, menu }) => {
 	}
 }
 
-const deleteMenu = async ({ restoId, menuCategory: menu }) => {
+const deleteMenu = async ({ restoId, menu }) => {
 	try {
-		const menuCatRef = getMenuRef(restoId, menu)
-		await deleteDoc(menuCatRef)
+		const menuRef = getMenuRef(restoId, menu.id)
+		await deleteDoc(menuRef)
 	} catch (error) {
 		throw error
 	}

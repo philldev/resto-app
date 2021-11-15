@@ -20,17 +20,25 @@ export const MenusProvider = ({ children }) => {
 		}
 	}
 
-	const updateMenu = (menu) => {
+	const updateMenu = async (menu) => {
 		if (currentResto) {
+			await MenusApi.updateMenu({ restoId: currentResto.id, menu })
+			setMenus((p) => p.map((i) => (i.id === menu.id ? menu : i)))
 			try {
-			} catch (error) {}
+			} catch (error) {
+				throw error
+			}
 		}
 	}
 
-	const deleteMenu = (menu) => {
+	const deleteMenu = async (menu) => {
 		if (currentResto) {
 			try {
-			} catch (error) {}
+				await MenusApi.deleteMenu({ restoId: currentResto.id, menu })
+				setMenus((p) => p.filter((i) => i.id !== menu.id))
+			} catch (error) {
+				throw error
+			}
 		}
 	}
 
@@ -38,12 +46,9 @@ export const MenusProvider = ({ children }) => {
 		if (currentResto) {
 			const fetchData = async () => {
 				try {
-					const menus = MenusApi.getMenus(currentResto.id, 'all', {
-						listen: true,
-						callback: async (menus) => {
-							setMenus(menus)
-						},
-					})
+					const menus = await MenusApi.getMenus(currentResto.id, 'all')
+					console.log(menus)
+					setMenus(menus)
 				} catch (error) {
 					console.log(error)
 				} finally {
@@ -54,11 +59,13 @@ export const MenusProvider = ({ children }) => {
 		}
 	}, [currentResto])
 
-	const value = { menus, initLoading, addMenu }
+	const value = { menus, initLoading, addMenu, updateMenu, deleteMenu }
 	return <MenusContext.Provider value={value}>{children}</MenusContext.Provider>
 }
 
 export const useMenus = () => {
 	const ctx = React.useContext(MenusContext)
 	if (ctx === undefined) throw new Error('No Context Provided')
+
+	return ctx
 }
