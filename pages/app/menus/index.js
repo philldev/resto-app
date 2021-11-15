@@ -1,7 +1,13 @@
 import { Button, IconButton } from '@chakra-ui/button'
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { AddIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import {
+	AddIcon,
+	CloseIcon,
+	DeleteIcon,
+	EditIcon,
+	SearchIcon,
+} from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
@@ -26,6 +32,7 @@ import {
 } from '@chakra-ui/modal'
 import { Select } from '@chakra-ui/select'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
@@ -68,41 +75,9 @@ function Menus() {
 							</Flex>
 							<CogIcon w='6' h='6' />
 						</Flex>
-						<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
-							<TabList
-								alignItems='center'
-								flex='0'
-								overflowX='auto'
-								overflowY='hidden'
-								p='2'
-								px='4'
-							>
-								<Box
-									w='10'
-									h='10'
-									flexShrink='0'
-									alignItems='center'
-									justifyContent='center'
-									mr='2'
-									d='flex'
-									as='button'
-								>
-									<SearchIcon />
-								</Box>
-								<Tab
-									_active={{
-										boxShadow: 'none',
-									}}
-									_focus={{
-										boxShadow: 'none',
-									}}
-								>
-									Semua
-								</Tab>
-								<MenuCategoryTabList />
-							</TabList>
-							<MenuPanels />
-						</Tabs>
+						<MenuTabsProvider>
+							<MenuTabs />
+						</MenuTabsProvider>
 						<Box
 							py='4'
 							borderTop='1px solid'
@@ -118,6 +93,58 @@ function Menus() {
 				</MenusProvider>
 			</MenuCategoryProvider>
 		</AppPage>
+	)
+}
+
+const MenuTabsContext = React.createContext(null)
+
+const MenuTabsProvider = ({ children }) => {
+	const [tabIndex, setTabIndex] = React.useState(0)
+	const [isSearching, setIsSearching] = React.useState(false)
+	const handleTabsChange = (index) => setTabIndex(index)
+	const toggleIsSearching = () => setIsSearching((p) => !p)
+
+	React.useEffect(() => {
+		if (isSearching) setTabIndex(0)
+	}, [isSearching])
+
+	const value = { tabIndex, handleTabsChange, isSearching, toggleIsSearching }
+	return (
+		<MenuTabsContext.Provider value={value}>
+			{children}
+		</MenuTabsContext.Provider>
+	)
+}
+
+const useMenuTabs = () => {
+	const ctx = React.useContext(MenuTabsContext)
+	if (ctx === undefined) throw new Error('Context not provided')
+	return ctx
+}
+
+const MenuTabs = () => {
+	const { tabIndex, handleTabsChange } = useMenuTabs()
+	return (
+		<Tabs
+			index={tabIndex}
+			onChange={handleTabsChange}
+			variant='soft-rounded'
+			flex='1'
+			overflow='hidden'
+		>
+			<TabList
+				alignItems='center'
+				flex='0'
+				overflowX='auto'
+				overflowY='hidden'
+				p='2'
+				px='4'
+				pos='relative'
+			>
+				<MenuTabList />
+			</TabList>
+			<MenuPanels />
+		</Tabs>
 	)
 }
 
@@ -166,12 +193,54 @@ const MenuPanels = () => {
 	)
 }
 
-const MenuCategoryTabList = () => {
+const MenuTabList = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
+	const { isSearching, toggleIsSearching } = useMenuTabs()
 
 	if (initLoading) return null
+	if (isSearching)
+		return (
+			<Flex w='full' pos='relative'>
+				<Box
+					zIndex='2'
+					left='2'
+					pos='absolute'
+					as='button'
+					w='10'
+					h='10'
+					onClick={() => toggleIsSearching()}
+				>
+					<CloseIcon />
+				</Box>
+				<Input bg='gray.900' placeholder='Cari menu' rounded='3xl' pl='12' />
+			</Flex>
+		)
 	return (
 		<>
+			<Box
+				w='10'
+				h='10'
+				flexShrink='0'
+				alignItems='center'
+				justifyContent='center'
+				mr='2'
+				d='flex'
+				as='button'
+				pos='relative'
+				onClick={() => toggleIsSearching()}
+			>
+				{isSearching ? <CloseIcon /> : <SearchIcon />}
+			</Box>
+			<Tab
+				_active={{
+					boxShadow: 'none',
+				}}
+				_focus={{
+					boxShadow: 'none',
+				}}
+			>
+				Semua
+			</Tab>
 			{menuCategories.length === 0 && (
 				<Text ml='4' color='gray.400'>
 					Belum ada kategori

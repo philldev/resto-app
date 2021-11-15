@@ -13,6 +13,7 @@ export const UserRestoProvider = ({ children }) => {
 
 	const selectResto = (resto) => {
 		setCurrentResto(resto)
+		window.localStorage.setItem('currentResto', JSON.stringify(resto))
 	}
 
 	const addUserResto = async (newResto) => {
@@ -55,7 +56,13 @@ export const UserRestoProvider = ({ children }) => {
 			try {
 				const restaurantList = await RestoApi.getRestoList(user.id)
 				setRestoList(restaurantList)
-				setCurrentResto(null)
+				let localResto = JSON.parse(window.localStorage.getItem('currentResto'))
+				if (localResto) {
+					setCurrentResto(localResto)
+				} else {
+					setCurrentResto(null)
+				}
+
 				setInitLoading(false)
 			} catch (error) {
 				console.log(error)
