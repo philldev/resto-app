@@ -29,7 +29,13 @@ import {
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import {
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
+} from '@chakra-ui/tabs'
 import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
@@ -45,6 +51,7 @@ import {
 } from '../../../context/MenuCategory'
 import { MenusProvider, useMenus } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
+import { TabsProvider, useTabs } from '../../../context/Tabs'
 
 const PLACEHOLDER_MENU_IMG =
 	'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80'
@@ -71,9 +78,9 @@ function Menus() {
 							</Flex>
 							<CogIcon w='6' h='6' />
 						</Flex>
-						<MenuTabsProvider>
+						<TabsProvider>
 							<MenuTabs />
-						</MenuTabsProvider>
+						</TabsProvider>
 						<Box
 							py='4'
 							borderTop='1px solid'
@@ -92,43 +99,8 @@ function Menus() {
 	)
 }
 
-const MenuTabsContext = React.createContext(null)
-
-const MenuTabsProvider = ({ children }) => {
-	const [tabIndex, setTabIndex] = React.useState(0)
-	const [isSearching, setIsSearching] = React.useState(false)
-	const [searchQuery, setSearchQuery] = React.useState('')
-	const handleQueryChange = (e) => setSearchQuery(e.target.value)
-	const handleTabsChange = (index) => setTabIndex(index)
-	const toggleIsSearching = () => setIsSearching((p) => !p)
-
-	React.useEffect(() => {
-		if (isSearching) setTabIndex(0)
-	}, [isSearching])
-
-	const value = {
-		tabIndex,
-		handleTabsChange,
-		isSearching,
-		toggleIsSearching,
-		handleQueryChange,
-		searchQuery,
-	}
-	return (
-		<MenuTabsContext.Provider value={value}>
-			{children}
-		</MenuTabsContext.Provider>
-	)
-}
-
-const useMenuTabs = () => {
-	const ctx = React.useContext(MenuTabsContext)
-	if (ctx === undefined) throw new Error('Context not provided')
-	return ctx
-}
-
 const MenuTabs = () => {
-	const { tabIndex, handleTabsChange } = useMenuTabs()
+	const { tabIndex, handleTabsChange } = useTabs()
 	return (
 		<Tabs
 			index={tabIndex}
@@ -137,17 +109,7 @@ const MenuTabs = () => {
 			flex='1'
 			overflow='hidden'
 		>
-			<TabList
-				alignItems='center'
-				flex='0'
-				overflowX='auto'
-				overflowY='hidden'
-				p='2'
-				px='4'
-				pos='relative'
-			>
-				<MenuTabList />
-			</TabList>
+			<MenuTabList />
 			<MenuPanels />
 		</Tabs>
 	)
@@ -156,7 +118,7 @@ const MenuTabs = () => {
 const MenuPanels = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	const { menus } = useMenus()
-	const { searchQuery } = useMenuTabs()
+	const { searchQuery } = useTabs()
 	if (initLoading) return null
 	return (
 		<TabPanels
@@ -211,77 +173,87 @@ const MenuPanels = () => {
 const MenuTabList = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	const { isSearching, toggleIsSearching, searchQuery, handleQueryChange } =
-		useMenuTabs()
+		useTabs()
 	if (initLoading) return null
-	if (isSearching)
-		return (
-			<Flex w='full' pos='relative'>
-				<Box
-					zIndex='2'
-					left='2'
-					pos='absolute'
-					as='button'
-					w='10'
-					h='10'
-					onClick={() => toggleIsSearching()}
-				>
-					<CloseIcon />
-				</Box>
-				<Input
-					value={searchQuery}
-					onChange={handleQueryChange}
-					bg='gray.900'
-					placeholder='Cari menu'
-					rounded='3xl'
-					pl='12'
-				/>
-			</Flex>
-		)
 	return (
-		<>
-			<Box
-				w='10'
-				h='10'
-				flexShrink='0'
-				alignItems='center'
-				justifyContent='center'
-				mr='2'
-				d='flex'
-				as='button'
-				pos='relative'
-				onClick={() => toggleIsSearching()}
-			>
-				{isSearching ? <CloseIcon /> : <SearchIcon />}
-			</Box>
-			<Tab
-				_active={{
-					boxShadow: 'none',
-				}}
-				_focus={{
-					boxShadow: 'none',
-				}}
-			>
-				Semua
-			</Tab>
-			{menuCategories.length === 0 && (
-				<Text ml='4' color='gray.400'>
-					Belum ada kategori
-				</Text>
+		<TabList
+			alignItems='center'
+			flex='0'
+			overflowX='auto'
+			overflowY='hidden'
+			p='2'
+			px='4'
+			pos='relative'
+		>
+			{isSearching ? (
+				<Flex w='full' pos='relative'>
+					<Box
+						zIndex='2'
+						left='2'
+						pos='absolute'
+						as='button'
+						w='10'
+						h='10'
+						onClick={() => toggleIsSearching()}
+					>
+						<CloseIcon />
+					</Box>
+					<Input
+						value={searchQuery}
+						onChange={handleQueryChange}
+						bg='gray.900'
+						placeholder='Cari menu'
+						rounded='3xl'
+						pl='12'
+					/>
+				</Flex>
+			) : (
+				<>
+					<Box
+						w='10'
+						h='10'
+						flexShrink='0'
+						alignItems='center'
+						justifyContent='center'
+						mr='2'
+						d='flex'
+						as='button'
+						pos='relative'
+						onClick={() => toggleIsSearching()}
+					>
+						{isSearching ? <CloseIcon /> : <SearchIcon />}
+					</Box>
+					<Tab
+						_active={{
+							boxShadow: 'none',
+						}}
+						_focus={{
+							boxShadow: 'none',
+						}}
+					>
+						Semua
+					</Tab>
+					{menuCategories.length === 0 && (
+						<Text ml='4' color='gray.400'>
+							Belum ada kategori
+						</Text>
+					)}
+					{menuCategories.map((item) => (
+						<Tab
+							_active={{
+								boxShadow: 'none',
+							}}
+							_focus={{
+								boxShadow: 'none',
+							}}
+							key={item.id}
+						>
+							{item.name}
+						</Tab>
+					))}
+				</>
 			)}
-			{menuCategories.map((item) => (
-				<Tab
-					_active={{
-						boxShadow: 'none',
-					}}
-					_focus={{
-						boxShadow: 'none',
-					}}
-					key={item.id}
-				>
-					{item.name}
-				</Tab>
-			))}
-		</>
+		</TabList>
 	)
 }
 
