@@ -38,6 +38,7 @@ import {
 	MenuCategoryProvider,
 	useMenuCategory,
 } from '../../../context/MenuCategory'
+import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
 import { MenuCategoryResolver } from '../../../utils/formSchema/menuCategorySchema'
 
@@ -47,63 +48,70 @@ function Menus() {
 	return (
 		<AppPage displayHeader={false}>
 			<MenuCategoryProvider>
-				<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-					<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
-						<Flex alignItems='center'>
-							<MenuIcon mr='2' flex='1' w='6' h='6' />
-							<Text fontSize='xl'>
-								<strong>{currentResto.name}</strong> Menu
-							</Text>
-						</Flex>
-						<CogIcon w='6' h='6' />
-					</Flex>
-					<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
-						<TabList
+				<MenusProvider>
+					<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
+						<Flex
 							alignItems='center'
-							flex='0'
-							overflowX='auto'
-							overflowY='hidden'
-							p='2'
-							px='4'
+							justifyContent='space-between'
+							p='4'
+							pb='2'
 						>
-							<Box
-								w='10'
-								h='10'
-								flexShrink='0'
+							<Flex alignItems='center'>
+								<MenuIcon mr='2' flex='1' w='6' h='6' />
+								<Text fontSize='xl'>
+									<strong>{currentResto.name}</strong> Menu
+								</Text>
+							</Flex>
+							<CogIcon w='6' h='6' />
+						</Flex>
+						<Tabs variant='soft-rounded' flex='1' overflow='hidden'>
+							<TabList
 								alignItems='center'
-								justifyContent='center'
-								mr='2'
-								d='flex'
-								as='button'
+								flex='0'
+								overflowX='auto'
+								overflowY='hidden'
+								p='2'
+								px='4'
 							>
-								<SearchIcon />
-							</Box>
-							<Tab
-								_active={{
-									boxShadow: 'none',
-								}}
-								_focus={{
-									boxShadow: 'none',
-								}}
-							>
-								Semua
-							</Tab>
-							<MenuCategoryTabList />
-						</TabList>
-						<MenuPanels />
-					</Tabs>
-					<Box
-						py='4'
-						borderTop='1px solid'
-						borderTopColor='gray.700'
-						overflowX='auto'
-					>
-						<HStack w='max-content' px='4' overflowX='auto'>
-							<AddMenu />
-							<AddMenuCategory />
-						</HStack>
-					</Box>
-				</Flex>
+								<Box
+									w='10'
+									h='10'
+									flexShrink='0'
+									alignItems='center'
+									justifyContent='center'
+									mr='2'
+									d='flex'
+									as='button'
+								>
+									<SearchIcon />
+								</Box>
+								<Tab
+									_active={{
+										boxShadow: 'none',
+									}}
+									_focus={{
+										boxShadow: 'none',
+									}}
+								>
+									Semua
+								</Tab>
+								<MenuCategoryTabList />
+							</TabList>
+							<MenuPanels />
+						</Tabs>
+						<Box
+							py='4'
+							borderTop='1px solid'
+							borderTopColor='gray.700'
+							overflowX='auto'
+						>
+							<HStack w='max-content' px='4' overflowX='auto'>
+								<AddMenu />
+								<AddMenuCategory />
+							</HStack>
+						</Box>
+					</Flex>
+				</MenusProvider>
 			</MenuCategoryProvider>
 		</AppPage>
 	)

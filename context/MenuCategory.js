@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useUserResto } from './Resto'
-import * as MenuApi from '../firebase/menu'
+import * as MenuCategoryApi from '../firebase/menuCategory'
 
 const MenuCategoryContext = React.createContext(null)
 
@@ -11,7 +11,7 @@ export const MenuCategoryProvider = ({ children }) => {
 
 	const addMenuCategory = async (menuCat) => {
 		try {
-			await MenuApi.createMenuCategory({ menuCat, restoId: currentResto.id })
+			await MenuCategoryApi.createMenuCategory({ menuCat, restoId: currentResto.id })
 			setMenuCategories((p) => [...p, menuCat])
 		} catch (error) {
 			throw error
@@ -20,7 +20,7 @@ export const MenuCategoryProvider = ({ children }) => {
 
 	const updateMenuCategory = async (menuCategory) => {
 		try {
-			await MenuApi.updateMenuCategory({
+			await MenuCategoryApi.updateMenuCategory({
 				menuCategory,
 				restoId: currentResto.id,
 			})
@@ -34,7 +34,7 @@ export const MenuCategoryProvider = ({ children }) => {
 
 	const deleteMenuCategory = async (menuCategory) => {
 		try {
-			await MenuApi.deleteMenuCategory({
+			await MenuCategoryApi.deleteMenuCategory({
 				menuCategory,
 				restoId: currentResto.id,
 			})
@@ -48,7 +48,7 @@ export const MenuCategoryProvider = ({ children }) => {
 		if (currentResto) {
 			const fetchData = async () => {
 				try {
-					const data = await MenuApi.getMenuCategories(currentResto.id)
+					const data = await MenuCategoryApi.getMenuCategories(currentResto.id)
 					setMenuCategories(data)
 					setInitLoading(false)
 				} catch (error) {
