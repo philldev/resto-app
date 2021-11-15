@@ -101,6 +101,8 @@ const MenuTabsContext = React.createContext(null)
 const MenuTabsProvider = ({ children }) => {
 	const [tabIndex, setTabIndex] = React.useState(0)
 	const [isSearching, setIsSearching] = React.useState(false)
+	const [searchQuery, setSearchQuery] = React.useState('')
+	const handleQueryChange = (e) => setSearchQuery(e.target.value)
 	const handleTabsChange = (index) => setTabIndex(index)
 	const toggleIsSearching = () => setIsSearching((p) => !p)
 
@@ -108,7 +110,14 @@ const MenuTabsProvider = ({ children }) => {
 		if (isSearching) setTabIndex(0)
 	}, [isSearching])
 
-	const value = { tabIndex, handleTabsChange, isSearching, toggleIsSearching }
+	const value = {
+		tabIndex,
+		handleTabsChange,
+		isSearching,
+		toggleIsSearching,
+		handleQueryChange,
+		searchQuery,
+	}
 	return (
 		<MenuTabsContext.Provider value={value}>
 			{children}
@@ -151,6 +160,7 @@ const MenuTabs = () => {
 const MenuPanels = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	const { menus } = useMenus()
+	const { searchQuery } = useMenuTabs()
 	if (initLoading) return null
 	return (
 		<TabPanels
@@ -161,11 +171,20 @@ const MenuPanels = () => {
 			flex='1'
 			overflowY='auto'
 		>
-			<TabPanel display='grid' gridTemplateColumns='1fr 1fr' gridGap='4'>
+			<TabPanel>
 				{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
-				{menus.map((menu) => (
-					<MenuItem menu={menu} key={menu.id} />
-				))}
+				{searchQuery.length > 0 && (
+					<Text color='gray.500' mb='4'>
+						Pencarian : {searchQuery}
+					</Text>
+				)}
+				<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
+					{searchQuery.length === 0
+						? menus.map((menu) => <MenuItem menu={menu} key={menu.id} />)
+						: menus
+								.filter((m) => m.name.includes(searchQuery))
+								.map((menu) => <MenuItem menu={menu} key={menu.id} />)}
+				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat) => (
 				<TabPanel key={cat.id}>
@@ -195,7 +214,8 @@ const MenuPanels = () => {
 
 const MenuTabList = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
-	const { isSearching, toggleIsSearching } = useMenuTabs()
+	const { isSearching, toggleIsSearching, searchQuery, handleQueryChange } =
+		useMenuTabs()
 
 	if (initLoading) return null
 	if (isSearching)
@@ -212,7 +232,14 @@ const MenuTabList = () => {
 				>
 					<CloseIcon />
 				</Box>
-				<Input bg='gray.900' placeholder='Cari menu' rounded='3xl' pl='12' />
+				<Input
+					value={searchQuery}
+					onChange={handleQueryChange}
+					bg='gray.900'
+					placeholder='Cari menu'
+					rounded='3xl'
+					pl='12'
+				/>
 			</Flex>
 		)
 	return (
