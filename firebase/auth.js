@@ -1,6 +1,6 @@
+/* eslint-disable no-useless-catch */
 import {
 	getAuth,
-	onAuthStateChanged as fbOnAuthStateChanged,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,

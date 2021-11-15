@@ -1,6 +1,7 @@
 {
-	"extends": ["react-app", "next"],
+	"extends": ["eslint:recommended", "next"],
 	"rules": {
-		"react/no-unescaped-entities": "off"
+		"react/no-unescaped-entities": "off",
+		"no-useless-catch ": "off"
 	}
 }

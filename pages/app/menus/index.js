@@ -1,5 +1,4 @@
 import { Button, IconButton } from '@chakra-ui/button'
-import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { useDisclosure } from '@chakra-ui/hooks'
 import {
 	AddIcon,
@@ -9,7 +8,7 @@ import {
 	SearchIcon,
 } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
 import {
 	Menu,
 	MenuButton,
@@ -30,25 +29,22 @@ import {
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
-import { Select } from '@chakra-ui/select'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
-import { motion } from 'framer-motion'
 import Image from 'next/image'
 import * as React from 'react'
-import { useForm } from 'react-hook-form'
 import { AppPage } from '../../../components/common/AppPage'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import { DotsHorizontal } from '../../../components/common/icons/DotsHorizontal'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { MenuCategoryForm } from '../../../components/MenuCategoryForm'
+import { MenuForm } from '../../../components/MenuForm'
 import {
 	MenuCategoryProvider,
 	useMenuCategory,
 } from '../../../context/MenuCategory'
 import { MenusProvider, useMenus } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
-import { MenuCategoryResolver } from '../../../utils/formSchema/menuCategorySchema'
-import { MenuResolver } from '../../../utils/formSchema/menuSchema'
 
 const PLACEHOLDER_MENU_IMG =
 	'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80'
@@ -216,7 +212,6 @@ const MenuTabList = () => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	const { isSearching, toggleIsSearching, searchQuery, handleQueryChange } =
 		useMenuTabs()
-
 	if (initLoading) return null
 	if (isSearching)
 		return (
@@ -603,315 +598,5 @@ const AddMenuCategory = () => {
 		</>
 	)
 }
-
-const MenuCategoryForm = ({ isEditing, category, onSuccess, onCancel }) => {
-	const { addMenuCategory, updateMenuCategory } = useMenuCategory()
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: category,
-		resolver: MenuCategoryResolver,
-	})
-	const [isLoading, setIsLoading] = React.useState()
-	const onSubmit = async (data) => {
-		try {
-			setIsLoading(true)
-			if (isEditing) {
-				await updateMenuCategory(data)
-			} else {
-				await addMenuCategory(data)
-			}
-			onSuccess()
-		} catch (error) {
-			console.log(error)
-			setIsLoading(false)
-		}
-	}
-	return (
-		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
-			<VStack spacing='0' mb='4'>
-				<FormControl w='full'>
-					<FormLabel>Nama*</FormLabel>
-					<Input
-						w='full'
-						bg='gray.700'
-						border='none'
-						placeholder='Masukan name kategori'
-						{...register('name')}
-					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.name?.message}
-					</FormHelperText>
-				</FormControl>
-			</VStack>
-			<VStack>
-				<Button isLoading={isLoading} type='submit' w='full' colorScheme='teal'>
-					{isEditing ? 'Edit' : 'Tambah'}
-				</Button>
-				<Button
-					isLoading={isLoading}
-					onClick={onCancel}
-					w='full'
-					variant='outline'
-				>
-					Batal
-				</Button>
-			</VStack>
-		</Flex>
-	)
-}
-
-const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
-	const { addMenu, updateMenu } = useMenus()
-	const { menuCategories } = useMenuCategory()
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		defaultValues: menu,
-		resolver: MenuResolver,
-	})
-
-	const [isLoading, setIsLoading] = React.useState()
-	const onSubmit = async (data) => {
-		try {
-			setIsLoading(true)
-			if (isEditing) {
-				await updateMenu(data)
-			} else {
-				await addMenu(data)
-			}
-			onSuccess()
-		} catch (error) {
-			console.log(error)
-			setIsLoading(false)
-		}
-	}
-
-	return (
-		<Flex as='form' onSubmit={handleSubmit(onSubmit)} flexDir='column' pb='4'>
-			<VStack spacing='0' mb='4'>
-				<FormControl w='full'>
-					<FormLabel>Nama*</FormLabel>
-					<Input
-						w='full'
-						bg='gray.700'
-						border='none'
-						placeholder='Masukan name menu'
-						{...register('name')}
-					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.name?.message}
-					</FormHelperText>
-				</FormControl>
-				<FormControl w='full'>
-					<FormLabel>Harga*</FormLabel>
-					<Input
-						w='full'
-						bg='gray.700'
-						border='none'
-						type='number'
-						placeholder='Masukan harga menu'
-						{...register('price')}
-					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.price?.message}
-					</FormHelperText>
-				</FormControl>
-				<FormControl id='country'>
-					<FormLabel>Kategori*</FormLabel>
-					<Select placeholder='Pilih Kategori' {...register('categoryId')}>
-						{menuCategories.map((i) => (
-							<option
-								value={i.id}
-								selected={i.id === menu?.categoryId}
-								key={i.id}
-							>
-								{i.name}
-							</option>
-						))}
-					</Select>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.categoryId?.message}
-					</FormHelperText>
-				</FormControl>
-				<FormControl w='full'>
-					<FormLabel>Foto</FormLabel>
-					{isEditing && menu?.imageURL ? (
-						<Box
-							w='30%'
-							mr='4'
-							h='20'
-							pos='relative'
-							rounded='xl'
-							overflow='hidden'
-						>
-							<Image
-								layout='fill'
-								objectFit='cover'
-								src={menu.imageURL}
-								alt={menu.name}
-							/>
-						</Box>
-					) : (
-						<Button w='full' variant='outline'>
-							Upload Foto
-						</Button>
-					)}
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
-				</FormControl>
-			</VStack>
-			<VStack>
-				<Button type='submit' isLoading={isLoading} w='full' colorScheme='teal'>
-					{isEditing ? 'Edit' : 'Tambah'}
-				</Button>
-				<Button onClick={onCancel} w='full' variant='outline'>
-					Batal
-				</Button>
-			</VStack>
-		</Flex>
-	)
-}
-
-const menuCategories = [
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Makanan',
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Minuman',
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Cemilan',
-	// },
-]
-
-const menus = [
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[0].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[0].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[0].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[0].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[0].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[1].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[1].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[1].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[1].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[1].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[2].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[2].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[2].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[2].id,
-	// },
-	// {
-	// 	id: createDocId(),
-	// 	name: 'Food 1',
-	// 	price: 10000,
-	// 	imageURL:
-	// 		'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=999&q=80',
-	// 	categoryId: menuCategories[2].id,
-	// },
-]
 
 export default withProtectedRoute(Menus)
