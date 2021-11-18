@@ -1,13 +1,15 @@
 import { Button } from '@chakra-ui/button'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, HStack, Text } from '@chakra-ui/layout'
+import { Badge, Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import { AppPage } from '../../../components/common/AppPage'
 import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
+import Image from 'next/image'
+import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
 function Orders() {
 	return (
@@ -106,10 +108,10 @@ const OrderTabList = () => {
 					>
 						{isSearching ? <CloseIcon /> : <SearchIcon />}
 					</Box>
-					<Tab>Today</Tab>
-					<Tab>This Week</Tab>
-					<Tab>This Month</Tab>
-					<Tab>All</Tab>
+					<Tab flexShrink='0'>Today</Tab>
+					<Tab flexShrink='0'>This Week</Tab>
+					<Tab flexShrink='0'>This Month</Tab>
+					<Tab flexShrink='0'>All</Tab>
 				</>
 			)}
 		</TabList>
@@ -126,7 +128,74 @@ const OrderPanels = () => {
 			flex='1'
 			overflowY='auto'
 		>
-			<TabPanel>today</TabPanel>
+			<TabPanel>
+				<Grid maxW='2xl' mx='auto' templateColumns='1fr' gap='2'>
+					<Flex
+						flexDir='column'
+						pos='relative'
+						borderRadius='xl'
+						border='1px solid'
+						borderColor='gray.700'
+						overflow='hidden'
+					>
+						<Box
+							p='2'
+							bg='gray.900'
+							borderBottom='1px solid'
+							borderBottomColor='gray.700'
+							w='100%'
+						>
+							<Flex w='full' justifyContent='space-between' alignItems='center'>
+								<Text fontSize='lg'>No. Order #222</Text>
+								<Badge colorScheme='yellow'>On Progress</Badge>
+							</Flex>
+						</Box>
+						<VStack
+							p='2'
+							alignItems='stretch'
+							h='100px'
+							pos='relative'
+							overflowY='auto'
+						>
+							{new Array(5).fill(0).map((i, index) => (
+								<Flex w='full' key={index}>
+									<Box
+										flexShrink='0'
+										pos='relative'
+										w='45px'
+										h='45px'
+										rounded='lg'
+										overflow='hidden'
+									>
+										<Image
+											layout='fill'
+											objectFit='cover'
+											src={PLACEHOLDER_MENU_IMG}
+											alt={'Order'}
+										/>
+									</Box>
+									<Flex w='full' ml='2' justifyContent='space-between'>
+										<Box>
+											<Text>Menu Item 1</Text>
+											<Text>Rp. 20,000</Text>
+										</Box>
+										<Text p='1'>Qty : 10</Text>
+									</Flex>
+								</Flex>
+							))}
+						</VStack>
+						<Flex
+							p='2'
+							bg='gray.900'
+							borderTop='1px solid'
+							borderTopColor='gray.700'
+							w='100%'
+						>
+							<Text fontSize='lg'>Total Pesanan : Rp 200,000.00</Text>
+						</Flex>
+					</Flex>
+				</Grid>
+			</TabPanel>
 			<TabPanel>this week</TabPanel>
 			<TabPanel>this month</TabPanel>
 			<TabPanel>all</TabPanel>
