@@ -106,46 +106,10 @@ const OrderTabList = () => {
 					>
 						{isSearching ? <CloseIcon /> : <SearchIcon />}
 					</Box>
-					<Tab
-						_active={{
-							boxShadow: 'none',
-						}}
-						_focus={{
-							boxShadow: 'none',
-						}}
-					>
-						Today
-					</Tab>
-					<Tab
-						_active={{
-							boxShadow: 'none',
-						}}
-						_focus={{
-							boxShadow: 'none',
-						}}
-					>
-						This Week
-					</Tab>
-					<Tab
-						_active={{
-							boxShadow: 'none',
-						}}
-						_focus={{
-							boxShadow: 'none',
-						}}
-					>
-						This Month
-					</Tab>
-					<Tab
-						_active={{
-							boxShadow: 'none',
-						}}
-						_focus={{
-							boxShadow: 'none',
-						}}
-					>
-						All
-					</Tab>
+					<Tab>Today</Tab>
+					<Tab>This Week</Tab>
+					<Tab>This Month</Tab>
+					<Tab>All</Tab>
 				</>
 			)}
 		</TabList>

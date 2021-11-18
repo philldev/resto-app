@@ -224,12 +224,6 @@ const MenuTabList = () => {
 						{isSearching ? <CloseIcon /> : <SearchIcon />}
 					</Box>
 					<Tab
-						_active={{
-							boxShadow: 'none',
-						}}
-						_focus={{
-							boxShadow: 'none',
-						}}
 					>
 						Semua
 					</Tab>
@@ -240,12 +234,6 @@ const MenuTabList = () => {
 					)}
 					{menuCategories.map((item) => (
 						<Tab
-							_active={{
-								boxShadow: 'none',
-							}}
-							_focus={{
-								boxShadow: 'none',
-							}}
 							key={item.id}
 						>
 							{item.name}

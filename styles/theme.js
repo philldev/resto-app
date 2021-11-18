@@ -11,12 +11,11 @@ export const theme = extendTheme({
 		},
 		Input: {
 			baseStyle: {
-				border: 'none',
-				_focus: {},
+				color :'#fff'
 			},
 		},
 		Tab: {
-			baseStyle: { _focus: { boxShadow: 'none' } },
+			baseStyle: { _focus: { boxShadow: 'none' }, _active : { boxShadow: 'none' } },
 		},
 	},
 	fonts: {
@@ -31,6 +30,9 @@ export const theme = extendTheme({
 			a: {
 				color: props.colorMode === 'dark' ? 'teal.300' : 'teal.500',
 			},
+			'*:focus' : {
+				boxShadow: 'none !important'
+			}
 		}),
 	},
 })
