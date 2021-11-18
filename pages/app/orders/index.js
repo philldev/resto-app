@@ -1,7 +1,16 @@
 import { Button } from '@chakra-ui/button'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Badge, Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
+import {
+	Badge,
+	Box,
+	Divider,
+	Flex,
+	Grid,
+	HStack,
+	Text,
+	VStack,
+} from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import { AppPage } from '../../../components/common/AppPage'
 import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
@@ -126,80 +135,110 @@ const OrderPanels = () => {
 			h='calc(100% - 56px)'
 			flexDir='column'
 			flex='1'
-			overflowY='auto'
+			overflowY='hidden'
 		>
-			<TabPanel>
-				<Grid maxW='2xl' mx='auto' templateColumns='1fr' gap='2'>
-					<Flex
-						flexDir='column'
-						pos='relative'
-						borderRadius='xl'
-						border='1px solid'
-						borderColor='gray.700'
-						overflow='hidden'
-					>
-						<Box
-							p='2'
-							bg='gray.900'
-							borderBottom='1px solid'
-							borderBottomColor='gray.700'
-							w='100%'
-						>
-							<Flex w='full' justifyContent='space-between' alignItems='center'>
-								<Text fontSize='lg'>No. Order #222</Text>
-								<Badge colorScheme='yellow'>On Progress</Badge>
-							</Flex>
-						</Box>
-						<VStack
-							p='2'
-							alignItems='stretch'
-							h='100px'
-							pos='relative'
-							overflowY='auto'
-						>
-							{new Array(5).fill(0).map((i, index) => (
-								<Flex w='full' key={index}>
-									<Box
-										flexShrink='0'
-										pos='relative'
-										w='45px'
-										h='45px'
-										rounded='lg'
-										overflow='hidden'
-									>
-										<Image
-											layout='fill'
-											objectFit='cover'
-											src={PLACEHOLDER_MENU_IMG}
-											alt={'Order'}
-										/>
-									</Box>
-									<Flex w='full' ml='2' justifyContent='space-between'>
-										<Box>
-											<Text>Menu Item 1</Text>
-											<Text>Rp. 20,000</Text>
-										</Box>
-										<Text p='1'>Qty : 10</Text>
-									</Flex>
-								</Flex>
-							))}
-						</VStack>
-						<Flex
-							p='2'
-							bg='gray.900'
-							borderTop='1px solid'
-							borderTopColor='gray.700'
-							w='100%'
-						>
-							<Text fontSize='lg'>Total Pesanan : Rp 200,000.00</Text>
-						</Flex>
-					</Flex>
+			<TabPanel overflowY='auto' w='100%' maxW='2xl' mx='auto'>
+				<Grid templateColumns='1fr' gap='2'>
+					{new Array(8).fill(0).map((i, idx) => (
+						<OrderCard key={idx} />
+					))}
 				</Grid>
 			</TabPanel>
 			<TabPanel>this week</TabPanel>
 			<TabPanel>this month</TabPanel>
 			<TabPanel>all</TabPanel>
 		</TabPanels>
+	)
+}
+
+const OrderCard = () => {
+	return (
+		<Flex
+			flexDir='column'
+			pos='relative'
+			borderRadius='xl'
+			border='1px solid'
+			borderColor='gray.700'
+			overflow='hidden'
+		>
+			<Box
+				p='2'
+				bg='gray.900'
+				borderBottom='1px solid'
+				borderBottomColor='gray.700'
+				w='100%'
+			>
+				<HStack mb='1' w='full' alignItems='center'>
+					<Text fontSize='lg' fontWeight='bold'>
+						Order #222
+					</Text>
+					<Divider orientation='vertical' h='6' mx='2' />
+					<Text fontSize='sm' color='gray.300'>
+						Meja #10
+					</Text>
+					<Divider orientation='vertical' h='6' mx='2' />
+					<Text fontSize='sm' color='gray.300'>
+						Deddy Wolley
+					</Text>
+				</HStack>
+				<HStack>
+					<Badge colorScheme='yellow'>On Progress</Badge>
+					<Badge colorScheme='green' opacity='.5'>
+						Completed
+					</Badge>
+					<Badge colorScheme='red' opacity='.5'>
+						Canceled
+					</Badge>
+				</HStack>
+			</Box>
+			<VStack
+				p='2'
+				alignItems='stretch'
+				h='100px'
+				pos='relative'
+				overflowY='auto'
+			>
+				{new Array(5).fill(0).map((i, index) => (
+					<Flex w='full' key={index}>
+						<Box
+							flexShrink='0'
+							pos='relative'
+							w='45px'
+							h='45px'
+							rounded='lg'
+							overflow='hidden'
+						>
+							<Image
+								layout='fill'
+								objectFit='cover'
+								src={PLACEHOLDER_MENU_IMG}
+								alt={'Order'}
+							/>
+						</Box>
+						<Flex w='full' ml='2' justifyContent='space-between'>
+							<Box>
+								<Text>Menu Item 1</Text>
+								<Text>Rp. 20,000</Text>
+							</Box>
+							<Text p='1'>Qty : 10</Text>
+						</Flex>
+					</Flex>
+				))}
+			</VStack>
+			<Flex
+				p='2'
+				flexDir='column'
+				bg='gray.900'
+				borderTop='1px solid'
+				borderTopColor='gray.700'
+				w='100%'
+			>
+				<Text mb='2' fontSize='lg'>
+					Total Bayar : Rp 200,000.00
+				</Text>
+				<Button size='xs'>Lihat Detail</Button>
+			</Flex>
+		</Flex>
 	)
 }
 
