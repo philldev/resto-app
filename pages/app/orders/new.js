@@ -4,8 +4,11 @@ import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
 	Drawer,
-	DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader,
-	DrawerOverlay
+	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerHeader,
+	DrawerOverlay,
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
@@ -14,9 +17,11 @@ import { MenuCategoryProvider } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
+import { useRouter } from 'next/router'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
+	const router = useRouter()
 	if (!currentResto) return null
 	return (
 		<Flex flexDir='column' w='100vw' h='100vh'>
@@ -26,7 +31,7 @@ function NewOrder() {
 						<MenuIcon mr='2' flex='1' w='6' h='6' />
 						<Text fontSize='xl'>Order Baru</Text>
 					</Flex>
-					<IconButton variant='ghost' icon={<ArrowBackIcon w='6' h='6' />} />
+					<IconButton variant='ghost' onClick={() => router.back()}icon={<ArrowBackIcon w='6' h='6' />} />
 				</Flex>
 				<MenuCategoryProvider>
 					<MenusProvider>
@@ -35,11 +40,12 @@ function NewOrder() {
 						</TabsProvider>
 					</MenusProvider>
 				</MenuCategoryProvider>
-				<Box 
-				p='4' bg='gray.800' 
-				// position='fixed' 
-				// bottom='0' left='0' w='100%'
-				fontSize='sm'
+				<Box
+					p='4'
+					bg='gray.800'
+					// position='fixed'
+					// bottom='0' left='0' w='100%'
+					fontSize='sm'
 				>
 					<VStack alignItems='stretch'>
 						<Flex justifyContent='space-between' w='full'>
@@ -69,12 +75,11 @@ const OrderDetail = () => {
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
-				<DrawerContent h='75vh'  bg='gray.800'>
+				<DrawerContent h='75vh' bg='gray.800'>
 					<DrawerCloseButton />
 					<DrawerHeader>Detail Order</DrawerHeader>
 
 					<DrawerBody></DrawerBody>
-
 				</DrawerContent>
 			</Drawer>
 		</>
