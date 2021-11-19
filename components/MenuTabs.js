@@ -1,7 +1,7 @@
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import * as React from 'react'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
+import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
 	Menu,
 	MenuButton,
@@ -73,10 +73,14 @@ const MenuPanels = ({ isOrdering }) => {
 				)}
 				<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
 					{searchQuery.length === 0
-						? menus.map((menu) => <MenuItem {...{ isOrdering, menu }} key={menu.id} />)
+						? menus.map((menu) => (
+								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
+					))
 						: menus
 								.filter((m) => m.name.includes(searchQuery))
-								.map((menu) => <MenuItem {...{ isOrdering, menu }} key={menu.id} />)}
+								.map((menu) => (
+									<MenuItem {...{ isOrdering, menu }} key={menu.id} />
+								))}
 				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat) => (
@@ -275,7 +279,7 @@ const MenuItem = ({ menu, isOrdering }) => {
 	return (
 		<>
 			{isOrdering ? (
-				<OrderMenuCard />
+				<OrderMenuCard menu={menu} />
 			) : (
 				<>
 					<MenuCard menu={menu} onClick={onOpen} />
@@ -439,6 +443,42 @@ const MenuCard = ({ menu, ...props }) => {
 	)
 }
 
-const OrderMenuCard = () => {
-	return <Box pt='100%' rounded='xl' border='1px solid' borderColor='gray.700'></Box>
+const OrderMenuCard = ({ menu }) => {
+	return (
+		<Box rounded='xl' border='1px solid' borderColor='gray.700' p='2'>
+			<Flex>
+				<Box
+					flexShrink='0'
+					pos='relative'
+					h='16'
+					w='16'
+					overflow='hidden'
+					rounded='xl'
+				>
+					<Image
+						layout='fill'
+						objectFit='cover'
+						src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
+						alt={menu.name}
+					/>
+				</Box>
+				<Box flex='1' pl='2'>
+					<Text fontWeight='bold'>{menu.name}</Text>
+					<Text>Rp {menu.price}</Text>
+				</Box>
+			</Flex>
+			<VStack alignItems='stretch' mt='2'>
+				<Flex alignItems='center'>
+					<Text flexShrink='0' fontSize='sm' w='16' mr='2'>
+						Qty :
+					</Text>
+					<Input size='xs' type='number' rounded='md' textAlign='center' />
+				</Flex>
+				<HStack>
+					<Button flex='1' size='xs'>-</Button>
+					<Button flex='1' size='xs' colorScheme='teal'>+</Button>
+				</HStack>
+			</VStack>
+		</Box>
+	)
 }
