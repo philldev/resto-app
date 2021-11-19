@@ -2,6 +2,6 @@
 	"extends": ["eslint:recommended", "next"],
 	"rules": {
 		"react/no-unescaped-entities": "off",
-		"no-useless-catch ": "off"
+		"no-useless-catch": 0
 	}
 }

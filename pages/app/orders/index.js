@@ -19,6 +19,7 @@ import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import Image from 'next/image'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
+import Link from 'next/link'
 
 function Orders() {
 	return (
@@ -41,7 +42,11 @@ function Orders() {
 					overflowX='auto'
 				>
 					<HStack w='max-content' px='4' overflowX='auto'>
-						<Button colorScheme='teal'>Tambah Pesanan</Button>
+						<Link passHref href='/app/orders/new'>
+							<Button as={'a'} colorScheme='teal'>
+								Tambah Pesanan
+							</Button>
+						</Link>
 					</HStack>
 				</Box>
 			</Flex>

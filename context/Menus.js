@@ -22,9 +22,9 @@ export const MenusProvider = ({ children }) => {
 
 	const updateMenu = async (menu) => {
 		if (currentResto) {
-			await MenusApi.updateMenu({ restoId: currentResto.id, menu })
-			setMenus((p) => p.map((i) => (i.id === menu.id ? menu : i)))
 			try {
+				await MenusApi.updateMenu({ restoId: currentResto.id, menu })
+				setMenus((p) => p.map((i) => (i.id === menu.id ? menu : i)))
 			} catch (error) {
 				throw error
 			}

@@ -1,24 +1,40 @@
-import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons"
-import * as React from "react"
-import { Input } from "@chakra-ui/input"
-import { Box, Flex, Grid, HStack, Text } from "@chakra-ui/layout"
-import { Menu, MenuButton, MenuList,
+import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import * as React from 'react'
+import { Input } from '@chakra-ui/input'
+import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
+import {
+	Menu,
+	MenuButton,
+	MenuList,
 	MenuItem as MenuItemChakra,
-} from "@chakra-ui/menu"
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/modal"
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs"
-import { useMenuCategory } from "../context/MenuCategory"
-import { useMenus } from "../context/Menus"
-import { useTabs } from "../context/Tabs"
-import { DotsHorizontal } from "./common/icons/DotsHorizontal"
-import { MenuCategoryForm } from "./MenuCategoryForm"
-import { Button, IconButton } from "@chakra-ui/button"
-import { useDisclosure } from "@chakra-ui/hooks"
-import { MenuForm } from "./MenuForm"
-import { PLACEHOLDER_MENU_IMG } from "../utils/imagePlaceholders"
+} from '@chakra-ui/menu'
+import {
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
+} from '@chakra-ui/modal'
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import { useMenuCategory } from '../context/MenuCategory'
+import { useMenus } from '../context/Menus'
+import { useTabs } from '../context/Tabs'
+import { DotsHorizontal } from './common/icons/DotsHorizontal'
+import { MenuCategoryForm } from './MenuCategoryForm'
+import { Button, IconButton } from '@chakra-ui/button'
+import { useDisclosure } from '@chakra-ui/hooks'
+import { MenuForm } from './MenuForm'
+import { PLACEHOLDER_MENU_IMG } from '../utils/imagePlaceholders'
 import Image from 'next/image'
 
-export const MenuTabs = () => {
+export const MenuTabs = ({ isOrdering }) => {
 	const { tabIndex, handleTabsChange } = useTabs()
 	return (
 		<Tabs
@@ -29,13 +45,12 @@ export const MenuTabs = () => {
 			overflow='hidden'
 		>
 			<MenuTabList />
-			<MenuPanels />
+			<MenuPanels {...{ isOrdering }} />
 		</Tabs>
 	)
 }
 
-
-const MenuPanels = () => {
+const MenuPanels = ({ isOrdering }) => {
 	const { menuCategories, initLoading } = useMenuCategory()
 	const { menus } = useMenus()
 	const { searchQuery } = useTabs()
@@ -58,10 +73,10 @@ const MenuPanels = () => {
 				)}
 				<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
 					{searchQuery.length === 0
-						? menus.map((menu) => <MenuItem menu={menu} key={menu.id} />)
+						? menus.map((menu) => <MenuItem {...{ isOrdering, menu }} key={menu.id} />)
 						: menus
 								.filter((m) => m.name.includes(searchQuery))
-								.map((menu) => <MenuItem menu={menu} key={menu.id} />)}
+								.map((menu) => <MenuItem {...{ isOrdering, menu }} key={menu.id} />)}
 				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat) => (
@@ -81,7 +96,7 @@ const MenuPanels = () => {
 						{menus
 							.filter((i) => i.categoryId === cat.id)
 							.map((menu) => (
-								<MenuItem menu={menu} key={menu.id} />
+								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
 							))}
 					</Grid>
 				</TabPanel>
@@ -143,21 +158,14 @@ const MenuTabList = () => {
 					>
 						{isSearching ? <CloseIcon /> : <SearchIcon />}
 					</Box>
-					<Tab
-					>
-						Semua
-					</Tab>
+					<Tab>Semua</Tab>
 					{menuCategories.length === 0 && (
 						<Text ml='4' color='gray.400'>
 							Belum ada kategori
 						</Text>
 					)}
 					{menuCategories.map((item) => (
-						<Tab
-							key={item.id}
-						>
-							{item.name}
-						</Tab>
+						<Tab key={item.id}>{item.name}</Tab>
 					))}
 				</>
 			)}
@@ -262,22 +270,27 @@ const DeleteMenuCategory = ({ category }) => {
 	)
 }
 
-
-const MenuItem = ({ menu }) => {
+const MenuItem = ({ menu, isOrdering }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	return (
 		<>
-			<MenuCard onClick={onOpen} menu={menu} />
-			<Modal isCentered isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent bg='gray.800' mx='4'>
-					<ModalHeader>Detail Menu</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<MenuDetail menu={menu} />
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+			{isOrdering ? (
+				<OrderMenuCard />
+			) : (
+				<>
+					<MenuCard menu={menu} onClick={onOpen} />
+					<Modal isCentered isOpen={isOpen} onClose={onClose}>
+						<ModalOverlay />
+						<ModalContent bg='gray.800' mx='4'>
+							<ModalHeader>Detail Menu</ModalHeader>
+							<ModalCloseButton />
+							<ModalBody>
+								<MenuDetail menu={menu} />
+							</ModalBody>
+						</ModalContent>
+					</Modal>
+				</>
+			)}
 		</>
 	)
 }
@@ -424,4 +437,8 @@ const MenuCard = ({ menu, ...props }) => {
 			</Box>
 		</Box>
 	)
+}
+
+const OrderMenuCard = () => {
+	return <Box pt='100%' rounded='xl' border='1px solid' borderColor='gray.700'></Box>
 }
