@@ -445,13 +445,12 @@ const MenuCard = ({ menu, ...props }) => {
 
 const OrderMenuCard = ({ menu }) => {
 	return (
-		<Box rounded='xl' border='1px solid' borderColor='gray.700' p='2'>
-			<Flex>
+		<Box fontSize='sm' rounded='xl' border='1px solid' borderColor='gray.700' p='2'>
+			<Flex flexDir='column'>
 				<Box
 					flexShrink='0'
 					pos='relative'
-					h='16'
-					w='16'
+					h='20'
 					overflow='hidden'
 					rounded='xl'
 				>
@@ -462,14 +461,14 @@ const OrderMenuCard = ({ menu }) => {
 						alt={menu.name}
 					/>
 				</Box>
-				<Box flex='1' pl='2'>
+				<Box flex='1' mt='2'>
 					<Text fontWeight='bold'>{menu.name}</Text>
 					<Text>Rp {menu.price}</Text>
 				</Box>
 			</Flex>
 			<VStack alignItems='stretch' mt='2'>
 				<Flex alignItems='center'>
-					<Text flexShrink='0' fontSize='sm' w='16' mr='2'>
+					<Text flexShrink='0' fontSize='sm' mr='2'>
 						Qty :
 					</Text>
 					<Input size='xs' type='number' rounded='md' textAlign='center' />
