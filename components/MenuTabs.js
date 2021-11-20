@@ -467,15 +467,10 @@ const OrderMenuCard = ({ menu }) => {
 				</Box>
 			</Flex>
 			<VStack alignItems='stretch' mt='2'>
-				<Flex alignItems='center'>
-					<Text flexShrink='0' fontSize='sm' mr='2'>
-						Qty :
-					</Text>
-					<Input size='xs' type='number' rounded='md' textAlign='center' />
-				</Flex>
 				<HStack>
-					<Button flex='1' size='xs'>-</Button>
-					<Button flex='1' size='xs' colorScheme='teal'>+</Button>
+					<Button flex='1' size='sm'>-</Button>
+					<Input value='0' flex='1' size='sm' type='number' rounded='md' textAlign='center' />
+					<Button flex='1' size='sm' colorScheme='teal'>+</Button>
 				</HStack>
 			</VStack>
 		</Box>

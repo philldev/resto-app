@@ -1,4 +1,14 @@
 import { Button, IconButton } from '@chakra-ui/button'
+import {
+	Table,
+	Thead,
+	Tbody,
+	Tfoot,
+	Tr,
+	Th,
+	Td,
+	TableCaption,
+} from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
@@ -29,9 +39,13 @@ function NewOrder() {
 				<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
 					<Flex alignItems='center'>
 						<MenuIcon mr='2' flex='1' w='6' h='6' />
-						<Text fontSize='xl'>Order Baru</Text>
+						<Text fontSize='xl'>Pesanan Baru</Text>
 					</Flex>
-					<IconButton variant='ghost' onClick={() => router.back()}icon={<ArrowBackIcon w='6' h='6' />} />
+					<IconButton
+						variant='ghost'
+						onClick={() => router.back()}
+						icon={<ArrowBackIcon w='6' h='6' />}
+					/>
 				</Flex>
 				<MenuCategoryProvider>
 					<MenusProvider>
@@ -50,7 +64,7 @@ function NewOrder() {
 					<VStack alignItems='stretch'>
 						<Flex justifyContent='space-between' w='full'>
 							<Text>Total : Rp. 250,000</Text>
-							<Text>Pesanan : 10</Text>
+							<Text>Total Menu : 10</Text>
 						</Flex>
 						<OrderDetail />
 					</VStack>
@@ -78,8 +92,24 @@ const OrderDetail = () => {
 				<DrawerContent h='75vh' bg='gray.800'>
 					<DrawerCloseButton />
 					<DrawerHeader>Detail Order</DrawerHeader>
-
-					<DrawerBody></DrawerBody>
+					<DrawerBody>
+						<Table size='sm'>
+							<Thead>
+								<Tr>
+									<Th>Menu</Th>
+									<Th isNumeric>Qty</Th>
+									<Th isNumeric>Harga</Th>
+								</Tr>
+							</Thead>
+							<Tbody>
+								<Tr>
+									<Td>Nasi Goreng</Td>
+									<Td isNumeric>1</Td>
+									<Td isNumeric>25.4</Td>
+								</Tr>
+							</Tbody>
+						</Table>
+					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
 		</>
