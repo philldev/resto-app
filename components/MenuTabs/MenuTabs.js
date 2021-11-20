@@ -65,14 +65,14 @@ const MenuPanels = ({ isOrdering }) => {
 			flex='1'
 			overflowY='auto'
 		>
-			<TabPanel>
+			<TabPanel maxW='container.md' mx='auto' w='full'>
 				{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
 				{searchQuery.length > 0 && (
 					<Text color='gray.500' mb='4'>
 						Pencarian : {searchQuery}
 					</Text>
 				)}
-				<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
+				<Grid gridTemplateColumns={{ base :'1fr 1fr', md : '1fr 1fr 1fr'}}  gridGap='4'>
 					{searchQuery.length === 0
 						? menus.map((menu) => (
 								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
@@ -85,7 +85,7 @@ const MenuPanels = ({ isOrdering }) => {
 				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat) => (
-				<TabPanel key={cat.id}>
+				<TabPanel maxW='container.md' mx='auto' w='full' key={cat.id}>
 					<Flex justifyContent='space-between'>
 						<Box
 							mb='4'
@@ -97,7 +97,7 @@ const MenuPanels = ({ isOrdering }) => {
 						</Box>
 						<CategorySettings category={cat} />
 					</Flex>
-					<Grid gridTemplateColumns='1fr 1fr' gridGap='4'>
+					<Grid gridTemplateColumns={{ base :'1fr 1fr', md : '1fr 1fr 1fr'}} gridGap='4'>
 						{menus
 							.filter((i) => i.categoryId === cat.id)
 							.map((menu) => (
@@ -124,6 +124,9 @@ const MenuTabList = () => {
 			p='2'
 			px='4'
 			pos='relative'
+			maxW='container.md'
+			w='full'
+			mx='auto'
 		>
 			{isSearching ? (
 				<Flex w='full' pos='relative'>

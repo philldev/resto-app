@@ -100,7 +100,7 @@ const OpenOrderDetailBtn = () => {
 					<DrawerCloseButton />
 					<DrawerHeader>Detail Pesanan</DrawerHeader>
 					<DrawerBody>
-						<OrderDetailForm onClose={onClose} />
+						<NewOrderDetailForm onClose={onClose} />
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
@@ -108,7 +108,7 @@ const OpenOrderDetailBtn = () => {
 	)
 }
 
-const OrderDetailForm = ({ onClose, onSuccess }) => {
+const NewOrderDetailForm = ({ onClose, onSuccess }) => {
 	const { orderItems } = useNewOrder()
 	return (
 		<VStack maxW='container.md' mx='auto' alignItems='stretch' spacing='6'>
