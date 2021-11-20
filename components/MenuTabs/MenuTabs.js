@@ -1,12 +1,13 @@
+import { Button, IconButton } from '@chakra-ui/button'
+import { useDisclosure } from '@chakra-ui/hooks'
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
-import * as React from 'react'
 import { Input } from '@chakra-ui/input'
 import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
 	Menu,
 	MenuButton,
-	MenuList,
 	MenuItem as MenuItemChakra,
+	MenuList,
 } from '@chakra-ui/menu'
 import {
 	AlertDialog,
@@ -23,16 +24,16 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
-import { useMenuCategory } from '../context/MenuCategory'
-import { useMenus } from '../context/Menus'
-import { useTabs } from '../context/Tabs'
-import { DotsHorizontal } from './common/icons/DotsHorizontal'
-import { MenuCategoryForm } from './MenuCategoryForm'
-import { Button, IconButton } from '@chakra-ui/button'
-import { useDisclosure } from '@chakra-ui/hooks'
-import { MenuForm } from './MenuForm'
-import { PLACEHOLDER_MENU_IMG } from '../utils/imagePlaceholders'
 import Image from 'next/image'
+import * as React from 'react'
+import { useMenuCategory } from '../../context/MenuCategory'
+import { useMenus } from '../../context/Menus'
+import { useNewOrder } from '../../context/NewOrder'
+import { useTabs } from '../../context/Tabs'
+import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
+import { DotsHorizontal } from '../common/icons/DotsHorizontal'
+import { MenuCategoryForm } from '../MenuCategoryForm'
+import { MenuForm } from '../MenuForm'
 
 export const MenuTabs = ({ isOrdering }) => {
 	const { tabIndex, handleTabsChange } = useTabs()
@@ -75,7 +76,7 @@ const MenuPanels = ({ isOrdering }) => {
 					{searchQuery.length === 0
 						? menus.map((menu) => (
 								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
-					))
+							))
 						: menus
 								.filter((m) => m.name.includes(searchQuery))
 								.map((menu) => (
@@ -444,8 +445,19 @@ const MenuCard = ({ menu, ...props }) => {
 }
 
 const OrderMenuCard = ({ menu }) => {
+	const { orderItems, incrementItemQty, decrementItemQty } = useNewOrder()
+	const orderItem = orderItems.find((item) => item.id === menu.id) ?? {
+		...menu,
+		qty: 0,
+	}
 	return (
-		<Box fontSize='sm' rounded='xl' border='1px solid' borderColor='gray.700' p='2'>
+		<Box
+			fontSize='sm'
+			rounded='xl'
+			border='1px solid'
+			borderColor='gray.700'
+			p='2'
+		>
 			<Flex flexDir='column'>
 				<Box
 					flexShrink='0'
@@ -468,9 +480,32 @@ const OrderMenuCard = ({ menu }) => {
 			</Flex>
 			<VStack alignItems='stretch' mt='2'>
 				<HStack>
-					<Button flex='1' size='sm'>-</Button>
-					<Input value='0' flex='1' size='sm' type='number' rounded='md' textAlign='center' />
-					<Button flex='1' size='sm' colorScheme='teal'>+</Button>
+					<Button
+						onClick={() => decrementItemQty(orderItem)}
+						flex='1'
+						size='sm'
+					>
+						-
+					</Button>
+					{/* <Input
+						value={orderItem.qty}
+						flex='1'
+						size='sm'
+						type='number'
+						rounded='md'
+						textAlign='center'
+					/> */}
+					<Text textAlign='center' flex='1'>
+						{orderItem.qty}
+					</Text>
+					<Button
+						onClick={() => incrementItemQty(orderItem)}
+						flex='1'
+						size='sm'
+						colorScheme='teal'
+					>
+						+
+					</Button>
 				</HStack>
 			</VStack>
 		</Box>

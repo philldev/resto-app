@@ -19,7 +19,7 @@ import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { MenuCategoryForm } from '../../../components/MenuCategoryForm'
 import { MenuForm } from '../../../components/MenuForm'
-import { MenuTabs } from '../../../components/MenuTabs'
+import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import {
 	MenuCategoryProvider,
 	useMenuCategory
