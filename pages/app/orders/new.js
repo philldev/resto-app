@@ -1,9 +1,10 @@
 import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
-import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Box, Divider, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
-	FormControl,FormLabel,
+	FormControl,
+	FormLabel,
 	Drawer,
 	Textarea,
 	DrawerBody,
@@ -28,6 +29,8 @@ import { MenusProvider } from '../../../context/Menus'
 import { NewOrderProvider, useNewOrder } from '../../../context/NewOrder'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
+import Image from 'next/image'
+import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
@@ -105,30 +108,80 @@ const OpenOrderDetailBtn = () => {
 	)
 }
 
-const OrderDetailForm = ({onClose, onSuccess}) => {
+const OrderDetailForm = ({ onClose, onSuccess }) => {
 	const { orderItems } = useNewOrder()
 	return (
-		<VStack alignItems='stretch' spacing='6'>
+		<VStack maxW='container.md' mx='auto' alignItems='stretch' spacing='6'>
 			<VStack alignItems='stretch' spacing='4' flexDir='column' pb='4'>
 				<Box>
 					<FormControl mb='1'>Item Pesanan</FormControl>
-					<Table size='sm' variant='simple'>
-						<Thead>
-							<Tr>
-								<Th>Nama Menu</Th>
-								<Th isNumeric>Qty</Th>
-								<Th isNumeric w='40%'>
-									Harga
-								</Th>
-							</Tr>
-						</Thead>
-						<Tbody>
-							{orderItems.map((item, index) => (
-								<OrderDetailItem orderItem={item} key={index} />
-							))}
-						</Tbody>
-						<Tfoot>
-							{/* <Tr>
+					<VStack>
+						{orderItems.map((item, index) => (
+							<Flex fontSize='sm' w='full' key={index} borderBottom='1px solid' py='2' borderBottomColor='gray.700'>
+								<Box
+									flexShrink='0'
+									pos='relative'
+									w='45px'
+									h='45px'
+									rounded='lg'
+									overflow='hidden'
+								>
+									<Image
+										layout='fill'
+										objectFit='cover'
+										src={item.imageURL ?? PLACEHOLDER_MENU_IMG}
+										alt={'Order'}
+									/>
+								</Box>
+								<Flex
+									alignItems='center'
+									w='full'
+									ml='2'
+									justifyContent='space-between'
+								>
+									<Box>
+										<Text>{item.name}</Text>
+										<Text>Rp. {item.price}</Text>
+									</Box>
+									<Text p='1'>x {item.qty}</Text>
+								</Flex>
+							</Flex>
+						))}
+					</VStack>
+				</Box>
+				<FormControl>
+					<FormLabel>Catatan Pesanan</FormLabel>
+					<Textarea placeholder='Catatan' />
+				</FormControl>
+			</VStack>
+			<VStack alignItems='stretch'>
+				<Button>Buat Pesanan</Button>
+				<Button onClick={onClose}>Kembali ke Menu</Button>
+			</VStack>
+		</VStack>
+	)
+}
+
+const OrderItemsTable = () => {
+	const { orderItems } = useNewOrder()
+	return (
+		<Table size='sm' variant='simple'>
+			<Thead>
+				<Tr>
+					<Th>Nama Menu</Th>
+					<Th isNumeric>Qty</Th>
+					<Th isNumeric w='40%'>
+						Harga
+					</Th>
+				</Tr>
+			</Thead>
+			<Tbody>
+				{orderItems.map((item, index) => (
+					<OrderDetailTableItem orderItem={item} key={index} />
+				))}
+			</Tbody>
+			<Tfoot>
+				{/* <Tr>
 								<Td borderColor='transparent'></Td>
 								<Td borderColor='transparent' isNumeric>
 									Jumlah Menu
@@ -137,7 +190,7 @@ const OrderDetailForm = ({onClose, onSuccess}) => {
 									X {getTotalQty()}
 								</Td>
 							</Tr> */}
-							{/* <Tr>
+				{/* <Tr>
 								<Td borderColor='transparent'></Td>
 								<Td borderColor='transparent' isNumeric>
 									Total Menu
@@ -164,23 +217,12 @@ const OrderDetailForm = ({onClose, onSuccess}) => {
 									Rp { (getTotal() * .03) + getTotal()}
 								</Td>
 							</Tr> */}
-						</Tfoot>
-					</Table>
-				</Box>
-				<FormControl>
-					<FormLabel>Catatan Pesanan</FormLabel>
-					<Textarea placeholder='Catatan' />
-				</FormControl>
-			</VStack>
-			<VStack alignItems='stretch'>
-				<Button>Buat Pesanan</Button>
-				<Button onClick={onClose}>Kembali ke Menu</Button>
-			</VStack>
-		</VStack>
+			</Tfoot>
+		</Table>
 	)
 }
 
-const OrderDetailItem = ({ orderItem }) => {
+const OrderDetailTableItem = ({ orderItem }) => {
 	return (
 		<Tr>
 			<Td>{orderItem.name}</Td>
