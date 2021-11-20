@@ -3,7 +3,9 @@ import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
+	FormControl,FormLabel,
 	Drawer,
+	Textarea,
 	DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
@@ -15,6 +17,7 @@ import {
 	Th,
 	Thead,
 	Tr,
+	Tfoot,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import * as React from 'react'
@@ -75,11 +78,12 @@ const BottomInfo = () => {
 }
 
 const OpenOrderDetailBtn = () => {
+	const { orderItems } = useNewOrder()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = React.useRef()
 	return (
 		<>
-			<Button ref={btnRef} onClick={onOpen}>
+			<Button disabled={orderItems.length === 0} ref={btnRef} onClick={onOpen}>
 				Lihat Detail Pesanan
 			</Button>
 			<Drawer
@@ -89,11 +93,11 @@ const OpenOrderDetailBtn = () => {
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
-				<DrawerContent h='75vh' bg='gray.800'>
+				<DrawerContent maxH='50vh' bg='gray.800'>
 					<DrawerCloseButton />
-					<DrawerHeader>Detail Order</DrawerHeader>
+					<DrawerHeader>Detail Pesanan</DrawerHeader>
 					<DrawerBody>
-						<OrderDetail />
+						<OrderDetailForm onClose={onClose} />
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
@@ -101,23 +105,78 @@ const OpenOrderDetailBtn = () => {
 	)
 }
 
-const OrderDetail = () => {
+const OrderDetailForm = ({onClose, onSuccess}) => {
 	const { orderItems } = useNewOrder()
 	return (
-		<Table size='sm'>
-			<Thead>
-				<Tr>
-					<Th w='60%'>Menu</Th>
-					<Th isNumeric>Qty</Th>
-					<Th isNumeric>Harga</Th>
-				</Tr>
-			</Thead>
-			<Tbody>
-				{orderItems.map((item, index) => (
-					<OrderDetailItem orderItem={item} key={index} />
-				))}
-			</Tbody>
-		</Table>
+		<VStack alignItems='stretch' spacing='6'>
+			<VStack alignItems='stretch' spacing='4' flexDir='column' pb='4'>
+				<Box>
+					<FormControl mb='1'>Item Pesanan</FormControl>
+					<Table size='sm' variant='simple'>
+						<Thead>
+							<Tr>
+								<Th>Nama Menu</Th>
+								<Th isNumeric>Qty</Th>
+								<Th isNumeric w='40%'>
+									Harga
+								</Th>
+							</Tr>
+						</Thead>
+						<Tbody>
+							{orderItems.map((item, index) => (
+								<OrderDetailItem orderItem={item} key={index} />
+							))}
+						</Tbody>
+						<Tfoot>
+							{/* <Tr>
+								<Td borderColor='transparent'></Td>
+								<Td borderColor='transparent' isNumeric>
+									Jumlah Menu
+								</Td>
+								<Td borderColor='transparent' isNumeric fontWeight='bold'>
+									X {getTotalQty()}
+								</Td>
+							</Tr> */}
+							{/* <Tr>
+								<Td borderColor='transparent'></Td>
+								<Td borderColor='transparent' isNumeric>
+									Total Menu
+								</Td>
+								<Td borderColor='transparent' isNumeric fontWeight='bold'>
+									Rp {getTotal()}
+								</Td>
+							</Tr>
+							<Tr>
+								<Td borderColor='transparent'></Td>
+								<Td borderColor='transparent' isNumeric>
+									Pajak 3%
+								</Td>
+								<Td borderColor='transparent' isNumeric fontWeight='bold'>
+									Rp {(getTotal() * .03).toFixed(2)}
+								</Td>
+							</Tr>
+							<Tr>
+								<Td borderColor='transparent'></Td>
+								<Td borderColor='transparent' isNumeric>
+									Total Bayar
+								</Td>
+								<Td borderColor='transparent' isNumeric fontSize='md' fontWeight='bold'>
+									Rp { (getTotal() * .03) + getTotal()}
+								</Td>
+							</Tr> */}
+						</Tfoot>
+					</Table>
+				</Box>
+				<FormControl>
+					<FormLabel>Catatan Pesanan</FormLabel>
+					<Textarea placeholder='Catatan' />
+				</FormControl>
+			</VStack>
+			<VStack alignItems='stretch'>
+				<Button>Buat Pesanan</Button>
+				<Button onClick={onClose}>Kembali ke Menu</Button>
+			</VStack>
+		</VStack>
 	)
 }
 
