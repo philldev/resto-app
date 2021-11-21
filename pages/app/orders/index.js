@@ -43,8 +43,8 @@ function Orders() {
 				>
 					<HStack w='max-content' px='4' overflowX='auto'>
 						<Link passHref href='/app/orders/new'>
-							<Button as={'a'} colorScheme='teal'>
-								Tambah Pesanan
+							<Button as={'a'} colorScheme='teal' size='sm'>
+								+ Tambah Pesanan
 							</Button>
 						</Link>
 					</HStack>
@@ -82,6 +82,9 @@ const OrderTabList = () => {
 			p='2'
 			px='4'
 			pos='relative'
+			mx='auto'
+			maxW='container.md'
+			w='full'
 		>
 			{isSearching ? (
 				<Flex w='full' pos='relative'>

@@ -2,8 +2,18 @@ import * as React from 'react'
 
 const NewOrder = React.createContext(null)
 
+export const OrderTypeEnum = {
+	TAKE_AWAY : 'TAKE_AWAY',
+	DINE_IN : 'DINE_IN',
+}
+
 export const NewOrderProvider = ({ children }) => {
 	const [orderItems, setOrderItems] = React.useState([])
+	const [orderType, setOrderType] = React.useState(null)
+
+	const chooseOrderType = (type) => {
+		setOrderType(type)
+	}
 
 	const incrementItemQty = (menu) => {
 		const exist = orderItems.find( i => i.id === menu.id)
@@ -53,7 +63,9 @@ export const NewOrderProvider = ({ children }) => {
 		incrementItemQty,
 		decrementItemQty,
 		getTotal,
-		getTotalQty
+		getTotalQty,
+		orderType,
+		chooseOrderType
 	}
 
 	return <NewOrder.Provider value={value}>{children}</NewOrder.Provider>

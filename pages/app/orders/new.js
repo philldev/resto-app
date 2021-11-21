@@ -1,19 +1,34 @@
 import { Button, IconButton } from '@chakra-ui/button'
+import {
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
+} from '@chakra-ui/modal'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
-import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Badge, Box, Divider, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
-	Drawer, DrawerBody,
+	Drawer,
+	DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
 	DrawerHeader,
-	DrawerOverlay, FormControl,
-	FormLabel, Table,
+	DrawerOverlay,
+	FormControl,
+	FormLabel,
+	Table,
 	Tbody,
-	Td, Textarea, Tfoot, Th,
+	Td,
+	Textarea,
+	Tfoot,
+	Th,
 	Thead,
-	Input, FormHelperText,
-	Tr
+	Input,
+	FormHelperText,
+	Tr,
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -22,7 +37,11 @@ import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import { MenuCategoryProvider } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
-import { NewOrderProvider, useNewOrder } from '../../../context/NewOrder'
+import {
+	NewOrderProvider,
+	OrderTypeEnum,
+	useNewOrder,
+} from '../../../context/NewOrder'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
 import { useIsMdSize } from '../../../hooks/windowSize'
@@ -30,23 +49,13 @@ import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
-	const router = useRouter()
 	if (!currentResto) return null
 	return (
 		<NewOrderProvider>
+			<OrderTypeDialog />
 			<Flex flexDir='column' w='100vw' h='100vh'>
 				<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-					<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
-						<Flex alignItems='center'>
-							<MenuIcon mr='2' flex='1' w='6' h='6' />
-							<Text fontSize='xl'>Pesanan Baru</Text>
-						</Flex>
-						<IconButton
-							variant='ghost'
-							onClick={() => router.back()}
-							icon={<ArrowBackIcon w='6' h='6' />}
-						/>
-					</Flex>
+					<Topbar />
 					<MenuCategoryProvider>
 						<MenusProvider>
 							<TabsProvider>
@@ -58,6 +67,86 @@ function NewOrder() {
 				</Flex>
 			</Flex>
 		</NewOrderProvider>
+	)
+}
+
+const Topbar = () => {
+	const router = useRouter()
+	const { orderType, chooseOrderType } = useNewOrder()
+	return (
+		<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
+			<Flex alignItems='center'>
+				<MenuIcon mr='2' flex='1' w='6' h='6' />
+				<Text fontSize='xl'>Pesanan Baru</Text>
+				<Divider orientation='vertical' mx='2' />
+				{orderType === OrderTypeEnum.DINE_IN && (
+					<Badge colorScheme='blue' variant='solid'>
+						Makan Di Tempat
+					</Badge>
+				)}
+				{orderType === OrderTypeEnum.TAKE_AWAY && (
+					<Badge colorScheme='blue'> BAWA PULANG</Badge>
+				)}
+				{orderType && (
+					<Button
+						size='xs'
+						variant='ghost'
+						textDecor='underline'
+						onClick={() => chooseOrderType(null)}
+					>
+						Ganti
+					</Button>
+				)}
+			</Flex>
+			<IconButton
+				variant='ghost'
+				onClick={() => router.back()}
+				icon={<ArrowBackIcon w='6' h='6' />}
+			/>
+		</Flex>
+	)
+}
+
+const OrderTypeDialog = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { orderType, chooseOrderType } = useNewOrder()
+	React.useEffect(() => {
+		if (!orderType && !isOpen) {
+			onOpen()
+		}
+	}, [orderType, onOpen, isOpen])
+	return (
+		<>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent bg='gray.800' mx='4'>
+					<ModalHeader>Pilih tipe pesanan</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<VStack alignItems='stretch' mb='4'>
+							<Button
+								onClick={() => {
+									chooseOrderType(OrderTypeEnum.DINE_IN)
+									onClose()
+								}}
+								variant='outline'
+							>
+								Makan di tempat
+							</Button>
+							<Button
+								onClick={() => {
+									chooseOrderType(OrderTypeEnum.TAKE_AWAY)
+									onClose()
+								}}
+								variant='outline'
+							>
+								Bawa pulang
+							</Button>
+						</VStack>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</>
 	)
 }
 
