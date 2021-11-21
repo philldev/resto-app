@@ -1,25 +1,21 @@
 import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
-import { Box, Divider, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
-	FormControl,
-	FormLabel,
-	Drawer,
-	Textarea,
-	DrawerBody,
+	Drawer, DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
 	DrawerHeader,
-	DrawerOverlay,
-	Table,
+	DrawerOverlay, FormControl,
+	FormLabel, Table,
 	Tbody,
-	Td,
-	Th,
+	Td, Textarea, Tfoot, Th,
 	Thead,
-	Tr,
-	Tfoot,
+	Input, FormHelperText,
+	Tr
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
@@ -29,7 +25,7 @@ import { MenusProvider } from '../../../context/Menus'
 import { NewOrderProvider, useNewOrder } from '../../../context/NewOrder'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
-import Image from 'next/image'
+import { useIsMdSize } from '../../../hooks/windowSize'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
 function NewOrder() {
@@ -84,6 +80,7 @@ const OpenOrderDetailBtn = () => {
 	const { orderItems } = useNewOrder()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = React.useRef()
+	const isMdSize = useIsMdSize()
 	return (
 		<>
 			<Button disabled={orderItems.length === 0} ref={btnRef} onClick={onOpen}>
@@ -91,12 +88,12 @@ const OpenOrderDetailBtn = () => {
 			</Button>
 			<Drawer
 				isOpen={isOpen}
-				placement='bottom'
+				placement={isMdSize ? 'right' : 'bottom'}
 				onClose={onClose}
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
-				<DrawerContent maxH='50vh' bg='gray.800'>
+				<DrawerContent maxH={isMdSize ? '100vh' : '50vh'} bg='gray.800'>
 					<DrawerCloseButton />
 					<DrawerHeader>Detail Pesanan</DrawerHeader>
 					<DrawerBody>
@@ -113,11 +110,28 @@ const NewOrderDetailForm = ({ onClose, onSuccess }) => {
 	return (
 		<VStack maxW='container.md' mx='auto' alignItems='stretch' spacing='6'>
 			<VStack alignItems='stretch' spacing='4' flexDir='column' pb='4'>
-				<Box>
-					<FormControl mb='1'>Item Pesanan</FormControl>
+				<FormControl w='full'>
+					<FormLabel>Nama Kostumer*</FormLabel>
+					<Input
+						w='full'
+						bg='gray.700'
+						border='none'
+						placeholder='Masukan nama kustomer'
+					/>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+				</FormControl>
+				<FormControl>
+					<FormLabel mb='1'>Item Pesanan</FormLabel>
 					<VStack>
 						{orderItems.map((item, index) => (
-							<Flex fontSize='sm' w='full' key={index} borderBottom='1px solid' py='2' borderBottomColor='gray.700'>
+							<Flex
+								fontSize='sm'
+								w='full'
+								key={index}
+								borderBottom='1px solid'
+								py='2'
+								borderBottomColor='gray.700'
+							>
 								<Box
 									flexShrink='0'
 									pos='relative'
@@ -148,7 +162,7 @@ const NewOrderDetailForm = ({ onClose, onSuccess }) => {
 							</Flex>
 						))}
 					</VStack>
-				</Box>
+				</FormControl>
 				<FormControl>
 					<FormLabel>Catatan Pesanan</FormLabel>
 					<Textarea placeholder='Catatan' />

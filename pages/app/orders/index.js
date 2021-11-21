@@ -142,8 +142,8 @@ const OrderPanels = () => {
 			flex='1'
 			overflowY='hidden'
 		>
-			<TabPanel overflowY='auto' w='100%' maxW='2xl' mx='auto'>
-				<Grid templateColumns='1fr' gap='2'>
+			<TabPanel overflowY='auto' >
+				<Grid w='100%' maxW='container.md' mx='auto' templateColumns='1fr' gap='2'>
 					{new Array(8).fill(0).map((i, idx) => (
 						<OrderCard key={idx} />
 					))}
