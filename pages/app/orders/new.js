@@ -72,37 +72,48 @@ function NewOrder() {
 
 const Topbar = () => {
 	const router = useRouter()
-	const { orderType, chooseOrderType } = useNewOrder()
 	return (
 		<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
-			<Flex alignItems='center'>
-				<MenuIcon mr='2' flex='1' w='6' h='6' />
-				<Text fontSize='xl'>Pesanan Baru</Text>
-				<Divider orientation='vertical' mx='2' />
-				{orderType === OrderTypeEnum.DINE_IN && (
-					<Badge colorScheme='blue' variant='solid'>
-						Makan Di Tempat
-					</Badge>
-				)}
-				{orderType === OrderTypeEnum.TAKE_AWAY && (
-					<Badge colorScheme='blue'> BAWA PULANG</Badge>
-				)}
-				{orderType && (
-					<Button
-						size='xs'
-						variant='ghost'
-						textDecor='underline'
-						onClick={() => chooseOrderType(null)}
-					>
-						Ganti
-					</Button>
-				)}
+			<Flex alignItems='center' wrap='wrap'>
+				<Flex alignItems='center'>
+					<MenuIcon mr='2' flex='1' w='6' h='6' />
+					<Text fontSize='xl'>Pesanan Baru</Text>
+				</Flex>
+				<Divider orientation='vertical' mx='1' />
+				<OrderTypeLabel />
 			</Flex>
 			<IconButton
 				variant='ghost'
 				onClick={() => router.back()}
 				icon={<ArrowBackIcon w='6' h='6' />}
 			/>
+		</Flex>
+	)
+}
+
+const OrderTypeLabel = () => {
+	const { orderType, chooseOrderType } = useNewOrder()
+	if (!orderType) return null
+	return (
+		<Flex alignItems='center'>
+			{orderType === OrderTypeEnum.DINE_IN && (
+				<Badge colorScheme='blue' variant='solid'>
+					Makan Di Tempat
+				</Badge>
+			)}
+			{orderType === OrderTypeEnum.TAKE_AWAY && (
+				<Badge colorScheme='blue' variant='solid'> BAWA PULANG</Badge>
+			)}
+			{orderType && (
+				<Button
+					size='xs'
+					variant='ghost'
+					textDecor='underline'
+					onClick={() => chooseOrderType(null)}
+				>
+					Ganti
+				</Button>
+			)}
 		</Flex>
 	)
 }
@@ -182,9 +193,15 @@ const OpenOrderDetailBtn = () => {
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
-				<DrawerContent maxH={isMdSize ? '100vh' : '50vh'} bg='gray.800'>
+				<DrawerContent
+					maxW={isMdSize ? '400px' : undefined}
+					maxH={isMdSize ? '100vh' : '50vh'}
+					bg='gray.800'
+				>
 					<DrawerCloseButton />
-					<DrawerHeader>Detail Pesanan</DrawerHeader>
+					<DrawerHeader d='flex' flexDir='column'>
+						<Text>Detail Pesanan</Text> <OrderTypeLabel />
+					</DrawerHeader>
 					<DrawerBody>
 						<NewOrderDetailForm onClose={onClose} />
 					</DrawerBody>
