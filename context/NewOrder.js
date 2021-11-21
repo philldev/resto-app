@@ -3,20 +3,21 @@ import * as React from 'react'
 const NewOrder = React.createContext(null)
 
 export const OrderTypeEnum = {
-	TAKE_AWAY : 'TAKE_AWAY',
-	DINE_IN : 'DINE_IN',
+	TAKE_AWAY: 'TAKE_AWAY',
+	DINE_IN: 'DINE_IN',
 }
 
 export const NewOrderProvider = ({ children }) => {
 	const [orderItems, setOrderItems] = React.useState([])
 	const [orderType, setOrderType] = React.useState(null)
+	const [order, setOrder] = React.useState(null)
 
 	const chooseOrderType = (type) => {
 		setOrderType(type)
 	}
 
 	const incrementItemQty = (menu) => {
-		const exist = orderItems.find( i => i.id === menu.id)
+		const exist = orderItems.find((i) => i.id === menu.id)
 		if (!exist) addItem(menu)
 		else
 			setOrderItems((p) =>
@@ -27,7 +28,7 @@ export const NewOrderProvider = ({ children }) => {
 	}
 
 	const decrementItemQty = (menu) => {
-		const exist = orderItems.find(i => i.id === menu.id)
+		const exist = orderItems.find((i) => i.id === menu.id)
 		if (exist && menu.qty === 1) removeItem(menu)
 		else
 			setOrderItems((p) =>
@@ -45,18 +46,23 @@ export const NewOrderProvider = ({ children }) => {
 		setOrderItems((p) => [...p, { ...menu, qty: 1 }])
 	}
 
-	const getTotal = React.useMemo( () => () => {
-		return orderItems.reduce((pVal, cVal) => {
-				return pVal + (cVal.qty * cVal.price)
-		}, 0 )
-	}, [orderItems])
+	const getTotal = React.useMemo(
+		() => () => {
+			return orderItems.reduce((pVal, cVal) => {
+				return pVal + cVal.qty * cVal.price
+			}, 0)
+		},
+		[orderItems]
+	)
 
-	const getTotalQty = React.useMemo( () => () => {
-		return orderItems.reduce((pVal, cVal) => {
-				return pVal + cVal.qty 
-		}, 0 )
-	}, [orderItems])
-
+	const getTotalQty = React.useMemo(
+		() => () => {
+			return orderItems.reduce((pVal, cVal) => {
+				return pVal + cVal.qty
+			}, 0)
+		},
+		[orderItems]
+	)
 
 	const value = {
 		orderItems,
@@ -65,7 +71,9 @@ export const NewOrderProvider = ({ children }) => {
 		getTotal,
 		getTotalQty,
 		orderType,
-		chooseOrderType
+		chooseOrderType,
+		order,
+		setOrder,
 	}
 
 	return <NewOrder.Provider value={value}>{children}</NewOrder.Provider>

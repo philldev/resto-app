@@ -35,8 +35,12 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
+import { useWizard } from 'react-wizard-primitive'
+import { EyeIcon } from '../../../components/common/icons/EyeIcon'
+import { EyeOffIcon } from '../../../components/common/icons/EyeIcon copy'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
+import { OrderItemsTable } from '../../../components/OrderItemsTable'
 import { MenuCategoryProvider } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import {
@@ -201,15 +205,15 @@ const OpenOrderDetailBtn = () => {
 				<DrawerOverlay />
 				<DrawerContent
 					maxW={isMdSize ? '400px' : undefined}
-					maxH={isMdSize ? '100vh' : '50vh'}
+					maxH={isMdSize ? '100vh' : '80vh'}
 					bg='gray.800'
 				>
 					<DrawerCloseButton />
-					<DrawerHeader d='flex' flexDir='column'>
+					<DrawerHeader px='2' d='flex' flexDir='column'>
 						<Text>Detail Pesanan</Text> <OrderTypeLabel />
 					</DrawerHeader>
-					<DrawerBody>
-						<NewOrderDetailForm onClose={onClose} />
+					<DrawerBody px='2'>
+						<NewOrderDetail onClose={onClose} />
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>
@@ -217,9 +221,87 @@ const OpenOrderDetailBtn = () => {
 	)
 }
 
-const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
-	const { orderItems, orderType } = useNewOrder()
+const NewOrderDetail = ({ onClose }) => {
+	const { getStep, nextStep, previousStep } = useWizard()
+	const steps = [NewOrderDetailForm, NewOrderPayment, NewOrderPayNow]
+	return steps.map(
+		(Step, index) =>
+			getStep().isActive && (
+				<Step
+					key={index}
+					goNext={nextStep}
+					goBack={previousStep}
+					{...{ onClose }}
+				/>
+			)
+	)
+}
 
+const NewOrderPayment = ({ goNext, goBack }) => {
+	return (
+		<VStack spacing='4' pb='4' alignItems='stretch'>
+			<FormControl w='full'>
+				<FormLabel>Pembayaran*</FormLabel>
+				<VStack alignItems='stretch'>
+					<Button onClick={goNext} variant='outline'>
+						Bayar Sekarang
+					</Button>
+					<Button variant='outline'>Bayar Nanti</Button>
+				</VStack>
+			</FormControl>
+			<Button onClick={goBack}>Kembali</Button>
+		</VStack>
+	)
+}
+
+const NewOrderPayNow = ({ goNext, goBack }) => {
+	const { getTotal, orderItems, getTotalQty } = useNewOrder()
+
+	const [showOrderItems, setShowOrderItems] = React.useState(false)
+	return (
+		<VStack spacing='4' pb='4' alignItems='stretch'>
+			<VStack spacing='2' alignItems='stretch'>
+				<FormControl>
+					<FormLabel>Item Pesanan</FormLabel>
+					<Button
+						mb='2'
+						onClick={() => setShowOrderItems((p) => !p)}
+						leftIcon={
+							!showOrderItems ? (
+								<EyeIcon w='5' h='5' />
+							) : (
+								<EyeOffIcon w='5' h='5' />
+							)
+						}
+						size='sm'
+					>
+						{!showOrderItems ? 'Lihat' : 'Sembunyikan'} Item Pesanan
+					</Button>
+					{showOrderItems && (
+						<OrderItemsTable
+							total={getTotal()}
+							tax={3}
+							totalQty={getTotalQty()}
+							orderItems={orderItems}
+						/>
+					)}
+				</FormControl>
+				<FormControl>
+					<FormLabel mb='1'>Total Bayar</FormLabel>
+					<Box p='1' textAlign='center' rounded='md' bg='gray.900'  fontWeight='bold' fontSize='xl'>Rp {getTotal()}</Box>
+				</FormControl>
+				<FormControl>
+					<FormLabel mb='1'>Bayar</FormLabel>
+					<Input textAlign='center' fontWeight='bold' fontSize='xl' placeholder='' type='number' />
+				</FormControl>
+			</VStack>
+			<Button onClick={goBack}>Kembali</Button>
+		</VStack>
+	)
+}
+
+const NewOrderDetailForm = ({ onClose, goNext }) => {
+	const { orderItems, orderType, setOrder, order } = useNewOrder()
 	const {
 		register,
 		setValue,
@@ -227,21 +309,26 @@ const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
-		defaultValues: order,
+		defaultValues: order
+			? {
+					costumer: order.costumer,
+					notes: order.notes,
+					table: order.table,
+			  }
+			: undefined,
 		resolver: getOrderResolver(orderType),
 	})
 
 	const [isLoading, setIsLoading] = React.useState()
 	const onSubmit = async (data) => {
 		try {
-			setIsLoading(true)
 			const order = {
 				...data,
-				items : orderItems,
-				type : orderType
+				items: orderItems,
+				type: orderType,
 			}
-			console.log('order', order);
-			// onSuccess()
+			setOrder(order)
+			goNext()
 		} catch (error) {
 			console.log(error)
 			setIsLoading(false)
@@ -256,6 +343,7 @@ const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
 			mx='auto'
 			alignItems='stretch'
 			spacing='6'
+			pb='4'
 		>
 			<VStack alignItems='stretch' spacing='4' flexDir='column' pb='4'>
 				<FormControl w='full'>
@@ -327,7 +415,7 @@ const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
 						<Grid templateColumns='1fr 1fr 1fr' gap='1'>
 							{new Array(12).fill(0).map((_, index) => (
 								<Button
-									colorScheme={watch('table') === index + 1 ? 'teal' : 'gray'}
+									colorScheme={watch('table') === index + 1 ? 'blue' : 'gray'}
 									variant={watch('table') === index + 1 ? 'solid' : 'outline'}
 									onClick={() =>
 										watch('table') === index + 1
@@ -347,8 +435,12 @@ const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
 				)}
 			</VStack>
 			<VStack alignItems='stretch'>
-				<Button isLoading={isLoading} type='submit'>Buat Pesanan</Button>
-				<Button isLoading={isLoading} onClick={onClose}>Kembali ke Menu</Button>
+				<Button colorScheme='teal' isLoading={isLoading} type='submit'>
+					Lanjut
+				</Button>
+				<Button isLoading={isLoading} onClick={onClose}>
+					Kembali ke Menu
+				</Button>
 			</VStack>
 		</VStack>
 	)
