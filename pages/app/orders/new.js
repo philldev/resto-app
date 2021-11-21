@@ -1,4 +1,15 @@
 import { Button, IconButton } from '@chakra-ui/button'
+import { useDisclosure } from '@chakra-ui/hooks'
+import { ArrowBackIcon } from '@chakra-ui/icons'
+import {
+	Badge,
+	Box,
+	Divider,
+	Flex,
+	Grid,
+	Text,
+	VStack,
+} from '@chakra-ui/layout'
 import {
 	Modal,
 	ModalBody,
@@ -7,9 +18,6 @@ import {
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
-import { useDisclosure } from '@chakra-ui/hooks'
-import { ArrowBackIcon } from '@chakra-ui/icons'
-import { Badge, Box, Divider, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
 	Drawer,
 	DrawerBody,
@@ -18,21 +26,15 @@ import {
 	DrawerHeader,
 	DrawerOverlay,
 	FormControl,
-	FormLabel,
-	Table,
-	Tbody,
-	Td,
-	Textarea,
-	Tfoot,
-	Th,
-	Thead,
-	Input,
 	FormHelperText,
-	Tr,
+	FormLabel,
+	Input,
+	Textarea,
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import { useForm } from 'react-hook-form'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import { MenuCategoryProvider } from '../../../context/MenuCategory'
@@ -45,6 +47,7 @@ import {
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
 import { useIsMdSize } from '../../../hooks/windowSize'
+import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
 function NewOrder() {
@@ -102,7 +105,10 @@ const OrderTypeLabel = () => {
 				</Badge>
 			)}
 			{orderType === OrderTypeEnum.TAKE_AWAY && (
-				<Badge colorScheme='blue' variant='solid'> BAWA PULANG</Badge>
+				<Badge colorScheme='blue' variant='solid'>
+					{' '}
+					BAWA PULANG
+				</Badge>
 			)}
 			{orderType && (
 				<Button
@@ -211,10 +217,46 @@ const OpenOrderDetailBtn = () => {
 	)
 }
 
-const NewOrderDetailForm = ({ onClose, onSuccess }) => {
-	const { orderItems } = useNewOrder()
+const NewOrderDetailForm = ({ onClose, order, onSuccess }) => {
+	const { orderItems, orderType } = useNewOrder()
+
+	const {
+		register,
+		setValue,
+		watch,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		defaultValues: order,
+		resolver: getOrderResolver(orderType),
+	})
+
+	const [isLoading, setIsLoading] = React.useState()
+	const onSubmit = async (data) => {
+		try {
+			setIsLoading(true)
+			const order = {
+				...data,
+				items : orderItems,
+				type : orderType
+			}
+			console.log('order', order);
+			// onSuccess()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
+		}
+	}
+
 	return (
-		<VStack maxW='container.md' mx='auto' alignItems='stretch' spacing='6'>
+		<VStack
+			as='form'
+			onSubmit={handleSubmit(onSubmit)}
+			maxW='container.md'
+			mx='auto'
+			alignItems='stretch'
+			spacing='6'
+		>
 			<VStack alignItems='stretch' spacing='4' flexDir='column' pb='4'>
 				<FormControl w='full'>
 					<FormLabel>Nama Kostumer*</FormLabel>
@@ -223,8 +265,11 @@ const NewOrderDetailForm = ({ onClose, onSuccess }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan nama kustomer'
+						{...register('costumer')}
 					/>
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.costumer?.message}
+					</FormHelperText>
 				</FormControl>
 				<FormControl>
 					<FormLabel mb='1'>Item Pesanan</FormLabel>
@@ -271,84 +316,41 @@ const NewOrderDetailForm = ({ onClose, onSuccess }) => {
 				</FormControl>
 				<FormControl>
 					<FormLabel>Catatan Pesanan</FormLabel>
-					<Textarea placeholder='Catatan' />
+					<Textarea {...register('notes')} placeholder='Catatan' />
+					<FormHelperText fontSize='sm' color='red.400' mt='2'>
+						{errors.notes?.message}
+					</FormHelperText>
 				</FormControl>
+				{orderType === OrderTypeEnum.DINE_IN && (
+					<FormControl>
+						<FormLabel>Meja Pesanan</FormLabel>
+						<Grid templateColumns='1fr 1fr 1fr' gap='1'>
+							{new Array(12).fill(0).map((_, index) => (
+								<Button
+									colorScheme={watch('table') === index + 1 ? 'teal' : 'gray'}
+									variant={watch('table') === index + 1 ? 'solid' : 'outline'}
+									onClick={() =>
+										watch('table') === index + 1
+											? setValue('table', -1)
+											: setValue('table', index + 1, { shouldValidate: true })
+									}
+									key={index}
+								>
+									{index + 1}
+								</Button>
+							))}
+						</Grid>
+						<FormHelperText fontSize='sm' color='red.400' mt='2'>
+							{errors.table?.message}
+						</FormHelperText>
+					</FormControl>
+				)}
 			</VStack>
 			<VStack alignItems='stretch'>
-				<Button>Buat Pesanan</Button>
-				<Button onClick={onClose}>Kembali ke Menu</Button>
+				<Button isLoading={isLoading} type='submit'>Buat Pesanan</Button>
+				<Button isLoading={isLoading} onClick={onClose}>Kembali ke Menu</Button>
 			</VStack>
 		</VStack>
-	)
-}
-
-const OrderItemsTable = () => {
-	const { orderItems } = useNewOrder()
-	return (
-		<Table size='sm' variant='simple'>
-			<Thead>
-				<Tr>
-					<Th>Nama Menu</Th>
-					<Th isNumeric>Qty</Th>
-					<Th isNumeric w='40%'>
-						Harga
-					</Th>
-				</Tr>
-			</Thead>
-			<Tbody>
-				{orderItems.map((item, index) => (
-					<OrderDetailTableItem orderItem={item} key={index} />
-				))}
-			</Tbody>
-			<Tfoot>
-				{/* <Tr>
-								<Td borderColor='transparent'></Td>
-								<Td borderColor='transparent' isNumeric>
-									Jumlah Menu
-								</Td>
-								<Td borderColor='transparent' isNumeric fontWeight='bold'>
-									X {getTotalQty()}
-								</Td>
-							</Tr> */}
-				{/* <Tr>
-								<Td borderColor='transparent'></Td>
-								<Td borderColor='transparent' isNumeric>
-									Total Menu
-								</Td>
-								<Td borderColor='transparent' isNumeric fontWeight='bold'>
-									Rp {getTotal()}
-								</Td>
-							</Tr>
-							<Tr>
-								<Td borderColor='transparent'></Td>
-								<Td borderColor='transparent' isNumeric>
-									Pajak 3%
-								</Td>
-								<Td borderColor='transparent' isNumeric fontWeight='bold'>
-									Rp {(getTotal() * .03).toFixed(2)}
-								</Td>
-							</Tr>
-							<Tr>
-								<Td borderColor='transparent'></Td>
-								<Td borderColor='transparent' isNumeric>
-									Total Bayar
-								</Td>
-								<Td borderColor='transparent' isNumeric fontSize='md' fontWeight='bold'>
-									Rp { (getTotal() * .03) + getTotal()}
-								</Td>
-							</Tr> */}
-			</Tfoot>
-		</Table>
-	)
-}
-
-const OrderDetailTableItem = ({ orderItem }) => {
-	return (
-		<Tr>
-			<Td>{orderItem.name}</Td>
-			<Td isNumeric>{orderItem.qty}</Td>
-			<Td isNumeric>Rp {orderItem.price}</Td>
-		</Tr>
 	)
 }
 
