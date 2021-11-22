@@ -257,23 +257,27 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 	)
 }
 
-
 const NewOrderPayNow = ({ goBack }) => {
 	const { getTotal, orderItems } = useNewOrder()
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
-	
+
 	const [payAmount, setPayAmount] = React.useState('')
 	const [payAmountVal, setPayAmountVal] = React.useState(0)
-	
+
 	const changeAmount = payAmountVal - getTotal()
-	const isMoreOrEqual = changeAmount >= getTotal()
-	const exampleAmount = [50000, 100000, 150000, 200000, 250000, 500000]
+	const isMoreOrEqual = changeAmount >= 0
+
+	console.log(isMoreOrEqual, changeAmount)
+	const exampleAmount = [
+		10000, 20000, 50000, 100000, 
+		// 150000, 200000, 250000, 500000,
+	]
 
 	React.useEffect(() => {
 		setPayAmount(payAmountVal)
 	}, [payAmountVal])
 
-	console.log('render++');
+	console.log('render++')
 
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
@@ -296,7 +300,7 @@ const NewOrderPayNow = ({ goBack }) => {
 					</Button>
 					{showOrderItems && <OrderItemsTable orderItems={orderItems} />}
 				</FormControl>
-				<FormControl>
+				<FormControl w='100%' overflowX='hidden'>
 					<FormLabel mb='1'>Bayar</FormLabel>
 					<NumberFormat
 						customInput={Input}
