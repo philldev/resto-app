@@ -52,6 +52,7 @@ import {
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
 import { useIsMdSize } from '../../../hooks/windowSize'
+import { formatPrice } from '../../../utils/formatPrice'
 import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 
@@ -430,7 +431,7 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 								>
 									<Box>
 										<Text>{item.name}</Text>
-										<Text>Rp. {item.price}</Text>
+										<Text>{formatPrice(item.price)}</Text>
 									</Box>
 									<Text p='1'>x {item.qty}</Text>
 								</Flex>

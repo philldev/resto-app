@@ -1,4 +1,5 @@
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
+import { formatPrice } from '../utils/formatPrice'
 
 export const OrderItemsTable = ({ orderItems }) => {
 	return (
@@ -26,7 +27,7 @@ const OrderDetailTableItem = ({ orderItem }) => {
 		<Tr>
 			<Td>{orderItem.name}</Td>
 			<Td isNumeric>{orderItem.qty}</Td>
-			<Td isNumeric>Rp {orderItem.price}</Td>
+			<Td isNumeric>{formatPrice(orderItem.price)}</Td>
 		</Tr>
 	)
 }

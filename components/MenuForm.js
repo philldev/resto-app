@@ -59,7 +59,6 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 				<FormControl w='full'>
 					<FormLabel>Harga*</FormLabel>
 					<Controller
-						defaultValue={0}
 						render={({ field }) => (
 							<NumberFormat
 								name={field.name}
@@ -70,7 +69,9 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 									field.onChange(e.target.value)
 								}}
 								prefix={'Rp '}
-								thousandSeparator={true}
+								thousandSeparator='.'
+								decimalSeparator=','
+								suffix=',00'
 								w='full'
 								bg='gray.700'
 								border='none'

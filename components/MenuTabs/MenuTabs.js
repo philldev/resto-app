@@ -30,6 +30,7 @@ import { useMenuCategory } from '../../context/MenuCategory'
 import { useMenus } from '../../context/Menus'
 import { useNewOrder } from '../../context/NewOrder'
 import { useTabs } from '../../context/Tabs'
+import { formatPrice } from '../../utils/formatPrice'
 import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
 import { DotsHorizontal } from '../common/icons/DotsHorizontal'
 import { MenuCategoryForm } from '../MenuCategoryForm'
@@ -72,11 +73,14 @@ const MenuPanels = ({ isOrdering }) => {
 						Pencarian : {searchQuery}
 					</Text>
 				)}
-				<Grid gridTemplateColumns={{ base :'1fr 1fr', md : '1fr 1fr 1fr'}}  gridGap='4'>
+				<Grid
+					gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }}
+					gridGap='4'
+				>
 					{searchQuery.length === 0
 						? menus.map((menu) => (
 								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
-							))
+						  ))
 						: menus
 								.filter((m) => m.name.includes(searchQuery))
 								.map((menu) => (
@@ -97,7 +101,10 @@ const MenuPanels = ({ isOrdering }) => {
 						</Box>
 						<CategorySettings category={cat} />
 					</Flex>
-					<Grid gridTemplateColumns={{ base :'1fr 1fr', md : '1fr 1fr 1fr'}} gridGap='4'>
+					<Grid
+						gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }}
+						gridGap='4'
+					>
 						{menus
 							.filter((i) => i.categoryId === cat.id)
 							.map((menu) => (
@@ -326,7 +333,7 @@ const MenuDetail = ({ menu }) => {
 					<Text fontWeight='bold' textAlign='left'>
 						{menu.name}
 					</Text>
-					<Text textAlign='left'>Rp {menu.price}</Text>
+					<Text textAlign='left'>{formatPrice(menu.price)}</Text>
 				</Box>
 			</Flex>
 			<HStack>
@@ -441,7 +448,7 @@ const MenuCard = ({ menu, ...props }) => {
 			</Box>
 			<Box py='2' px='4' bg='gray.800'>
 				<Text fontWeight='bold'>{menu.name}</Text>
-				<Text>Rp {menu.price}</Text>
+				<Text>{formatPrice(menu.price)}</Text>
 			</Box>
 		</Box>
 	)
@@ -478,7 +485,7 @@ const OrderMenuCard = ({ menu }) => {
 				</Box>
 				<Box flex='1' mt='2'>
 					<Text fontWeight='bold'>{menu.name}</Text>
-					<Text>Rp {menu.price}</Text>
+					<Text>{formatPrice(menu.price)}</Text>
 				</Box>
 			</Flex>
 			<VStack alignItems='stretch' mt='2'>
