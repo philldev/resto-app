@@ -36,6 +36,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
 import { useWizard } from 'react-wizard-primitive'
 import { EyeIcon } from '../../../components/common/icons/EyeIcon'
 import { EyeOffIcon } from '../../../components/common/icons/EyeIcon copy'
@@ -258,10 +259,17 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 
 const NewOrderPayNow = ({ goBack }) => {
 	const { getTotal, orderItems } = useNewOrder()
-
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
+
+	const [payAmount, setPayAmount] = React.useState('')
+	const [payAmountVal, setPayAmountVal] = React.useState(0)
+
+	const changeAmount = payAmountVal - getTotal()
+	const isMoreOrEqual = changeAmount >= getTotal()
+	const exampleAmount = [50000, 100000, 150000, 200000, 250000, 500000]
+
 	return (
-		<VStack spacing='4' pb='4' alignItems='stretch'>
+		<VStack spacing='12' pb='4' alignItems='stretch'>
 			<VStack spacing='2' alignItems='stretch'>
 				<FormControl>
 					<FormLabel>Item Pesanan</FormLabel>
@@ -283,19 +291,36 @@ const NewOrderPayNow = ({ goBack }) => {
 				</FormControl>
 				<FormControl>
 					<FormLabel mb='1'>Bayar</FormLabel>
-					<Input
+					<NumberFormat
+						customInput={Input}
+						value={payAmount}
+						onChange={(e) => {
+							e.persist()
+							console.log(e.target.value)
+							setPayAmount(e.target.value)
+						}}
+						prefix={'Rp '}
+						thousandSeparator='.'
+						decimalSeparator=','
 						textAlign='center'
 						fontWeight='bold'
 						fontSize='xl'
-						placeholder=''
-						type='number'
+						placeholder='Jumlah Bayar'
 						mb='2'
+						suffix=',00'
+						w='full'
+						bg='gray.700'
+						border='none'
+						onValueChange={(values) => {
+							setPayAmountVal(values.value)
+						}}
 					/>
 					<HStack>
-						<Button size='xs'>Rp 50,000</Button>
-						<Button size='xs'>Rp 100,000</Button>
-						<Button size='xs'>Rp 150,000</Button>
-						<Button size='xs'>Rp 200,000</Button>
+						{exampleAmount.map((i, index) => (
+							<Button onClick={() => setPayAmount(i)} key={index} size='xs'>
+								{i / 1000}k
+							</Button>
+						))}
 					</HStack>
 				</FormControl>
 				<FormControl>
@@ -304,7 +329,8 @@ const NewOrderPayNow = ({ goBack }) => {
 						p='1'
 						textAlign='center'
 						rounded='md'
-						bg='gray.900'
+						bg={isMoreOrEqual ? 'green.900' :'gray.900'}
+						transition='all .2s ease-in-out'
 						fontWeight='bold'
 						fontSize='xl'
 					>
@@ -312,20 +338,24 @@ const NewOrderPayNow = ({ goBack }) => {
 					</Box>
 				</FormControl>
 				<FormControl>
-					<FormLabel mb='1'>Kembalian</FormLabel>
+					<FormLabel mb='1'>Total Kembalian</FormLabel>
 					<Box
 						p='1'
 						textAlign='center'
 						rounded='md'
-						bg='gray.900'
+						bg={isMoreOrEqual ? 'green.900' :'red.900'}
 						fontWeight='bold'
 						fontSize='xl'
+						transition='all .2s ease-in-out'
 					>
-						Rp 0
+						{formatPrice(changeAmount)}
 					</Box>
 				</FormControl>
 			</VStack>
-			<Button onClick={goBack}>Kembali</Button>
+			<VStack spacing='2' alignItems='stretch'>
+				<Button disabled={!isMoreOrEqual} colorScheme='green'>Bayar</Button>
+				<Button onClick={goBack}>Kembali</Button>
+			</VStack>
 		</VStack>
 	)
 }
