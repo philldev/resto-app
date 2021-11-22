@@ -257,16 +257,23 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 	)
 }
 
+
 const NewOrderPayNow = ({ goBack }) => {
 	const { getTotal, orderItems } = useNewOrder()
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
-
+	
 	const [payAmount, setPayAmount] = React.useState('')
 	const [payAmountVal, setPayAmountVal] = React.useState(0)
-
+	
 	const changeAmount = payAmountVal - getTotal()
 	const isMoreOrEqual = changeAmount >= getTotal()
 	const exampleAmount = [50000, 100000, 150000, 200000, 250000, 500000]
+
+	React.useEffect(() => {
+		setPayAmount(payAmountVal)
+	}, [payAmountVal])
+
+	console.log('render++');
 
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
@@ -296,7 +303,6 @@ const NewOrderPayNow = ({ goBack }) => {
 						value={payAmount}
 						onChange={(e) => {
 							e.persist()
-							console.log(e.target.value)
 							setPayAmount(e.target.value)
 						}}
 						prefix={'Rp '}
@@ -312,13 +318,17 @@ const NewOrderPayNow = ({ goBack }) => {
 						bg='gray.700'
 						border='none'
 						onValueChange={(values) => {
-							setPayAmountVal(values.value)
+							setPayAmountVal(parseInt(values.value))
 						}}
 					/>
 					<HStack>
 						{exampleAmount.map((i, index) => (
-							<Button onClick={() => setPayAmount(i)} key={index} size='xs'>
-								{i / 1000}k
+							<Button
+								onClick={() => setPayAmountVal((v) => v + i)}
+								key={index}
+								size='xs'
+							>
+								+ {i / 1000}k
 							</Button>
 						))}
 					</HStack>
@@ -329,7 +339,7 @@ const NewOrderPayNow = ({ goBack }) => {
 						p='1'
 						textAlign='center'
 						rounded='md'
-						bg={isMoreOrEqual ? 'green.900' :'gray.900'}
+						bg={isMoreOrEqual ? 'green.900' : 'gray.900'}
 						transition='all .2s ease-in-out'
 						fontWeight='bold'
 						fontSize='xl'
@@ -343,7 +353,7 @@ const NewOrderPayNow = ({ goBack }) => {
 						p='1'
 						textAlign='center'
 						rounded='md'
-						bg={isMoreOrEqual ? 'green.900' :'red.900'}
+						bg={isMoreOrEqual ? 'green.900' : 'red.900'}
 						fontWeight='bold'
 						fontSize='xl'
 						transition='all .2s ease-in-out'
@@ -353,7 +363,9 @@ const NewOrderPayNow = ({ goBack }) => {
 				</FormControl>
 			</VStack>
 			<VStack spacing='2' alignItems='stretch'>
-				<Button disabled={!isMoreOrEqual} colorScheme='green'>Bayar</Button>
+				<Button disabled={!isMoreOrEqual} colorScheme='green'>
+					Bayar
+				</Button>
 				<Button onClick={goBack}>Kembali</Button>
 			</VStack>
 		</VStack>
