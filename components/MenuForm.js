@@ -1,14 +1,15 @@
-import { useMenuCategory } from "../context/MenuCategory"
-import { useMenus } from "../context/Menus"
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import { MenuResolver } from "../utils/formSchema/menuSchema"
-import { Box, Flex, VStack } from "@chakra-ui/layout"
-import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control"
-import { Input } from "@chakra-ui/input"
-import { Select } from "@chakra-ui/select"
+import { Button } from '@chakra-ui/button'
+import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
+import { Input } from '@chakra-ui/input'
+import { Box, Flex, VStack } from '@chakra-ui/layout'
+import { Select } from '@chakra-ui/select'
 import Image from 'next/image'
-import { Button } from "@chakra-ui/button"
+import * as React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
+import { useMenuCategory } from '../context/MenuCategory'
+import { useMenus } from '../context/Menus'
+import { MenuResolver } from '../utils/formSchema/menuSchema'
 
 export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 	const { addMenu, updateMenu } = useMenus()
@@ -16,6 +17,7 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { errors },
 	} = useForm({
 		defaultValues: menu,
@@ -56,13 +58,27 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 				</FormControl>
 				<FormControl w='full'>
 					<FormLabel>Harga*</FormLabel>
-					<Input
-						w='full'
-						bg='gray.700'
-						border='none'
-						type='number'
-						placeholder='Masukan harga menu'
-						{...register('price')}
+					<Controller
+						defaultValue={0}
+						render={({ field }) => (
+							<NumberFormat
+								name={field.name}
+								defaultValue={field.value}
+								customInput={Input}
+								onChange={(e) => {
+									e.persist()
+									field.onChange(e.target.value)
+								}}
+								prefix={'Rp '}
+								thousandSeparator={true}
+								w='full'
+								bg='gray.700'
+								border='none'
+								placeholder='Masukan harga menu'
+							/>
+						)}
+						name='price'
+						control={control}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'>
 						{errors.price?.message}
