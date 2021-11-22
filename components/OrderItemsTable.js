@@ -1,6 +1,6 @@
-import { Table, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/table'
+import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 
-export const OrderItemsTable = ({ orderItems, total, tax, totalQty }) => {
+export const OrderItemsTable = ({ orderItems }) => {
 	return (
 		<Table size='sm' variant='simple'>
 			<Thead>
@@ -17,49 +17,6 @@ export const OrderItemsTable = ({ orderItems, total, tax, totalQty }) => {
 					<OrderDetailTableItem orderItem={item} key={index} />
 				))}
 			</Tbody>
-			<Tfoot>
-				<Tr>
-					<Td borderColor='transparent'></Td>
-					<Td borderColor='transparent' isNumeric>
-						Total Qty
-					</Td>
-					<Td borderColor='transparent' isNumeric fontWeight='bold'>
-						X {totalQty}
-					</Td>
-				</Tr>
-				<Tr>
-					<Td borderColor='transparent'></Td>
-					<Td borderColor='transparent' isNumeric>
-						Total Bayar
-					</Td>
-					<Td borderColor='transparent' isNumeric fontWeight='bold'>
-						Rp {total}
-					</Td>
-				</Tr>
-				{/* <Tr>
-					<Td borderColor='transparent'></Td>
-					<Td borderColor='transparent' isNumeric>
-						Pajak {tax}%
-					</Td>
-					<Td borderColor='transparent' isNumeric fontWeight='bold'>
-						Rp {(total * (tax / 100)).toFixed(2)}
-					</Td>
-				</Tr> */}
-				{/* <Tr>
-					<Td borderColor='transparent'></Td>
-					<Td borderColor='transparent' isNumeric>
-						Total Bayar
-					</Td>
-					<Td
-						borderColor='transparent'
-						isNumeric
-						fontSize='md'
-						fontWeight='bold'
-					>
-						Rp {total}
-					</Td>
-				</Tr> */}
-			</Tfoot>
 		</Table>
 	)
 }

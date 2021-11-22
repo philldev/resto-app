@@ -7,6 +7,7 @@ import {
 	Divider,
 	Flex,
 	Grid,
+	HStack,
 	Text,
 	VStack,
 } from '@chakra-ui/layout'
@@ -254,7 +255,7 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 	)
 }
 
-const NewOrderPayNow = ({ goNext, goBack }) => {
+const NewOrderPayNow = ({ goBack }) => {
 	const { getTotal, orderItems, getTotalQty } = useNewOrder()
 
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
@@ -287,12 +288,47 @@ const NewOrderPayNow = ({ goNext, goBack }) => {
 					)}
 				</FormControl>
 				<FormControl>
-					<FormLabel mb='1'>Total Bayar</FormLabel>
-					<Box p='1' textAlign='center' rounded='md' bg='gray.900'  fontWeight='bold' fontSize='xl'>Rp {getTotal()}</Box>
+					<FormLabel mb='1'>Bayar</FormLabel>
+					<Input
+						textAlign='center'
+						fontWeight='bold'
+						fontSize='xl'
+						placeholder=''
+						type='number'
+						mb='2'
+					/>
+					<HStack>
+						<Button size='xs'>Rp 50,000</Button>
+						<Button size='xs'>Rp 100,000</Button>
+						<Button size='xs'>Rp 150,000</Button>
+						<Button size='xs'>Rp 200,000</Button>
+					</HStack>
 				</FormControl>
 				<FormControl>
-					<FormLabel mb='1'>Bayar</FormLabel>
-					<Input textAlign='center' fontWeight='bold' fontSize='xl' placeholder='' type='number' />
+					<FormLabel mb='1'>Total Bayar</FormLabel>
+					<Box
+						p='1'
+						textAlign='center'
+						rounded='md'
+						bg='gray.900'
+						fontWeight='bold'
+						fontSize='xl'
+					>
+						Rp {getTotal()}
+					</Box>
+				</FormControl>
+				<FormControl>
+					<FormLabel mb='1'>Kembalian</FormLabel>
+					<Box
+						p='1'
+						textAlign='center'
+						rounded='md'
+						bg='gray.900'
+						fontWeight='bold'
+						fontSize='xl'
+					>
+						Rp 0
+					</Box>
 				</FormControl>
 			</VStack>
 			<Button onClick={goBack}>Kembali</Button>
