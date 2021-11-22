@@ -179,7 +179,7 @@ const BottomInfo = () => {
 		<Box p='4' bg='gray.800' fontSize='sm'>
 			<VStack alignItems='stretch'>
 				<Flex justifyContent='space-between' w='full'>
-					<Text>Total : Rp. {getTotal()}</Text>
+					<Text>Total : {formatPrice(getTotal())}</Text>
 					<Text>Total Menu : {getTotalQty()}</Text>
 				</Flex>
 				<OpenOrderDetailBtn />
@@ -257,7 +257,7 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 }
 
 const NewOrderPayNow = ({ goBack }) => {
-	const { getTotal, orderItems, getTotalQty } = useNewOrder()
+	const { getTotal, orderItems } = useNewOrder()
 
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
 	return (
@@ -279,14 +279,7 @@ const NewOrderPayNow = ({ goBack }) => {
 					>
 						{!showOrderItems ? 'Lihat' : 'Sembunyikan'} Item Pesanan
 					</Button>
-					{showOrderItems && (
-						<OrderItemsTable
-							total={getTotal()}
-							tax={3}
-							totalQty={getTotalQty()}
-							orderItems={orderItems}
-						/>
-					)}
+					{showOrderItems && <OrderItemsTable orderItems={orderItems} />}
 				</FormControl>
 				<FormControl>
 					<FormLabel mb='1'>Bayar</FormLabel>
@@ -315,7 +308,7 @@ const NewOrderPayNow = ({ goBack }) => {
 						fontWeight='bold'
 						fontSize='xl'
 					>
-						Rp {getTotal()}
+						{formatPrice(getTotal())}
 					</Box>
 				</FormControl>
 				<FormControl>
