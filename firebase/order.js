@@ -28,8 +28,8 @@ const getOrders = async (restoId, time = 'today') => {
 		const currDate = new Date() // get current date
 		q = query(
 			orderCollection(restoId),
-			where('createdAt', '>=', currDate.setHours(0)),
-			where('createdAt', '<=', currDate.setHours(24)),
+			where('createdAt', '>=', new Date(currDate.setHours(0))),
+			where('createdAt', '<=', new Date(currDate.setHours(24)))
 		)
 	} else if (time === 'this_week') {
 		const currDate = new Date() // get current date
@@ -49,10 +49,11 @@ const getOrders = async (restoId, time = 'today') => {
 		q = query(
 			orderCollection(restoId),
 			where('createdAt', '>=', firstday),
-			where('createdAt', '<=', lastday)
+			where('createdAt', '<=', lastday),
+			orderBy('createdAt', 'asc')
 		)
 	} else {
-		q = query(orderCollection(restoId))
+		q = query(orderCollection(restoId), orderBy('createdAt', 'asc'))
 	}
 	try {
 		const orders = []

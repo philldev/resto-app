@@ -179,7 +179,7 @@ const OrderPanel = ({ type, label }) => {
 			<Text mb='2' fontSize='lg' fontWeight='bold'>
 				Pesanan {label}
 			</Text>
-			<Grid templateColumns='1fr' gap='2'>
+			<Grid templateColumns={{base :'1fr', md :'1fr 1fr'}} gap='2'>
 				{items.map((i, idx) => (
 					<OrderCard key={idx} order={i} />
 				))}
@@ -218,7 +218,7 @@ const OrderCard = ({ order }) => {
 						{order.customer}
 					</Text>
 				</HStack>
-				<HStack>
+				<HStack overflowX='auto' pb='2'>
 					{order.status === 'on_progress' ? (
 						<Badge colorScheme='yellow'>Dalam Proses</Badge>
 					) : order.status === 'completed' ? (
@@ -229,6 +229,10 @@ const OrderCard = ({ order }) => {
 					{order.isPaid ? 
 						<Badge colorScheme='green'>Sudah di Bayar</Badge> : 
 						<Badge colorScheme='yellow'>Belum bayar</Badge>
+					}
+					{order.type === 'DINE_IN' ? 
+						<Badge colorScheme='blue'>Makan di tempat</Badge> : 
+						<Badge colorScheme='blue'>Bawa pulang</Badge>
 					}
 				</HStack>
 			</Box>
@@ -242,7 +246,7 @@ const OrderCard = ({ order }) => {
 					<Text mb='2' fontSize='lg' fontWeight='bold'>
 						Total Bayar : {formatPrice(getTotal(order.items))}
 					</Text>
-					<Text mb='2' fontSize='lg' fontWeight='bold'>
+					<Text textAlign='right' mb='2' fontSize='lg' fontWeight='bold'>
 						Jumlah Item : {getTotalQty(order.items)}
 					</Text>
 				</Flex>

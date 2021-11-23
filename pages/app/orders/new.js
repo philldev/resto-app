@@ -548,7 +548,7 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 						{...register('customer')}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'>
-						{errors.costumer?.message}
+						{errors.customer?.message}
 					</FormHelperText>
 				</FormControl>
 				<FormControl>
