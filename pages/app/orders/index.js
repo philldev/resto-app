@@ -1,5 +1,4 @@
 import { Button } from '@chakra-ui/button'
-import moment from 'moment'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import {
@@ -11,14 +10,13 @@ import {
 	HStack,
 	Text,
 } from '@chakra-ui/layout'
-import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/stat'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import moment from 'moment'
 import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
 import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
-import { OrderTypeEnum } from '../../../context/NewOrder'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
 import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
@@ -179,51 +177,8 @@ const OrderPanels = () => {
 
 const OrderPanel = ({ type, label }) => {
 	const { items } = useOrderItems(type)
-	const panelTotal = items.reduce((prev, curr) => {
-		return prev + getTotal(curr.items)
-	}, 0)
-
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
-			<Text mb='2' fontSize='lg' fontWeight='bold'>
-				Statistik {label}
-			</Text>
-			<StatGroup
-				mb='2'
-				border='1px solid'
-				borderColor='gray.700'
-				p='4'
-				rounded='xl'
-			>
-				<Stat variant='outline' mr='6'>
-					<StatLabel>Total pemasukan</StatLabel>
-					<StatNumber>{formatPrice(panelTotal)}</StatNumber>
-				</Stat>
-				<Stat mr='6' minW='max-content'>
-					<StatLabel>Total Pesanan</StatLabel>
-					<StatNumber>45</StatNumber>
-				</Stat>
-			</StatGroup>
-			<StatGroup
-				mb='2'
-				border='1px solid'
-				borderColor='gray.700'
-				p='4'
-				rounded='xl'
-			>
-				<Stat mr='6' minW='max-content'>
-					<StatLabel>Bawa Pulang</StatLabel>
-					<StatNumber>
-						{items.filter((i) => i.type === OrderTypeEnum.TAKE_AWAY).length}
-					</StatNumber>
-				</Stat>
-				<Stat mr='6' minW='max-content'>
-					<StatLabel>Makan Di Tempat</StatLabel>
-					<StatNumber>
-						{items.filter((i) => i.type === OrderTypeEnum.DINE_IN).length}
-					</StatNumber>
-				</Stat>
-			</StatGroup>
 			<Text mb='2' fontSize='lg' fontWeight='bold'>
 				Pesanan {label}
 			</Text>
@@ -238,69 +193,68 @@ const OrderPanel = ({ type, label }) => {
 
 const OrderCard = ({ order }) => {
 	return (
-		<Flex
-			flexDir='column'
-			pos='relative'
-			borderRadius='xl'
-			border='1px solid'
-			borderColor='gray.700'
-			overflow='hidden'
-		>
-			<Box
+		<Link passHref href={`/app/orders/${order.id}`}>
+			<Flex
+				flexDir='column'
+				pos='relative'
+				borderRadius='xl'
+				border='1px solid'
+				borderColor='gray.700'
+				overflow='hidden'
 				p='2'
-				bg='gray.900'
-				borderBottom='1px solid'
-				borderBottomColor='gray.700'
-				w='100%'
+				color='gray.200'
+				cursor='pointer'
+				_hover={{ bg: 'gray.800' }}
 			>
-				<HStack mb='1' w='full' alignItems='center'>
-					<Text fontSize='lg' fontWeight='bold'>
-						Order #{order.no}
-					</Text>
-					<Divider orientation='vertical' h='6' mx='2' />
-					<Text fontSize='sm' color='gray.300'>
-						Meja #{order.table}
-					</Text>
-					<Divider orientation='vertical' h='6' mx='2' />
-					<Text fontSize='sm' color='gray.300'>
-						{order.customer}
-					</Text>
-				</HStack>
-				<HStack overflowX='auto' pb='2'>
-					{order.status === 'on_progress' ? (
-						<Badge colorScheme='yellow'>Dalam Proses</Badge>
-					) : order.status === 'completed' ? (
-						<Badge colorScheme='green'>Selesai</Badge>
-					) : (
-						<Badge colorScheme='red'>Dibatalkan</Badge>
-					)}
-					{order.isPaid ? (
-						<Badge colorScheme='green'>Sudah di Bayar</Badge>
-					) : (
-						<Badge colorScheme='yellow'>Belum bayar</Badge>
-					)}
-					{order.type === 'DINE_IN' ? (
-						<Badge colorScheme='blue'>Makan di tempat</Badge>
-					) : (
-						<Badge colorScheme='blue'>Bawa pulang</Badge>
-					)}
-				</HStack>
-			</Box>
-			<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
-				<Flex justifyContent='space-between'>
-					<Text mb='2' fontSize='lg' fontWeight='bold'>
-						Total Bayar : {formatPrice(getTotal(order.items))}
-					</Text>
-					<Text textAlign='right' mb='2' fontSize='lg' fontWeight='bold'>
-						Jumlah Item : {getTotalQty(order.items)}
-					</Text>
+				<Box w='100%'>
+					<Flex mb='1' justifyContent='space-between'>
+						<HStack alignItems='center'>
+							<Text fontSize='lg' fontWeight='bold'>
+								Order #{order.no}
+							</Text>
+							<Divider orientation='vertical' h='6' mx='2' />
+							<Text fontSize='sm' color='gray.300'>
+								Meja #{order.table}
+							</Text>
+							<Divider orientation='vertical' h='6' mx='2' />
+							<Text fontSize='sm' color='gray.300'>
+								{order.customer}
+							</Text>
+						</HStack>
+						<Text textAlign='right' fontSize='10px' color='gray.400'>
+							{moment(order.createdAt.toDate()).calendar()}
+						</Text>
+					</Flex>
+					<HStack overflowX='auto' pb='2'>
+						{order.status === 'on_progress' ? (
+							<Badge colorScheme='yellow'>Dalam Proses</Badge>
+						) : order.status === 'completed' ? (
+							<Badge colorScheme='green'>Selesai</Badge>
+						) : (
+							<Badge colorScheme='red'>Dibatalkan</Badge>
+						)}
+						{order.isPaid ? (
+							<Badge colorScheme='green'>Sudah di Bayar</Badge>
+						) : (
+							<Badge colorScheme='yellow'>Belum bayar</Badge>
+						)}
+						{order.type === 'DINE_IN' ? (
+							<Badge colorScheme='blue'>Makan di tempat</Badge>
+						) : (
+							<Badge colorScheme='blue'>Bawa pulang</Badge>
+						)}
+					</HStack>
+				</Box>
+				<Flex flexDir='column' w='100%'>
+					<Flex justifyContent='space-between' fontSize='sm'>
+						<Text>Total Bayar : {formatPrice(getTotal(order.items))}</Text>
+						<Text textAlign='right'>
+							Jumlah Item : {getTotalQty(order.items)}
+						</Text>
+					</Flex>
 				</Flex>
-				<Button mb='2' size='xs'>Lihat Detail</Button>
-				<Text textAlign='right' fontSize='10px' color='gray.400'>
-					{moment(order.createdAt.toDate()).calendar()}
-				</Text>
 			</Flex>
-		</Flex>
+		</Link>
 	)
 }
 

@@ -9,6 +9,7 @@ import {
 	setDoc,
 	Timestamp,
 	where,
+	getDoc,
 } from '@firebase/firestore'
 import db from './firestore'
 import { createDocId } from './helper/createDocId'
@@ -21,6 +22,17 @@ const getOrderRef = (restoId, id) =>
 
 const orderCollection = (restoId) =>
 	collection(db, 'restaurants', restoId, 'orders')
+
+const getOrder = async (restoId, id) => {
+	try {
+		const orderRef = getOrderRef(restoId, id)
+		const snap = await getDoc(orderRef)
+		if (snap.exists()) return snap.data()
+		return null
+	} catch (error) {
+		throw error
+	}
+}
 
 const getOrders = async (restoId, time = 'today') => {
 	let q
@@ -123,4 +135,4 @@ const deleteOrder = async ({ restoId, order }) => {
 	}
 }
 
-export { getOrders, updateOrder, createOrder, deleteOrder }
+export { getOrders, updateOrder, createOrder, deleteOrder, getOrder }
