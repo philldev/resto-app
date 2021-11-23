@@ -47,7 +47,6 @@ export const MenusProvider = ({ children }) => {
 			const fetchData = async () => {
 				try {
 					const menus = await MenusApi.getMenus(currentResto.id, 'all')
-					console.log(menus)
 					setMenus(menus)
 				} catch (error) {
 					console.log(error)

@@ -323,7 +323,6 @@ const NewOrderPayNow = ({ goBack }) => {
 		setPayAmount(payAmountVal)
 	}, [payAmountVal])
 
-	console.log('render++')
 
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
