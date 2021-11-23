@@ -66,7 +66,6 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 								customInput={Input}
 								onChange={(e) => {
 									e.persist()
-									field.onChange(e.target.value)
 								}}
 								prefix={'Rp '}
 								thousandSeparator='.'
@@ -75,6 +74,9 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 								w='full'
 								bg='gray.700'
 								border='none'
+								onValueChange={(val) => {
+									field.onChange(val.value)
+								}}
 								placeholder='Masukan harga menu'
 							/>
 						)}
@@ -91,7 +93,6 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 						{menuCategories.map((i) => (
 							<option
 								value={i.id}
-								selected={i.id === menu?.categoryId}
 								key={i.id}
 							>
 								{i.name}

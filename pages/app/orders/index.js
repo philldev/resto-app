@@ -10,6 +10,7 @@ import {
 	HStack,
 	Text
 } from '@chakra-ui/layout'
+import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/stat'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
@@ -63,6 +64,7 @@ const OrderTabs = () => {
 			variant='soft-rounded'
 			flex='1'
 			overflow='hidden'
+			isLazy
 		>
 			<OrderTabList />
 			<OrderPanels />
@@ -174,12 +176,37 @@ const OrderPanels = () => {
 
 const OrderPanel = ({ type, label }) => {
 	const { items } = useOrderItems(type)
+	const panelTotal = items.reduce((prev, curr) => {
+		return prev + getTotal(curr.items)
+	}, 0)
+
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
 			<Text mb='2' fontSize='lg' fontWeight='bold'>
 				Pesanan {label}
 			</Text>
-			<Grid templateColumns={{base :'1fr', md :'1fr 1fr'}} gap='2'>
+			<StatGroup
+				mb='2'
+				border='1px solid'
+				borderColor='gray.700'
+				p='4'
+				rounded='xl'
+			>
+				<Stat variant='outline' mr='4'>
+					<StatLabel>Total pemasukan</StatLabel>
+					<StatNumber>{formatPrice(panelTotal)}</StatNumber>
+					{/* <StatHelpText>
+						<StatArrow type='increase' />
+						23.36%
+					</StatHelpText> */}
+				</Stat>
+				<Stat mr='2' minW='max-content'>
+					<StatLabel>Total Pesanan</StatLabel>
+					<StatNumber>45</StatNumber>
+				</Stat>
+			
+			</StatGroup>
+			<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
 				{items.map((i, idx) => (
 					<OrderCard key={idx} order={i} />
 				))}
@@ -226,22 +253,19 @@ const OrderCard = ({ order }) => {
 					) : (
 						<Badge colorScheme='red'>Dibatalkan</Badge>
 					)}
-					{order.isPaid ? 
-						<Badge colorScheme='green'>Sudah di Bayar</Badge> : 
+					{order.isPaid ? (
+						<Badge colorScheme='green'>Sudah di Bayar</Badge>
+					) : (
 						<Badge colorScheme='yellow'>Belum bayar</Badge>
-					}
-					{order.type === 'DINE_IN' ? 
-						<Badge colorScheme='blue'>Makan di tempat</Badge> : 
+					)}
+					{order.type === 'DINE_IN' ? (
+						<Badge colorScheme='blue'>Makan di tempat</Badge>
+					) : (
 						<Badge colorScheme='blue'>Bawa pulang</Badge>
-					}
+					)}
 				</HStack>
 			</Box>
-			<Flex
-				p='2'
-				flexDir='column'
-				bg='gray.900'
-				w='100%'
-			>
+			<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
 				<Flex justifyContent='space-between'>
 					<Text mb='2' fontSize='lg' fontWeight='bold'>
 						Total Bayar : {formatPrice(getTotal(order.items))}

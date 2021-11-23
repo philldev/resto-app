@@ -11,8 +11,11 @@ export const MenuCategoryProvider = ({ children }) => {
 
 	const addMenuCategory = async (menuCat) => {
 		try {
-			await MenuCategoryApi.createMenuCategory({ menuCat, restoId: currentResto.id })
-			setMenuCategories((p) => [...p, menuCat])
+			const newMenuCat = await MenuCategoryApi.createMenuCategory({
+				menuCat,
+				restoId: currentResto.id,
+			})
+			setMenuCategories((p) => [...p, newMenuCat])
 		} catch (error) {
 			throw error
 		}
