@@ -1,8 +1,8 @@
 import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 
-function Stats() {
+function Table() {
 	return <AppPage></AppPage>
 }
 
-export default withProtectedRoute(Stats)
+export default withProtectedRoute(Table)

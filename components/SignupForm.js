@@ -41,6 +41,7 @@ export default function SignupForm() {
 			maxW='sm'
 			w='full'
 			spacing='6'
+			px='4'
 		>
 			<Heading>Create Account</Heading>
 			<VStack w='full' spacing='2'>

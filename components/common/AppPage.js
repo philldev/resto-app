@@ -1,12 +1,11 @@
 import { Box, Flex, Grid } from '@chakra-ui/layout'
-import { ChartPieIcon } from './icons/ChartPieIcon'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ClipboardListIcon } from './icons/ClipboardListIcon'
 import { DashboardIcon } from './icons/DashboarIcon'
 import { HomeIcon } from './icons/HomeIcon'
 import { MenuIcon } from './icons/MenuIcon'
-import Link from 'next/link'
 import Page from './Page'
-import { useRouter } from 'next/router'
 
 export const AppPage = ({ children, displayHeader = true }) => {
 	return (
@@ -32,12 +31,11 @@ export const AppPage = ({ children, displayHeader = true }) => {
 					borderTopColor='gray.700'
 					h='20'
 				>
-					<Grid fontSize='sm' w='full' templateColumns='repeat(5,1fr)'>
-						<BottomNavItem isRoot href='/app' Icon={DashboardIcon} label='Home' />
+					<Grid fontSize='sm' w='full' templateColumns='repeat(4,1fr)'>
+						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
 						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
-						<BottomNavItem href='/app/stats' Icon={ChartPieIcon} label='Statistik' />
-						<BottomNavItem href='/app/restaurant' Icon={HomeIcon} label='Resto' />
+						<BottomNavItem href='/app/table' Icon={DashboardIcon} label='Meja' />
 					</Grid>
 				</Flex>
 			</Flex>

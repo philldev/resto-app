@@ -37,7 +37,7 @@ export default function LoginForm() {
 			onSubmit={handleSubmit(onSubmit)}
 			maxW='sm'
 			w='full'
-			spacing='6'
+			spacing='6' px='2'
 		>
 			<Heading>Login</Heading>
 			<VStack w='full' spacing='2'>

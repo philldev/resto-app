@@ -3,7 +3,7 @@ import { Flex } from '@chakra-ui/layout'
 
 export default function Footer() {
 	return (
-		<Flex position='fixed' bottom='0' left='0' w='full'>
+		<Flex>
 			<Flex justifyContent='center' alignItems='center' w='full' h='10'>
 				<Button
 					variant='link'
