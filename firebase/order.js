@@ -26,12 +26,10 @@ const getOrders = async (restoId, time = 'today') => {
 	let q
 	if (time === 'today') {
 		const currDate = new Date() // get current date
-		const yesterday = new Date(currDate.getDay() - 1)
-		const tomorrow = new Date(currDate.getDay() + 1)
 		q = query(
 			orderCollection(restoId),
-			where('createdAt', '>', yesterday),
-			where('createdAt', '<', tomorrow)
+			where('createdAt', '>=', currDate.setHours(0)),
+			where('createdAt', '<=', currDate.setHours(24)),
 		)
 	} else if (time === 'this_week') {
 		const currDate = new Date() // get current date
@@ -53,8 +51,9 @@ const getOrders = async (restoId, time = 'today') => {
 			where('createdAt', '>=', firstday),
 			where('createdAt', '<=', lastday)
 		)
+	} else {
+		q = query(orderCollection(restoId))
 	}
-
 	try {
 		const orders = []
 		const snap = await getDocs(q)
@@ -69,7 +68,11 @@ const getOrders = async (restoId, time = 'today') => {
 
 const getOrderNumber = async (restoId) => {
 	try {
-		const q = query(orderCollection(restoId), orderBy('createdAt', 'desc'), limit(1))
+		const q = query(
+			orderCollection(restoId),
+			orderBy('createdAt', 'desc'),
+			limit(1)
+		)
 		const snap = await getDocs(q)
 		if (snap.empty) {
 			return 0
@@ -84,12 +87,12 @@ const getOrderNumber = async (restoId) => {
 
 const createOrder = async ({ restoId, order }) => {
 	try {
-		const orderRef =  createOrderRef(restoId)
+		const orderRef = createOrderRef(restoId)
 		const orderNumber = await getOrderNumber(restoId)
 		const data = {
 			id: orderRef.id,
 			...order,
-			no : orderNumber,
+			no: orderNumber,
 			createdAt: Timestamp.now(),
 			updatedAt: Timestamp.now(),
 		}

@@ -8,18 +8,18 @@ import {
 	Flex,
 	Grid,
 	HStack,
-	Text,
-	VStack,
+	Text
 } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
 import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
-import Image from 'next/image'
-import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
-import Link from 'next/link'
+import { useOrderItems } from '../../../hooks/order/useOrderItems'
+import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
+import { formatPrice } from '../../../utils/formatPrice'
 
 function Orders() {
 	return (
@@ -136,6 +136,24 @@ const OrderTabList = () => {
 }
 
 const OrderPanels = () => {
+	const orderPanels = [
+		{
+			type: 'today',
+			label: 'Hari Ini',
+		},
+		{
+			type: 'this_week',
+			label: 'Minggu Ini',
+		},
+		{
+			type: 'this_month',
+			label: 'Bulan Ini',
+		},
+		{
+			type: 'all',
+			label: 'Semua',
+		},
+	]
 	return (
 		<TabPanels
 			bg='gray.900'
@@ -145,21 +163,32 @@ const OrderPanels = () => {
 			flex='1'
 			overflowY='hidden'
 		>
-			<TabPanel overflowY='auto' >
-				<Grid w='100%' maxW='container.md' mx='auto' templateColumns='1fr' gap='2'>
-					{new Array(8).fill(0).map((i, idx) => (
-						<OrderCard key={idx} />
-					))}
-				</Grid>
-			</TabPanel>
-			<TabPanel>this week</TabPanel>
-			<TabPanel>this month</TabPanel>
-			<TabPanel>all</TabPanel>
+			{orderPanels.map((item, index) => (
+				<TabPanel key={index} overflowY='auto'>
+					<OrderPanel {...item} />
+				</TabPanel>
+			))}
 		</TabPanels>
 	)
 }
 
-const OrderCard = () => {
+const OrderPanel = ({ type, label }) => {
+	const { items } = useOrderItems(type)
+	return (
+		<Box w='100%' maxW='container.md' mx='auto'>
+			<Text mb='2' fontSize='lg' fontWeight='bold'>
+				Pesanan {label}
+			</Text>
+			<Grid templateColumns='1fr' gap='2'>
+				{items.map((i, idx) => (
+					<OrderCard key={idx} order={i} />
+				))}
+			</Grid>
+		</Box>
+	)
+}
+
+const OrderCard = ({ order }) => {
 	return (
 		<Flex
 			flexDir='column'
@@ -178,72 +207,45 @@ const OrderCard = () => {
 			>
 				<HStack mb='1' w='full' alignItems='center'>
 					<Text fontSize='lg' fontWeight='bold'>
-						Order #222
+						Order #{order.no}
 					</Text>
 					<Divider orientation='vertical' h='6' mx='2' />
 					<Text fontSize='sm' color='gray.300'>
-						Meja #10
+						Meja #{order.table}
 					</Text>
 					<Divider orientation='vertical' h='6' mx='2' />
 					<Text fontSize='sm' color='gray.300'>
-						Deddy Wolley
+						{order.customer}
 					</Text>
 				</HStack>
 				<HStack>
-					<Badge colorScheme='yellow'>On Progress</Badge>
-					<Badge colorScheme='green' opacity='.5'>
-						Completed
-					</Badge>
-					<Badge colorScheme='red' opacity='.5'>
-						Canceled
-					</Badge>
+					{order.status === 'on_progress' ? (
+						<Badge colorScheme='yellow'>Dalam Proses</Badge>
+					) : order.status === 'completed' ? (
+						<Badge colorScheme='green'>Selesai</Badge>
+					) : (
+						<Badge colorScheme='red'>Dibatalkan</Badge>
+					)}
+					{order.isPaid ? 
+						<Badge colorScheme='green'>Sudah di Bayar</Badge> : 
+						<Badge colorScheme='yellow'>Belum bayar</Badge>
+					}
 				</HStack>
 			</Box>
-			<VStack
-				p='2'
-				alignItems='stretch'
-				h='100px'
-				pos='relative'
-				overflowY='auto'
-			>
-				{new Array(5).fill(0).map((i, index) => (
-					<Flex w='full' key={index}>
-						<Box
-							flexShrink='0'
-							pos='relative'
-							w='45px'
-							h='45px'
-							rounded='lg'
-							overflow='hidden'
-						>
-							<Image
-								layout='fill'
-								objectFit='cover'
-								src={PLACEHOLDER_MENU_IMG}
-								alt={'Order'}
-							/>
-						</Box>
-						<Flex w='full' ml='2' justifyContent='space-between'>
-							<Box>
-								<Text>Menu Item 1</Text>
-								<Text>Rp. 20,000</Text>
-							</Box>
-							<Text p='1'>Qty : 10</Text>
-						</Flex>
-					</Flex>
-				))}
-			</VStack>
 			<Flex
 				p='2'
 				flexDir='column'
 				bg='gray.900'
-				borderTop='1px solid'
-				borderTopColor='gray.700'
 				w='100%'
 			>
-				<Text mb='2' fontSize='lg'>
-					Total Bayar : Rp 200,000.00
-				</Text>
+				<Flex justifyContent='space-between'>
+					<Text mb='2' fontSize='lg' fontWeight='bold'>
+						Total Bayar : {formatPrice(getTotal(order.items))}
+					</Text>
+					<Text mb='2' fontSize='lg' fontWeight='bold'>
+						Jumlah Item : {getTotalQty(order.items)}
+					</Text>
+				</Flex>
 				<Button size='xs'>Lihat Detail</Button>
 			</Flex>
 		</Flex>
