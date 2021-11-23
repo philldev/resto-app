@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/button'
+import moment from 'moment'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import {
@@ -8,7 +9,7 @@ import {
 	Flex,
 	Grid,
 	HStack,
-	Text
+	Text,
 } from '@chakra-ui/layout'
 import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/stat'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
@@ -17,6 +18,7 @@ import { AppPage } from '../../../components/common/AppPage'
 import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { OrderTypeEnum } from '../../../context/NewOrder'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
 import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
@@ -65,6 +67,7 @@ const OrderTabs = () => {
 			flex='1'
 			overflow='hidden'
 			isLazy
+			lazyBehavior='keepMounted'
 		>
 			<OrderTabList />
 			<OrderPanels />
@@ -183,7 +186,7 @@ const OrderPanel = ({ type, label }) => {
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
 			<Text mb='2' fontSize='lg' fontWeight='bold'>
-				Pesanan {label}
+				Statistik {label}
 			</Text>
 			<StatGroup
 				mb='2'
@@ -192,20 +195,38 @@ const OrderPanel = ({ type, label }) => {
 				p='4'
 				rounded='xl'
 			>
-				<Stat variant='outline' mr='4'>
+				<Stat variant='outline' mr='6'>
 					<StatLabel>Total pemasukan</StatLabel>
 					<StatNumber>{formatPrice(panelTotal)}</StatNumber>
-					{/* <StatHelpText>
-						<StatArrow type='increase' />
-						23.36%
-					</StatHelpText> */}
 				</Stat>
-				<Stat mr='2' minW='max-content'>
+				<Stat mr='6' minW='max-content'>
 					<StatLabel>Total Pesanan</StatLabel>
 					<StatNumber>45</StatNumber>
 				</Stat>
-			
 			</StatGroup>
+			<StatGroup
+				mb='2'
+				border='1px solid'
+				borderColor='gray.700'
+				p='4'
+				rounded='xl'
+			>
+				<Stat mr='6' minW='max-content'>
+					<StatLabel>Bawa Pulang</StatLabel>
+					<StatNumber>
+						{items.filter((i) => i.type === OrderTypeEnum.TAKE_AWAY).length}
+					</StatNumber>
+				</Stat>
+				<Stat mr='6' minW='max-content'>
+					<StatLabel>Makan Di Tempat</StatLabel>
+					<StatNumber>
+						{items.filter((i) => i.type === OrderTypeEnum.DINE_IN).length}
+					</StatNumber>
+				</Stat>
+			</StatGroup>
+			<Text mb='2' fontSize='lg' fontWeight='bold'>
+				Pesanan {label}
+			</Text>
 			<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
 				{items.map((i, idx) => (
 					<OrderCard key={idx} order={i} />
@@ -274,7 +295,10 @@ const OrderCard = ({ order }) => {
 						Jumlah Item : {getTotalQty(order.items)}
 					</Text>
 				</Flex>
-				<Button size='xs'>Lihat Detail</Button>
+				<Button mb='2' size='xs'>Lihat Detail</Button>
+				<Text textAlign='right' fontSize='10px' color='gray.400'>
+					{moment(order.createdAt.toDate()).calendar()}
+				</Text>
 			</Flex>
 		</Flex>
 	)
