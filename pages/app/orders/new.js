@@ -20,6 +20,8 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/modal'
 import {
+	Alert,
+	AlertIcon,
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
@@ -56,6 +58,7 @@ import { useIsMdSize } from '../../../hooks/windowSize'
 import { formatPrice } from '../../../utils/formatPrice'
 import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
+import * as OrderApi from '../../../firebase/order'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
@@ -190,7 +193,7 @@ const BottomInfo = () => {
 }
 
 const OpenOrderDetailBtn = () => {
-	const { orderItems } = useNewOrder()
+	const { orderItems, order } = useNewOrder()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = React.useRef()
 	const isMdSize = useIsMdSize()
@@ -200,9 +203,9 @@ const OpenOrderDetailBtn = () => {
 				Lihat Detail Pesanan
 			</Button>
 			<Drawer
-				isOpen={isOpen}
+				isOpen={order ? true : isOpen}
 				placement={isMdSize ? 'right' : 'bottom'}
-				onClose={onClose}
+				onClose={order ? () => {} : onClose}
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
@@ -211,7 +214,7 @@ const OpenOrderDetailBtn = () => {
 					maxH={isMdSize ? '100vh' : '80vh'}
 					bg='gray.800'
 				>
-					<DrawerCloseButton />
+					{ !order && <DrawerCloseButton /> }
 					<DrawerHeader px='2' d='flex' flexDir='column'>
 						<Text>Detail Pesanan</Text> <OrderTypeLabel />
 					</DrawerHeader>
@@ -240,9 +243,54 @@ const NewOrderDetail = ({ onClose }) => {
 	)
 }
 
-const NewOrderPayment = ({ goNext, goBack }) => {
+const NewOrderPayment = ({ goNext }) => {
+	const { order, getTotal } = useNewOrder()
 	return (
 		<VStack spacing='4' pb='4' alignItems='stretch'>
+			<Alert status='success'>
+				<AlertIcon />
+				Pesanan sukses dibuat!
+			</Alert>
+			<Flex
+				flexDir='column'
+				pos='relative'
+				borderRadius='xl'
+				border='1px solid'
+				borderColor='gray.700'
+				overflow='hidden'
+			>
+				<Box p='2' bg='gray.900' w='100%'>
+					<HStack mb='1' w='full' alignItems='center'>
+						<Text fontSize='lg' fontWeight='bold'>
+							Order #{order.no}
+						</Text>
+						<Divider orientation='vertical' h='6' mx='2' />
+						<Text fontSize='sm' color='gray.300'>
+							Meja #{order.table}
+						</Text>
+						<Divider orientation='vertical' h='6' mx='2' />
+						<Text fontSize='sm' color='gray.300'>
+							{order.customer}
+						</Text>
+					</HStack>
+					<HStack>
+						<Badge colorScheme='yellow'>On Progress</Badge>
+						<Badge colorScheme='green' opacity='.5'>
+							Completed
+						</Badge>
+						<Badge colorScheme='red' opacity='.5'>
+							Canceled
+						</Badge>
+					</HStack>
+				</Box>
+
+				<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
+					<Text mb='2' fontSize='lg' fontWeight='bold'>
+						Total Bayar : {formatPrice(getTotal())}
+					</Text>
+					<Button size='sm'>Lihat Detail</Button>
+				</Flex>
+			</Flex>
 			<FormControl w='full'>
 				<FormLabel>Pembayaran*</FormLabel>
 				<VStack alignItems='stretch'>
@@ -252,7 +300,6 @@ const NewOrderPayment = ({ goNext, goBack }) => {
 					<Button variant='outline'>Bayar Nanti</Button>
 				</VStack>
 			</FormControl>
-			<Button onClick={goBack}>Kembali</Button>
 		</VStack>
 	)
 }
@@ -268,7 +315,7 @@ const NewOrderPayNow = ({ goBack }) => {
 	const isMoreOrEqual = changeAmount >= 0
 
 	const exampleAmount = [
-		10000, 20000, 50000, 100000, 
+		10000, 20000, 50000, 100000,
 		// 150000, 200000, 250000, 500000,
 	]
 
@@ -377,6 +424,7 @@ const NewOrderPayNow = ({ goBack }) => {
 
 const NewOrderDetailForm = ({ onClose, goNext }) => {
 	const { orderItems, orderType, setOrder, order } = useNewOrder()
+	const { currentResto } = useUserResto()
 	const {
 		register,
 		setValue,
@@ -396,13 +444,19 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 
 	const [isLoading, setIsLoading] = React.useState()
 	const onSubmit = async (data) => {
+		setIsLoading(true)
 		try {
 			const order = {
 				...data,
 				items: orderItems,
 				type: orderType,
+				status : 'on_progress'
 			}
-			setOrder(order)
+			const newOrder = await OrderApi.createOrder({
+				restoId: currentResto.id,
+				order,
+			})
+			setOrder(newOrder)
 			goNext()
 		} catch (error) {
 			console.log(error)
@@ -428,7 +482,7 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 						bg='gray.700'
 						border='none'
 						placeholder='Masukan nama kustomer'
-						{...register('costumer')}
+						{...register('customer')}
 					/>
 					<FormHelperText fontSize='sm' color='red.400' mt='2'>
 						{errors.costumer?.message}

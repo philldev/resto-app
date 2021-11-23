@@ -3,6 +3,8 @@ import {
 	deleteDoc,
 	doc,
 	getDocs,
+	limit,
+	orderBy,
 	query,
 	setDoc,
 	Timestamp,
@@ -54,12 +56,27 @@ const getOrders = async (restoId, time = 'today') => {
 	}
 
 	try {
-		const menus = []
+		const orders = []
 		const snap = await getDocs(q)
 		snap.forEach((doc) => {
-			menus.push(doc.data())
+			orders.push(doc.data())
 		})
-		return menus
+		return orders
+	} catch (error) {
+		throw error
+	}
+}
+
+const getOrderNumber = async (restoId) => {
+	try {
+		const q = query(orderCollection(restoId), orderBy('createdAt', 'desc'), limit(1))
+		const snap = await getDocs(q)
+		if (snap.empty) {
+			return 0
+		} else {
+			const orderNumber = snap.docs[0].data().no
+			return orderNumber + 1
+		}
 	} catch (error) {
 		throw error
 	}
@@ -67,10 +84,12 @@ const getOrders = async (restoId, time = 'today') => {
 
 const createOrder = async ({ restoId, order }) => {
 	try {
-		const orderRef = createOrderRef(restoId)
+		const orderRef =  createOrderRef(restoId)
+		const orderNumber = await getOrderNumber(restoId)
 		const data = {
 			id: orderRef.id,
 			...order,
+			no : orderNumber,
 			createdAt: Timestamp.now(),
 			updatedAt: Timestamp.now(),
 		}
