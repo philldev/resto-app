@@ -2,10 +2,8 @@ import {
 	collection,
 	deleteDoc,
 	doc,
-	getDocs,
-	onSnapshot,
-	query,
-	setDoc,
+	getDocs, query,
+	setDoc
 } from '@firebase/firestore'
 import db from './firestore'
 import { createDocId } from './helper/createDocId'
@@ -15,29 +13,15 @@ const createMenuCategoryRef = (restoId) =>
 const getMenuCategoryRef = (restoId, id) =>
 	doc(db, 'restaurants', restoId, 'menuCategories', id)
 
-const getMenuCategories = async (
-	restoId,
-	{ listen = false, callback = (menusCategories = []) => {} } = {}
-) => {
+const getMenuCategories = async (restoId) => {
 	try {
 		const q = query(collection(db, 'restaurants', restoId, 'menuCategories'))
-		if (listen) {
-			const unsub = onSnapshot(q, (snap) => {
-				const menuCategories = []
-				snap.forEach((doc) => {
-					menuCategories.push(doc.data())
-				})
-				callback(menuCategories)
-			})
-			return unsub
-		} else {
-			const menuCategories = []
-			const snap = await getDocs(q)
-			snap.forEach((doc) => {
-				menuCategories.push(doc.data())
-			})
-			return menuCategories
-		}
+		const menuCategories = []
+		const snap = await getDocs(q)
+		snap.forEach((doc) => {
+			menuCategories.push(doc.data())
+		})
+		return menuCategories
 	} catch (error) {
 		throw error
 	}
@@ -82,3 +66,4 @@ export {
 	createMenuCategory,
 	getMenuCategories,
 }
+

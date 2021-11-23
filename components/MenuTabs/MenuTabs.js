@@ -33,6 +33,7 @@ import { useTabs } from '../../context/Tabs'
 import { formatPrice } from '../../utils/formatPrice'
 import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
 import { DotsHorizontal } from '../common/icons/DotsHorizontal'
+import { SortIcon } from '../common/icons/SortIcon'
 import { MenuCategoryForm } from '../MenuCategoryForm'
 import { MenuForm } from '../MenuForm'
 
@@ -90,16 +91,18 @@ const MenuPanels = ({ isOrdering }) => {
 			</TabPanel>
 			{menuCategories.map((cat) => (
 				<TabPanel maxW='container.md' mx='auto' w='full' key={cat.id}>
-					<Flex justifyContent='space-between'>
+					<Flex justifyContent='space-between' alignItems='center' mb='4'>
 						<Box
-							mb='4'
 							fontSize='2xl'
 							fontWeight='bold'
 							textTransform='uppercase'
 						>
 							{cat.name}
 						</Box>
-						<CategorySettings category={cat} />
+						<HStack spacing='2'>
+							<Button variant='ghost' rightIcon={<SortIcon w='4' h='4' />} size='sm'>Urutkan Menu</Button>
+							{!isOrdering && <CategorySettings category={cat} />}
+						</HStack>
 					</Flex>
 					<Grid
 						gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }}
@@ -193,11 +196,12 @@ const CategorySettings = ({ category }) => {
 		<Menu>
 			<MenuButton
 				as={IconButton}
-				icon={<DotsHorizontal h='6' w='6' />}
+				icon={<DotsHorizontal h='5' w='5' />}
 				alignItems='center'
 				justifyContent='center'
 				d='flex'
 				variant='ghost'
+				size='sm'
 			/>
 
 			<MenuList>
