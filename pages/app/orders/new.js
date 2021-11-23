@@ -1,4 +1,5 @@
 import { Button, IconButton } from '@chakra-ui/button'
+import Link from 'next/link'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import {
@@ -59,6 +60,7 @@ import { formatPrice } from '../../../utils/formatPrice'
 import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
 import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
 import * as OrderApi from '../../../firebase/order'
+import { getTotal } from '../../../utils/calculateTotal'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
@@ -214,7 +216,7 @@ const OpenOrderDetailBtn = () => {
 					maxH={isMdSize ? '100vh' : '80vh'}
 					bg='gray.800'
 				>
-					{ !order && <DrawerCloseButton /> }
+					{!order && <DrawerCloseButton />}
 					<DrawerHeader px='2' d='flex' flexDir='column'>
 						<Text>Detail Pesanan</Text> <OrderTypeLabel />
 					</DrawerHeader>
@@ -229,7 +231,12 @@ const OpenOrderDetailBtn = () => {
 
 const NewOrderDetail = ({ onClose }) => {
 	const { getStep, nextStep, previousStep } = useWizard()
-	const steps = [NewOrderDetailForm, NewOrderPayment, NewOrderPayNow]
+	const steps = [
+		NewOrderDetailForm,
+		NewOrderPayment,
+		NewOrderPayNow,
+		PaySuccess,
+	]
 	return steps.map(
 		(Step, index) =>
 			getStep().isActive && (
@@ -251,62 +258,92 @@ const NewOrderPayment = ({ goNext }) => {
 				<AlertIcon />
 				Pesanan sukses dibuat!
 			</Alert>
-			<Flex
-				flexDir='column'
-				pos='relative'
-				borderRadius='xl'
-				border='1px solid'
-				borderColor='gray.700'
-				overflow='hidden'
-			>
-				<Box p='2' bg='gray.900' w='100%'>
-					<HStack mb='1' w='full' alignItems='center'>
-						<Text fontSize='lg' fontWeight='bold'>
-							Order #{order.no}
-						</Text>
-						<Divider orientation='vertical' h='6' mx='2' />
-						<Text fontSize='sm' color='gray.300'>
-							Meja #{order.table}
-						</Text>
-						<Divider orientation='vertical' h='6' mx='2' />
-						<Text fontSize='sm' color='gray.300'>
-							{order.customer}
-						</Text>
-					</HStack>
-					<HStack>
-						<Badge colorScheme='yellow'>On Progress</Badge>
-						<Badge colorScheme='green' opacity='.5'>
-							Completed
-						</Badge>
-						<Badge colorScheme='red' opacity='.5'>
-							Canceled
-						</Badge>
-					</HStack>
-				</Box>
-
-				<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
-					<Text mb='2' fontSize='lg' fontWeight='bold'>
-						Total Bayar : {formatPrice(getTotal())}
-					</Text>
-					<Button size='sm'>Lihat Detail</Button>
-				</Flex>
-			</Flex>
+			<OrderCard total={getTotal()} order={order} />
 			<FormControl w='full'>
 				<FormLabel>Pembayaran*</FormLabel>
 				<VStack alignItems='stretch'>
 					<Button onClick={goNext} variant='outline'>
 						Bayar Sekarang
 					</Button>
-					<Button variant='outline'>Bayar Nanti</Button>
+					<Link passHref href='/app/orders'>
+						<Button variant='outline'>Bayar Nanti</Button>
+					</Link>
 				</VStack>
 			</FormControl>
 		</VStack>
 	)
 }
 
-const NewOrderPayNow = ({ goBack }) => {
-	const { getTotal, orderItems } = useNewOrder()
+const OrderCard = ({ order, total }) => {
+	return (
+		<Flex
+			flexDir='column'
+			pos='relative'
+			borderRadius='xl'
+			border='1px solid'
+			borderColor='gray.700'
+			overflow='hidden'
+		>
+			<Box p='2' bg='gray.900' w='100%'>
+				<HStack mb='1' w='full' alignItems='center'>
+					<Text fontSize='lg' fontWeight='bold'>
+						Order #{order.no}
+					</Text>
+					<Divider orientation='vertical' h='6' mx='2' />
+					<Text fontSize='sm' color='gray.300'>
+						Meja #{order.table}
+					</Text>
+					<Divider orientation='vertical' h='6' mx='2' />
+					<Text fontSize='sm' color='gray.300'>
+						{order.customer}
+					</Text>
+				</HStack>
+				<HStack>
+					<Badge colorScheme='yellow'>On Progress</Badge>
+					<Badge colorScheme='green' opacity='.5'>
+						Completed
+					</Badge>
+					<Badge colorScheme='red' opacity='.5'>
+						Canceled
+					</Badge>
+				</HStack>
+			</Box>
+
+			<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
+				<Text mb='2' fontSize='lg' fontWeight='bold'>
+					Total Bayar : {formatPrice(total)}
+				</Text>
+				<Button size='sm'>Lihat Detail</Button>
+			</Flex>
+		</Flex>
+	)
+}
+
+const PaySuccess = () => {
+	const { order } = useNewOrder()
+	return (
+		<VStack spacing='12' pb='4' alignItems='stretch'>
+			<VStack alignItems='stretch'>
+				<Alert status='success'>
+					<AlertIcon />
+					Pesanan telah dibayar
+				</Alert>
+				<OrderCard order={order} total={getTotal(order.items)} />
+			</VStack>
+			<Link passHref href='/app/orders'>
+				<Button as='a' color='gray.100'>
+					Kembali ke list Order
+				</Button>
+			</Link>
+		</VStack>
+	)
+}
+
+const NewOrderPayNow = ({ goBack, goNext }) => {
+	const { currentResto } = useUserResto()
+	const { getTotal, orderItems, setOrder, order } = useNewOrder()
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
+	const [isLoading, setIsLoading] = React.useState(false)
 
 	const [payAmount, setPayAmount] = React.useState('')
 	const [payAmountVal, setPayAmountVal] = React.useState(0)
@@ -319,10 +356,30 @@ const NewOrderPayNow = ({ goBack }) => {
 		// 150000, 200000, 250000, 500000,
 	]
 
+	const onPayClick = async () => {
+		if (isMoreOrEqual) {
+			setIsLoading(true)
+			try {
+				const updatedOrder = await OrderApi.updateOrder({
+					restoId: currentResto.id,
+					order: {
+						...order,
+						isPaid: true,
+						payAmount: payAmountVal,
+					},
+				})
+				setOrder(updatedOrder)
+				goNext()
+			} catch (error) {
+				console.log(error)
+				setIsLoading(false)
+			}
+		}
+	}
+
 	React.useEffect(() => {
 		setPayAmount(payAmountVal)
 	}, [payAmountVal])
-
 
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
@@ -412,10 +469,17 @@ const NewOrderPayNow = ({ goBack }) => {
 				</FormControl>
 			</VStack>
 			<VStack spacing='2' alignItems='stretch'>
-				<Button disabled={!isMoreOrEqual} colorScheme='green'>
+				<Button
+					disabled={!isMoreOrEqual}
+					isLoading={isLoading}
+					onClick={onPayClick}
+					colorScheme='green'
+				>
 					Bayar
 				</Button>
-				<Button onClick={goBack}>Kembali</Button>
+				<Button onClick={goBack} isLoading={isLoading}>
+					Kembali
+				</Button>
 			</VStack>
 		</VStack>
 	)
@@ -449,7 +513,7 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 				...data,
 				items: orderItems,
 				type: orderType,
-				status : 'on_progress'
+				status: 'on_progress',
 			}
 			const newOrder = await OrderApi.createOrder({
 				restoId: currentResto.id,
