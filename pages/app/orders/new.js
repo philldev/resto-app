@@ -267,7 +267,6 @@ const NewOrderPayNow = ({ goBack }) => {
 	const changeAmount = payAmountVal - getTotal()
 	const isMoreOrEqual = changeAmount >= 0
 
-	console.log(isMoreOrEqual, changeAmount)
 	const exampleAmount = [
 		10000, 20000, 50000, 100000, 
 		// 150000, 200000, 250000, 500000,

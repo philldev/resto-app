@@ -2,11 +2,9 @@ import {
 	collection,
 	deleteDoc,
 	doc,
-	getDocs,
-	onSnapshot,
-	query,
+	getDocs, query,
 	setDoc,
-	where,
+	where
 } from '@firebase/firestore'
 import db from './firestore'
 import { createDocId } from './helper/createDocId'
@@ -19,34 +17,19 @@ const getMenuRef = (restoId, id) => doc(db, 'restaurants', restoId, 'menus', id)
 const menuCollection = (restoId) =>
 	collection(db, 'restaurants', restoId, 'menus')
 
-const getMenus = async (
-	restoId,
-	categoryId = 'all',
-	{ listen = false, callback = (menus = []) => {} } = {}
-) => {
+const getMenus = async (restoId, categoryId = 'all') => {
 	try {
 		const q =
 			categoryId === 'all'
 				? query(menuCollection(restoId))
 				: query(menuCollection(restoId), where('categoryId', '==', categoryId))
-				
-		if (listen) {
-			const unsub = onSnapshot(q, (snap) => {
-				const menus = []
-				snap.forEach((doc) => {
-					menus.push(doc.data())
-				})
-				callback(menus)
-			})
-			return unsub
-		} else {
-			const menus = []
-			const snap = await getDocs(q)
-			snap.forEach((doc) => {
-				menus.push(doc.data())
-			})
-			return menus
-		}
+
+		const menus = []
+		const snap = await getDocs(q)
+		snap.forEach((doc) => {
+			menus.push(doc.data())
+		})
+		return menus
 	} catch (error) {
 		throw error
 	}
@@ -86,3 +69,4 @@ const deleteMenu = async ({ restoId, menu }) => {
 }
 
 export { getMenus, deleteMenu, updateMenu, createMenu }
+
