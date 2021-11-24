@@ -1,5 +1,4 @@
 import { Button, IconButton } from '@chakra-ui/button'
-import Link from 'next/link'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import {
@@ -10,7 +9,7 @@ import {
 	Grid,
 	HStack,
 	Text,
-	VStack,
+	VStack
 } from '@chakra-ui/layout'
 import {
 	Modal,
@@ -18,7 +17,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
 import {
 	Alert,
@@ -33,9 +32,9 @@ import {
 	FormHelperText,
 	FormLabel,
 	Input,
-	Textarea,
+	Textarea
 } from '@chakra-ui/react'
-import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
@@ -45,22 +44,22 @@ import { EyeIcon } from '../../../components/common/icons/EyeIcon'
 import { EyeOffIcon } from '../../../components/common/icons/EyeIcon copy'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
+import { OrderItemList } from '../../../components/OrderItemsList'
 import { OrderItemsTable } from '../../../components/OrderItemsTable'
 import { MenuCategoryProvider } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import {
 	NewOrderProvider,
 	OrderTypeEnum,
-	useNewOrder,
+	useNewOrder
 } from '../../../context/NewOrder'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
+import * as OrderApi from '../../../firebase/order'
 import { useIsMdSize } from '../../../hooks/windowSize'
+import { getTotal } from '../../../utils/calculateTotal'
 import { formatPrice } from '../../../utils/formatPrice'
 import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
-import { PLACEHOLDER_MENU_IMG } from '../../../utils/imagePlaceholders'
-import * as OrderApi from '../../../firebase/order'
-import { getTotal } from '../../../utils/calculateTotal'
 
 function NewOrder() {
 	const { currentResto } = useUserResto()
@@ -553,46 +552,7 @@ const NewOrderDetailForm = ({ onClose, goNext }) => {
 				</FormControl>
 				<FormControl>
 					<FormLabel mb='1'>Item Pesanan</FormLabel>
-					<VStack>
-						{orderItems.map((item, index) => (
-							<Flex
-								fontSize='sm'
-								w='full'
-								key={index}
-								borderBottom='1px solid'
-								py='2'
-								borderBottomColor='gray.700'
-							>
-								<Box
-									flexShrink='0'
-									pos='relative'
-									w='45px'
-									h='45px'
-									rounded='lg'
-									overflow='hidden'
-								>
-									<Image
-										layout='fill'
-										objectFit='cover'
-										src={item.imageURL ?? PLACEHOLDER_MENU_IMG}
-										alt={'Order'}
-									/>
-								</Box>
-								<Flex
-									alignItems='center'
-									w='full'
-									ml='2'
-									justifyContent='space-between'
-								>
-									<Box>
-										<Text>{item.name}</Text>
-										<Text>{formatPrice(item.price)}</Text>
-									</Box>
-									<Text p='1'>x {item.qty}</Text>
-								</Flex>
-							</Flex>
-						))}
-					</VStack>
+					<OrderItemList orderItems={orderItems} />
 				</FormControl>
 				<FormControl>
 					<FormLabel>Catatan Pesanan</FormLabel>
