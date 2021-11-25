@@ -5,6 +5,7 @@ import { ClipboardListIcon } from './icons/ClipboardListIcon'
 import { DashboardIcon } from './icons/DashboarIcon'
 import { HomeIcon } from './icons/HomeIcon'
 import { MenuIcon } from './icons/MenuIcon'
+import { MoreIcon } from './icons/MoreIcon'
 import Page from './Page'
 
 export const AppPage = ({ children, displayHeader = true }) => {
@@ -31,11 +32,12 @@ export const AppPage = ({ children, displayHeader = true }) => {
 					borderTopColor='gray.700'
 					h='20'
 				>
-					<Grid maxW='container.md' mx='auto' fontSize='sm' w='full' templateColumns='repeat(4,1fr)'>
+					<Grid maxW='container.md' mx='auto' fontSize='sm' w='full' templateColumns='repeat(5,1fr)'>
 						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
 						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
 						<BottomNavItem href='/app/table' Icon={DashboardIcon} label='Meja' />
+						<BottomNavItem href='/app/more' Icon={MoreIcon} label='Lainnya' />
 					</Grid>
 				</Flex>
 			</Flex>

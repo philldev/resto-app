@@ -13,7 +13,7 @@ export default function LoginPage() {
 	return (
 		<>
 			<Head>
-				<title>Login to Resto App</title>
+				<title>Login to relio</title>
 			</Head>
 			<Page isHeaderDisplayed isFooterDisplayed>
 				<LoginForm />

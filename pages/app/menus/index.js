@@ -13,7 +13,6 @@ import {
 import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
-import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { MenuCategoryForm } from '../../../components/MenuCategoryForm'
 import { MenuForm } from '../../../components/MenuForm'
@@ -60,7 +59,6 @@ function Menus() {
 										Menu
 									</Text>
 							</Flex>
-							<CogIcon w='6' h='6' />
 						</Flex>
 						<HStack
 							maxW='container.md'

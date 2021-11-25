@@ -13,8 +13,7 @@ export default function useProtectedRoute() {
 		}
 		if (
 			(restoList?.length === 0 || currentResto === null) &&
-			!router.pathname.includes('/user/restaurants') &&
-			!router.pathname.includes('/user')
+			!router.pathname.includes('/app/choose-restaurant')
 		) {
 			router.push('/user/restaurants')
 		}

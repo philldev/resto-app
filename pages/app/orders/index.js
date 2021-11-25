@@ -15,7 +15,6 @@ import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
-import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
@@ -62,7 +61,6 @@ const Topbar = () => {
 					Pesanan
 				</Text>
 			</Flex>
-			<CogIcon w='6' h='6' />
 		</Flex>
 	)
 }

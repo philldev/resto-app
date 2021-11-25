@@ -1,49 +1,28 @@
+
 import { Button } from '@chakra-ui/button'
-import * as RestoApi from '../../firebase/resto'
-import * as React from 'react'
-import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/form-control'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon } from '@chakra-ui/icons'
-import { Input } from '@chakra-ui/input'
-import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Text } from '@chakra-ui/layout'
 import {
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
-import { Textarea } from '@chakra-ui/textarea'
-import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
+import * as React from 'react'
 import { BackBtn } from '../../components/common/BackBtn'
 import { CogIcon } from '../../components/common/icons/CogIcon'
 import { HomeIcon } from '../../components/common/icons/HomeIcon'
 import Page from '../../components/common/Page'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
-import { useAuth } from '../../context/auth'
-import { createDocId } from '../../firebase/helper/createDocId'
-import { RestoFormResolver } from '../../utils/formSchema/restoFormSchema'
-import { useUserResto } from '../../context/Resto'
-import { useRouter } from 'next/router'
 import { RestoForm } from '../../components/RestoForm'
+import { useAuth } from '../../context/auth'
+import { useUserResto } from '../../context/Resto'
 
-const restaurants = [
-	{
-		name: 'Janji Jiwa',
-		address:
-			'Jl. Sengel, Matani Satu, Kec. Tomohon Tengah, Kota Tomohon, Sulawesi Utara',
-		id: createDocId(),
-	},
-	{
-		name: 'Kelelondey',
-		id: createDocId(),
-		address:
-			'5R5P+7VM, Toraget, North Langowan, Minahasa Regency, North Sulawesi',
-	},
-]
-
-function RestaurantsPage() {
+function ChooseRestaurant() {
 	const { user } = useAuth()
 	const { restoList, selectResto } = useUserResto()
 	const router = useRouter()
@@ -125,4 +104,4 @@ const AddResto = () => {
 	)
 }
 
-export default withProtectedRoute(RestaurantsPage)
+export default withProtectedRoute(ChooseRestaurant)

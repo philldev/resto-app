@@ -6,7 +6,7 @@ import * as React from 'react'
 import NumberFormat from 'react-number-format'
 import { formatPrice } from '../utils/formatPrice'
 import { EyeIcon } from './common/icons/EyeIcon'
-import { EyeOffIcon } from './common/icons/EyeIcon copy'
+import { EyeOffIcon } from './common/icons/EyeOff'
 import { OrderItemsTable } from './OrderItemsTable'
 
 export const OrderPaymentCalculator = ({

@@ -13,7 +13,7 @@ export default function SignupPage() {
 	return (
 		<>
 			<Head>
-				<title>Signup to Resto App</title>
+				<title>Signup to relio</title>
 			</Head>
 			<Page isHeaderDisplayed isFooterDisplayed>
 				<SignupForm />
