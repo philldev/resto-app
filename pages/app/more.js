@@ -13,6 +13,7 @@ import { AppPage } from '../../components/common/AppPage'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { useAuth } from '../../context/auth'
 import { useUserResto } from '../../context/Resto'
+import Link from 'next/link'
 
 function More() {
 	const { currentResto } = useUserResto()
@@ -29,7 +30,7 @@ function More() {
 				</Flex>
 				<Box flex='1' px='4' py='4'>
 					<Box rounded='md' h='full' maxW='container.md' w='full' mx='auto'>
-						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='6'>
+						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
 							<UserView mb='4' />
 							<RestoView mb='4' />
 						</Grid>
@@ -42,18 +43,24 @@ function More() {
 }
 
 const NavList = () => {
-	const {currentResto} = useUserResto()
+	const { currentResto } = useUserResto()
 	return (
 		<Accordion allowMultiple allowToggle flexDir='column'>
-			<NavItem>Profil</NavItem>
+			<Link href='/app/settings/profile' passHref>
+				<NavItem>Profil</NavItem>
+			</Link>
 			<AccordionItem border='none'>
 				<AccordionButton p='0' border='none'>
 					<NavItem hideIcon>Restaurant</NavItem>
 					<AccordionIcon />
 				</AccordionButton>
 				<AccordionPanel pr='0' pt='0' pb='4'>
-					<NavItem>{currentResto.name}</NavItem>
-					<NavItem>Lihat Semua restoran</NavItem>
+					<Link href={`/app/settings/restaurants/${currentResto.id}`} passHref>
+						<NavItem>{currentResto.name}</NavItem>
+					</Link>
+					<Link href={`/app/settings/restaurants`} passHref>
+						<NavItem>Lihat Semua restoran</NavItem>
+					</Link>
 				</AccordionPanel>
 			</AccordionItem>
 			<NavItem>Pengaturan</NavItem>
