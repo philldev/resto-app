@@ -1,16 +1,16 @@
 import * as React from 'react'
 
-const NewOrder = React.createContext(null)
+const OrderingContext = React.createContext(null)
 
 export const OrderTypeEnum = {
 	TAKE_AWAY: 'TAKE_AWAY',
 	DINE_IN: 'DINE_IN',
 }
 
-export const NewOrderProvider = ({ children }) => {
-	const [orderItems, setOrderItems] = React.useState([])
-	const [orderType, setOrderType] = React.useState(null)
-	const [order, setOrder] = React.useState(null)
+export const OrderingProvider = ({ children, currentOrder }) => {
+	const [orderItems, setOrderItems] = React.useState(currentOrder?.items ? currentOrder.items : [])
+	const [orderType, setOrderType] = React.useState(currentOrder?.type ? currentOrder.type : null)
+	const [order, setOrder] = React.useState(currentOrder ?? null)
 
 	const chooseOrderType = (type) => {
 		setOrderType(type)
@@ -22,7 +22,7 @@ export const NewOrderProvider = ({ children }) => {
 		else
 			setOrderItems((p) =>
 				p.map((item) =>
-					item.id === menu.id ? { ...item, qty: item.qty++ } : item
+					item.id === menu.id ? { ...item, qty: item.qty + 1 } : item
 				)
 			)
 	}
@@ -33,7 +33,7 @@ export const NewOrderProvider = ({ children }) => {
 		else
 			setOrderItems((p) =>
 				p.map((item) =>
-					item.id === menu.id ? { ...item, qty: item.qty-- } : item
+					item.id === menu.id ? { ...item, qty: item.qty - 1 } : item
 				)
 			)
 	}
@@ -76,11 +76,11 @@ export const NewOrderProvider = ({ children }) => {
 		setOrder,
 	}
 
-	return <NewOrder.Provider value={value}>{children}</NewOrder.Provider>
+	return <OrderingContext.Provider value={value}>{children}</OrderingContext.Provider>
 }
 
-export const useNewOrder = () => {
-	const ctx = React.useContext(NewOrder)
+export const useOrdering = () => {
+	const ctx = React.useContext(OrderingContext)
 	if (ctx === undefined) throw new Error('Context not provided')
 	return ctx
 }

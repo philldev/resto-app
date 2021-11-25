@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup'
 import * as yup from 'yup'
-import { OrderTypeEnum } from '../../context/NewOrder'
+import { OrderTypeEnum } from '../../context/Ordering'
 
 const TakeAwaySchema = yup
 	.object({

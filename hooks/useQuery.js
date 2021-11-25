@@ -10,15 +10,12 @@ function useQuery(key, fetcher) {
 
 	const refetch = async () => {
 		try {
-			setIsLoading(true)
 			const data = await fetcher()
 			setData(data)
 			cache[key] = data
 		} catch (error) {
 			setIsError(true)
 			setError(error)
-		} finally {
-			setIsLoading(false)
 		}
 	}
 
@@ -54,6 +51,7 @@ function useQuery(key, fetcher) {
 		isLoading,
 		isError,
 		refetch,
+		setData
 	}
 }
 

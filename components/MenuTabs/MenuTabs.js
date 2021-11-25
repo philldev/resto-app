@@ -28,7 +28,7 @@ import Image from 'next/image'
 import * as React from 'react'
 import { useMenuCategory } from '../../context/MenuCategory'
 import { useMenus } from '../../context/Menus'
-import { useNewOrder } from '../../context/NewOrder'
+import { useOrdering } from '../../context/Ordering'
 import { useTabs } from '../../context/Tabs'
 import { formatPrice } from '../../utils/formatPrice'
 import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
@@ -459,7 +459,7 @@ const MenuCard = ({ menu, ...props }) => {
 }
 
 const OrderMenuCard = ({ menu }) => {
-	const { orderItems, incrementItemQty, decrementItemQty } = useNewOrder()
+	const { orderItems, incrementItemQty, decrementItemQty } = useOrdering()
 	const orderItem = orderItems.find((item) => item.id === menu.id) ?? {
 		...menu,
 		qty: 0,

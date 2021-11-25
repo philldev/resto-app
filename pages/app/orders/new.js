@@ -9,7 +9,7 @@ import {
 	Grid,
 	HStack,
 	Text,
-	VStack
+	VStack,
 } from '@chakra-ui/layout'
 import {
 	Modal,
@@ -17,7 +17,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import {
 	Alert,
@@ -32,27 +32,24 @@ import {
 	FormHelperText,
 	FormLabel,
 	Input,
-	Textarea
+	Textarea,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
 import { useWizard } from 'react-wizard-primitive'
-import { EyeIcon } from '../../../components/common/icons/EyeIcon'
-import { EyeOffIcon } from '../../../components/common/icons/EyeIcon copy'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import { OrderItemList } from '../../../components/OrderItemsList'
-import { OrderItemsTable } from '../../../components/OrderItemsTable'
+import { OrderPaymentCalculator } from '../../../components/OrderPaymentCalculator'
 import { MenuCategoryProvider } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import {
-	NewOrderProvider,
+	OrderingProvider,
 	OrderTypeEnum,
-	useNewOrder
-} from '../../../context/NewOrder'
+	useOrdering,
+} from '../../../context/Ordering'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
 import * as OrderApi from '../../../firebase/order'
@@ -65,7 +62,7 @@ function NewOrder() {
 	const { currentResto } = useUserResto()
 	if (!currentResto) return null
 	return (
-		<NewOrderProvider>
+		<OrderingProvider>
 			<OrderTypeDialog />
 			<Flex flexDir='column' w='100vw' h='100vh'>
 				<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
@@ -80,7 +77,7 @@ function NewOrder() {
 					<BottomInfo />
 				</Flex>
 			</Flex>
-		</NewOrderProvider>
+		</OrderingProvider>
 	)
 }
 
@@ -106,7 +103,7 @@ const Topbar = () => {
 }
 
 const OrderTypeLabel = () => {
-	const { orderType, chooseOrderType } = useNewOrder()
+	const { orderType, chooseOrderType } = useOrdering()
 	if (!orderType) return null
 	return (
 		<Flex alignItems='center'>
@@ -137,7 +134,7 @@ const OrderTypeLabel = () => {
 
 const OrderTypeDialog = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
-	const { orderType, chooseOrderType } = useNewOrder()
+	const { orderType, chooseOrderType } = useOrdering()
 	React.useEffect(() => {
 		if (!orderType && !isOpen) {
 			onOpen()
@@ -179,7 +176,7 @@ const OrderTypeDialog = () => {
 }
 
 const BottomInfo = () => {
-	const { getTotal, getTotalQty } = useNewOrder()
+	const { getTotal, getTotalQty } = useOrdering()
 	return (
 		<Box p='4' bg='gray.800' fontSize='sm'>
 			<VStack alignItems='stretch'>
@@ -194,7 +191,7 @@ const BottomInfo = () => {
 }
 
 const OpenOrderDetailBtn = () => {
-	const { orderItems, order } = useNewOrder()
+	const { orderItems, order } = useOrdering()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = React.useRef()
 	const isMdSize = useIsMdSize()
@@ -250,7 +247,7 @@ const NewOrderDetail = ({ onClose }) => {
 }
 
 const NewOrderPayment = ({ goNext }) => {
-	const { order, getTotal } = useNewOrder()
+	const { order, getTotal } = useOrdering()
 	return (
 		<VStack spacing='4' pb='4' alignItems='stretch'>
 			<Alert status='success'>
@@ -312,14 +309,16 @@ const OrderCard = ({ order, total }) => {
 				<Text mb='2' fontSize='lg' fontWeight='bold'>
 					Total Bayar : {formatPrice(total)}
 				</Text>
-				<Button size='sm'>Lihat Detail</Button>
+				<Link passHref href={`/app/orders/${order.id}`}>
+					<Button size='sm'>Lihat Detail</Button>
+				</Link>
 			</Flex>
 		</Flex>
 	)
 }
 
 const PaySuccess = () => {
-	const { order } = useNewOrder()
+	const { order } = useOrdering()
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
 			<VStack alignItems='stretch'>
@@ -340,152 +339,41 @@ const PaySuccess = () => {
 
 const NewOrderPayNow = ({ goBack, goNext }) => {
 	const { currentResto } = useUserResto()
-	const { getTotal, orderItems, setOrder, order } = useNewOrder()
-	const [showOrderItems, setShowOrderItems] = React.useState(false)
+	const { getTotal, orderItems, setOrder, order } = useOrdering()
 	const [isLoading, setIsLoading] = React.useState(false)
 
-	const [payAmount, setPayAmount] = React.useState('')
-	const [payAmountVal, setPayAmountVal] = React.useState(0)
-
-	const changeAmount = payAmountVal - getTotal()
-	const isMoreOrEqual = changeAmount >= 0
-
-	const exampleAmount = [
-		10000, 20000, 50000, 100000,
-		// 150000, 200000, 250000, 500000,
-	]
-
-	const onPayClick = async () => {
-		if (isMoreOrEqual) {
-			setIsLoading(true)
-			try {
-				const updatedOrder = await OrderApi.updateOrder({
-					restoId: currentResto.id,
-					order: {
-						...order,
-						isPaid: true,
-						payAmount: payAmountVal,
-					},
-				})
-				setOrder(updatedOrder)
-				goNext()
-			} catch (error) {
-				console.log(error)
-				setIsLoading(false)
-			}
+	const onPayClick = async ({ payAmount }) => {
+		setIsLoading(true)
+		try {
+			const updatedOrder = await OrderApi.updateOrder({
+				restoId: currentResto.id,
+				order: {
+					...order,
+					isPaid: true,
+					payAmount: payAmount,
+				},
+			})
+			setOrder(updatedOrder)
+			goNext()
+		} catch (error) {
+			console.log(error)
+			setIsLoading(false)
 		}
 	}
 
-	React.useEffect(() => {
-		setPayAmount(payAmountVal)
-	}, [payAmountVal])
-
 	return (
-		<VStack spacing='12' pb='4' alignItems='stretch'>
-			<VStack spacing='2' alignItems='stretch'>
-				<FormControl>
-					<FormLabel>Item Pesanan</FormLabel>
-					<Button
-						mb='2'
-						onClick={() => setShowOrderItems((p) => !p)}
-						leftIcon={
-							!showOrderItems ? (
-								<EyeIcon w='5' h='5' />
-							) : (
-								<EyeOffIcon w='5' h='5' />
-							)
-						}
-						size='sm'
-					>
-						{!showOrderItems ? 'Lihat' : 'Sembunyikan'} Item Pesanan
-					</Button>
-					{showOrderItems && <OrderItemsTable orderItems={orderItems} />}
-				</FormControl>
-				<FormControl w='100%' overflowX='hidden'>
-					<FormLabel mb='1'>Bayar</FormLabel>
-					<NumberFormat
-						customInput={Input}
-						value={payAmount}
-						onChange={(e) => {
-							e.persist()
-							setPayAmount(e.target.value)
-						}}
-						prefix={'Rp '}
-						thousandSeparator='.'
-						decimalSeparator=','
-						textAlign='center'
-						fontWeight='bold'
-						fontSize='xl'
-						placeholder='Jumlah Bayar'
-						mb='2'
-						suffix=',00'
-						w='full'
-						bg='gray.700'
-						border='none'
-						onValueChange={(values) => {
-							setPayAmountVal(parseInt(values.value))
-						}}
-					/>
-					<HStack>
-						{exampleAmount.map((i, index) => (
-							<Button
-								onClick={() => setPayAmountVal((v) => v + i)}
-								key={index}
-								size='xs'
-							>
-								+ {i / 1000}k
-							</Button>
-						))}
-					</HStack>
-				</FormControl>
-				<FormControl>
-					<FormLabel mb='1'>Total Bayar</FormLabel>
-					<Box
-						p='1'
-						textAlign='center'
-						rounded='md'
-						bg={isMoreOrEqual ? 'green.900' : 'gray.900'}
-						transition='all .2s ease-in-out'
-						fontWeight='bold'
-						fontSize='xl'
-					>
-						{formatPrice(getTotal())}
-					</Box>
-				</FormControl>
-				<FormControl>
-					<FormLabel mb='1'>Total Kembalian</FormLabel>
-					<Box
-						p='1'
-						textAlign='center'
-						rounded='md'
-						bg={isMoreOrEqual ? 'green.900' : 'red.900'}
-						fontWeight='bold'
-						fontSize='xl'
-						transition='all .2s ease-in-out'
-					>
-						{formatPrice(changeAmount)}
-					</Box>
-				</FormControl>
-			</VStack>
-			<VStack spacing='2' alignItems='stretch'>
-				<Button
-					disabled={!isMoreOrEqual}
-					isLoading={isLoading}
-					onClick={onPayClick}
-					colorScheme='green'
-				>
-					Bayar
-				</Button>
-				<Button onClick={goBack} isLoading={isLoading}>
-					Kembali
-				</Button>
-			</VStack>
-		</VStack>
+		<OrderPaymentCalculator
+			onPay={onPayClick}
+			orderItems={orderItems}
+			orderTotal={getTotal()}
+			isLoading={isLoading}
+			onBack={goBack}
+		/>
 	)
 }
 
 const NewOrderDetailForm = ({ onClose, goNext }) => {
-	const { orderItems, orderType, setOrder, order } = useNewOrder()
+	const { orderItems, orderType, setOrder, order } = useOrdering()
 	const { currentResto } = useUserResto()
 	const {
 		register,
