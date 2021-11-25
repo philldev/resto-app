@@ -14,6 +14,7 @@ import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { useAuth } from '../../context/auth'
 import { useUserResto } from '../../context/Resto'
 import Link from 'next/link'
+import { Tag } from '@chakra-ui/tag'
 
 function More() {
 	const { currentResto } = useUserResto()
@@ -44,10 +45,11 @@ function More() {
 
 const NavList = () => {
 	const { currentResto } = useUserResto()
+	const { signout } = useAuth()
 	return (
-		<Accordion allowMultiple allowToggle flexDir='column'>
-			<Link href='/app/settings/profile' passHref>
-				<NavItem>Profil</NavItem>
+		<Accordion d='grid' gridTemplateColumns={{md:'1fr 1fr'}} gridColumnGap={{md:'4'}} allowMultiple allowToggle flexDir='column'>
+			<Link href='/app/settings/account' passHref>
+				<NavItem>Akun</NavItem>
 			</Link>
 			<AccordionItem border='none'>
 				<AccordionButton p='0' border='none'>
@@ -63,8 +65,12 @@ const NavList = () => {
 					</Link>
 				</AccordionPanel>
 			</AccordionItem>
-			<NavItem>Pengaturan</NavItem>
-			<NavItem hideIcon>Keluar</NavItem>
+			<Link href={`/app/settings/preferences`} passHref>
+				<NavItem>Pengaturan</NavItem>
+			</Link>
+			<NavItem onClick={signout} hideIcon>
+				Keluar
+			</NavItem>
 		</Accordion>
 	)
 }
@@ -90,7 +96,10 @@ const UserView = chakra((props) => {
 	return (
 		<Flex {...props}>
 			<Box flex='1'>
-				<Text fontWeight='bold'>USER</Text>
+				<Flex alignItems='center'>
+					<Text fontWeight='bold' mr='2'>USER</Text>
+					<Tag fontSize='10px' size='sm'>FREE ACCOUNT</Tag>
+				</Flex>
 				<Text color='gray.300'>{user.email}</Text>
 			</Box>
 			<Avatar size='md' src='' name={user.email} />
