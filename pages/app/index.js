@@ -16,10 +16,10 @@ import {
 	ModalHeader,
 	ModalOverlay,
 } from '@chakra-ui/modal'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { AppPage } from '../../components/common/AppPage'
-import { HomeIcon } from '../../components/common/icons/HomeIcon'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { RestoForm } from '../../components/RestoForm'
 import { useUserResto } from '../../context/Resto'
@@ -33,8 +33,11 @@ function Home() {
 			<Flex flexDir='column' flex='1'>
 				<Flex alignItems='center' p='4' fontSize='xl'>
 					<Flex alignItems='center'>
-						<HomeIcon w='6' h='6' mr='2' />
-						<Text>Resto</Text>
+						<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+						{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
+						<Text fontSize='lg' ml='2'>
+							{currentResto.name}
+						</Text>
 					</Flex>
 				</Flex>
 				<Flex flexDir='column' flex='1' bg='gray.900'>

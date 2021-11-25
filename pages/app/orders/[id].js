@@ -104,11 +104,11 @@ const OrderDetail = () => {
 					</Text>
 					<Divider orientation='vertical' h='6' mx='2' />
 					<Text fontSize='sm' color='gray.300'>
-						Meja #{data.table}
+						Meja : #{data.table}
 					</Text>
 					<Divider orientation='vertical' h='6' mx='2' />
 					<Text fontSize='sm' color='gray.300'>
-						{data.customer}
+						Kostumer : {data.customer}
 					</Text>
 				</HStack>
 			</Flex>
@@ -255,7 +255,7 @@ const AddItem = ({ order, setOrder }) => {
 			<Modal  isCentered isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent maxW='container.md' bg='gray.900' mx='4'>
-					<ModalHeader>Status Pesanan #{order.no}</ModalHeader>
+					<ModalHeader>Tambah Item Pesanan #{order.no}</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody h='full' maxH='75vh' px='0'>
 						<VStack pb='4' spacing='6' alignItems='stretch'>

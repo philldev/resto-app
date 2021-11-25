@@ -133,6 +133,7 @@ const OrderTypeLabel = () => {
 }
 
 const OrderTypeDialog = () => {
+	const router = useRouter()
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const { orderType, chooseOrderType } = useOrdering()
 	React.useEffect(() => {
@@ -146,7 +147,7 @@ const OrderTypeDialog = () => {
 				<ModalOverlay />
 				<ModalContent bg='gray.800' mx='4'>
 					<ModalHeader>Pilih tipe pesanan</ModalHeader>
-					<ModalCloseButton />
+					<ModalCloseButton onClick={() => router.push('/app/orders')} />
 					<ModalBody>
 						<VStack alignItems='stretch' mb='4'>
 							<Button

@@ -100,7 +100,7 @@ const MenuPanels = ({ isOrdering }) => {
 							{cat.name}
 						</Box>
 						<HStack spacing='2'>
-							<Button variant='ghost' rightIcon={<SortIcon w='4' h='4' />} size='sm'>Urutkan Menu</Button>
+							<Button variant='ghost' rightIcon={<SortIcon w='4' h='4' />} size='sm'>Urutkan</Button>
 							{!isOrdering && <CategorySettings category={cat} />}
 						</HStack>
 					</Flex>

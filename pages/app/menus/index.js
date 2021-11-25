@@ -1,9 +1,7 @@
 import { Button } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
-import {
-	AddIcon
-} from '@chakra-ui/icons'
-import { Box, Flex, HStack, Text } from '@chakra-ui/layout'
+import { AddIcon } from '@chakra-ui/icons'
+import { Divider, Flex, HStack, Text } from '@chakra-ui/layout'
 import {
 	Modal,
 	ModalBody,
@@ -12,10 +10,10 @@ import {
 	ModalHeader,
 	ModalOverlay
 } from '@chakra-ui/modal'
+import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
-import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { MenuCategoryForm } from '../../../components/MenuCategoryForm'
 import { MenuForm } from '../../../components/MenuForm'
@@ -27,7 +25,6 @@ import {
 import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
-
 
 function Menus() {
 	const { currentResto } = useUserResto()
@@ -42,29 +39,43 @@ function Menus() {
 							justifyContent='space-between'
 							p='4'
 							pb='2'
+							flexWrap='wrap'
+							maxW='container.md'
+							mx='auto'
+							w='full'
 						>
 							<Flex alignItems='center'>
-								<MenuIcon mr='2' flex='1' w='6' h='6' />
-								<Text fontSize='xl'>
-									<strong>{currentResto.name}</strong> Menu
-								</Text>
+									<Image
+										width='32px'
+										height='32px'
+										alt='logo'
+										src='/logo.png'
+									/>
+									{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
+									<Text fontSize='lg' ml='2'>
+										{currentResto.name}
+									</Text>
+									<Divider h='24px' orientation='vertical' mx='2' />
+									<Text fontSize='lg' fontWeight='bold'>
+										Menu
+									</Text>
 							</Flex>
 							<CogIcon w='6' h='6' />
 						</Flex>
+						<HStack
+							maxW='container.md'
+							mx='auto'
+							w='full'
+							p='4'
+							py='2'
+							overflowX='auto'
+						>
+							<AddMenu />
+							<AddMenuCategory />
+						</HStack>
 						<TabsProvider>
 							<MenuTabs />
 						</TabsProvider>
-						<Box
-							py='4'
-							borderTop='1px solid'
-							borderTopColor='gray.700'
-							overflowX='auto'
-						>
-							<HStack w='max-content' px='4' overflowX='auto'>
-								<AddMenu />
-								<AddMenuCategory />
-							</HStack>
-						</Box>
 					</Flex>
 				</MenusProvider>
 			</MenuCategoryProvider>
@@ -81,10 +92,10 @@ const AddMenu = () => {
 				disabled={menuCategories.length === 0}
 				size='sm'
 				onClick={onOpen}
-				colorScheme='teal'
+				variant='outline'
 				leftIcon={<AddIcon />}
 			>
-				Tambah Menu
+				Menu
 			</Button>
 			<Modal isCentered isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
@@ -107,10 +118,10 @@ const AddMenuCategory = () => {
 			<Button
 				size='sm'
 				onClick={onOpen}
-				colorScheme='teal'
+				variant='outline'
 				leftIcon={<AddIcon />}
 			>
-				Tambah Kategori
+				Kategori
 			</Button>
 			<Modal isCentered isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />

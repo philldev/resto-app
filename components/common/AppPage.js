@@ -31,7 +31,7 @@ export const AppPage = ({ children, displayHeader = true }) => {
 					borderTopColor='gray.700'
 					h='20'
 				>
-					<Grid fontSize='sm' w='full' templateColumns='repeat(4,1fr)'>
+					<Grid maxW='container.md' mx='auto' fontSize='sm' w='full' templateColumns='repeat(4,1fr)'>
 						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
 						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />

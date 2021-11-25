@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button'
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { CalendarIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import {
 	Badge,
@@ -8,15 +8,16 @@ import {
 	Flex,
 	Grid,
 	HStack,
-	Text,
+	Text
 } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import moment from 'moment'
+import Image from 'next/image'
 import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
-import { ClipboardListIcon } from '../../../components/common/icons/ClipboardListIcon'
 import { CogIcon } from '../../../components/common/icons/CogIcon'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
 import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
@@ -26,32 +27,55 @@ function Orders() {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-				<Flex alignItems='center' justifyContent='space-between' p='4' pb='2'>
-					<Flex alignItems='center'>
-						<ClipboardListIcon mr='2' flex='1' w='6' h='6' />
-						<Text fontSize='xl'>Pesanan</Text>
-					</Flex>
-					<CogIcon w='6' h='6' />
-				</Flex>
+				<Box w='full' px='4'>
+					<Topbar />
+					<ActionBar />
+				</Box>
 				<TabsProvider>
 					<OrderTabs />
 				</TabsProvider>
-				<Box
-					py='4'
-					borderTop='1px solid'
-					borderTopColor='gray.700'
-					overflowX='auto'
-				>
-					<HStack w='max-content' px='4' overflowX='auto'>
-						<Link passHref href='/app/orders/new'>
-							<Button as={'a'} colorScheme='teal' size='sm'>
-								+ Tambah Pesanan
-							</Button>
-						</Link>
-					</HStack>
-				</Box>
 			</Flex>
 		</AppPage>
+	)
+}
+
+const Topbar = () => {
+	const { currentResto } = useUserResto()
+	return (
+		<Flex
+			maxW='container.md'
+			w='full'
+			mx='auto'
+			alignItems='center'
+			justifyContent='space-between'
+			py='4'
+			pb='2'
+		>
+			<Flex alignItems='center'>
+				<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+				{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
+				<Text fontSize='lg' ml='2'>
+					{currentResto.name}
+				</Text>
+				<Divider h='24px' orientation='vertical' mx='2' />
+				<Text fontSize='lg' fontWeight='bold'>
+					Pesanan
+				</Text>
+			</Flex>
+			<CogIcon w='6' h='6' />
+		</Flex>
+	)
+}
+
+const ActionBar = () => {
+	return (
+		<HStack maxW='container.md' w='full' py='2' mx='auto' spacing='6'>
+			<Link passHref href='/app/orders/new'>
+				<Button as={'a'} variant='outline' size='sm'>
+					+ Tambah Pesanan
+				</Button>
+			</Link>
+		</HStack>
 	)
 }
 
@@ -82,8 +106,7 @@ const OrderTabList = () => {
 			flex='0'
 			overflowX='auto'
 			overflowY='hidden'
-			p='2'
-			px='4'
+			py='2'
 			pos='relative'
 			mx='auto'
 			maxW='container.md'
@@ -128,10 +151,10 @@ const OrderTabList = () => {
 					>
 						{isSearching ? <CloseIcon /> : <SearchIcon />}
 					</Box>
-					<Tab flexShrink='0'>Today</Tab>
-					<Tab flexShrink='0'>This Week</Tab>
-					<Tab flexShrink='0'>This Month</Tab>
-					<Tab flexShrink='0'>All</Tab>
+					<Tab flexShrink='0'>Hari Ini</Tab>
+					<Tab flexShrink='0'>Minggu Ini</Tab>
+					<Tab flexShrink='0'>Bulan Ini</Tab>
+					<Tab flexShrink='0'>Semua</Tab>
 				</>
 			)}
 		</TabList>
@@ -142,7 +165,7 @@ const OrderPanels = () => {
 	const orderPanels = [
 		{
 			type: 'today',
-			label: 'Hari Ini',
+			label: moment().format('dddd'),
 		},
 		{
 			type: 'this_week',
@@ -212,18 +235,22 @@ const OrderCard = ({ order }) => {
 							<Text fontSize='lg' fontWeight='bold'>
 								Order #{order.no}
 							</Text>
+							{order.table && (
+								<>
+									<Divider orientation='vertical' h='6' mx='2' />
+									<Text fontSize='sm' color='gray.400'>
+										Meja #{order.table}
+									</Text>
+								</>
+							)}
 							<Divider orientation='vertical' h='6' mx='2' />
-							<Text fontSize='sm' color='gray.300'>
-								Meja #{order.table}
-							</Text>
-							<Divider orientation='vertical' h='6' mx='2' />
-							<Text fontSize='sm' color='gray.300'>
-								{order.customer}
-							</Text>
+							<Flex alignItems='center'>
+								<CalendarIcon color='gray.400' mr='1' w='4' h='4' />
+								<Text textAlign='right' fontSize='sm' color='gray.400'>
+									{moment(order.createdAt.toDate()).format('d/mm/yy')}
+								</Text>
+							</Flex>
 						</HStack>
-						<Text textAlign='right' fontSize='10px' color='gray.400'>
-							{moment(order.createdAt.toDate()).calendar()}
-						</Text>
 					</Flex>
 					<HStack overflowX='auto' pb='2'>
 						{order.status === 'on_progress' ? (
