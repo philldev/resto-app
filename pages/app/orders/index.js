@@ -8,7 +8,7 @@ import {
 	Flex,
 	Grid,
 	HStack,
-	Text
+	Text,
 } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import moment from 'moment'
@@ -229,46 +229,28 @@ const OrderCard = ({ order }) => {
 			>
 				<Box w='100%'>
 					<Flex mb='1' justifyContent='space-between'>
-						<HStack alignItems='center'>
-							<Text fontSize='lg' fontWeight='bold'>
-								Order #{order.no}
-							</Text>
-							{order.table && (
-								<>
-									<Divider orientation='vertical' h='6' mx='2' />
-									<Text fontSize='sm' color='gray.400'>
-										Meja #{order.table}
-									</Text>
-								</>
-							)}
-							<Divider orientation='vertical' h='6' mx='2' />
+						<Flex w='full' alignItems='center' justifyContent='space-between'>
+							<Flex alignItems='center'>
+								<Text fontSize='lg' fontWeight='bold'>
+									Order #{order.no}
+								</Text>
+								<Divider orientation='vertical' h='6' mx='2' />
+								{order.status === 'on_progress' ? (
+									<Badge colorScheme='yellow'>Dalam Proses</Badge>
+								) : order.status === 'completed' ? (
+									<Badge colorScheme='green'>Selesai</Badge>
+								) : (
+									<Badge colorScheme='red'>Dibatalkan</Badge>
+								)}
+							</Flex>
 							<Flex alignItems='center'>
 								<CalendarIcon color='gray.400' mr='1' w='4' h='4' />
 								<Text textAlign='right' fontSize='sm' color='gray.400'>
 									{moment(order.createdAt.toDate()).format('d/mm/yy')}
 								</Text>
 							</Flex>
-						</HStack>
+						</Flex>
 					</Flex>
-					<HStack overflowX='auto' pb='2'>
-						{order.status === 'on_progress' ? (
-							<Badge colorScheme='yellow'>Dalam Proses</Badge>
-						) : order.status === 'completed' ? (
-							<Badge colorScheme='green'>Selesai</Badge>
-						) : (
-							<Badge colorScheme='red'>Dibatalkan</Badge>
-						)}
-						{order.isPaid ? (
-							<Badge colorScheme='green'>Sudah di Bayar</Badge>
-						) : (
-							<Badge colorScheme='yellow'>Belum bayar</Badge>
-						)}
-						{order.type === 'DINE_IN' ? (
-							<Badge colorScheme='blue'>Makan di tempat</Badge>
-						) : (
-							<Badge colorScheme='blue'>Bawa pulang</Badge>
-						)}
-					</HStack>
 				</Box>
 				<Flex flexDir='column' w='100%'>
 					<Flex justifyContent='space-between' fontSize='sm'>

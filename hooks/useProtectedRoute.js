@@ -13,9 +13,9 @@ export default function useProtectedRoute() {
 		}
 		if (
 			(restoList?.length === 0 || currentResto === null) &&
-			!router.pathname.includes('/app/choose-restaurant')
+			!router.pathname.includes('/settings/account/restaurants')
 		) {
-			router.push('/user/restaurants')
+			router.push('/settings/account/restaurants')
 		}
 	}, [user, router, restoList, currentResto])
 

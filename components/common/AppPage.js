@@ -30,7 +30,7 @@ export const AppPage = ({ children, displayHeader = true }) => {
 					alignItems='center'
 					borderTop='1px solid'
 					borderTopColor='gray.700'
-					h='20'
+					h='16'
 				>
 					<Grid maxW='container.md' mx='auto' fontSize='sm' w='full' templateColumns='repeat(5,1fr)'>
 						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
@@ -50,7 +50,7 @@ const BottomNavItem = ({ label, Icon, href, isRoot }) => {
 	const isActive = isRoot ? href === router.pathname : router.pathname.includes(href)
 	return (
 		<Link href={href} passHref>
-			<Flex color={isActive ? 'teal.500' : undefined} as='button' flexDir='column' alignItems='center'>
+			<Flex  fontSize='xs' color={isActive ? 'teal.500' : undefined} as='button' flexDir='column' alignItems='center'>
 				<Icon w='6' h='6' mb='1' />
 				<span>{label}</span>
 			</Flex>

@@ -54,13 +54,13 @@ const NavList = () => {
 			<AccordionItem border='none'>
 				<AccordionButton p='0' border='none'>
 					<NavItem hideIcon>Restaurant</NavItem>
-					<AccordionIcon />
+					<AccordionIcon transform='rotate(-90deg)' />
 				</AccordionButton>
 				<AccordionPanel pr='0' pt='0' pb='4'>
-					<Link href={`/app/settings/restaurants/${currentResto.id}`} passHref>
+					<Link href={`/app/settings/restaurant`} passHref>
 						<NavItem>{currentResto.name}</NavItem>
 					</Link>
-					<Link href={`/app/settings/restaurants`} passHref>
+					<Link href={`/app/settings/account/restaurants`} passHref>
 						<NavItem>Lihat Semua restoran</NavItem>
 					</Link>
 				</AccordionPanel>

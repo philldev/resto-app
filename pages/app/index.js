@@ -58,7 +58,7 @@ function Home() {
 						<DeleteResto resto={currentResto} />
 						<Button
 							onClick={() => {
-								router.push('/user/restaurants')
+								router.push('/app/choose-restaurant')
 							}}
 							variant='ghost'
 							rounded='none'
