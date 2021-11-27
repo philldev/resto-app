@@ -9,7 +9,7 @@ import {
 	Grid,
 	HStack,
 	Text,
-	VStack
+	VStack,
 } from '@chakra-ui/layout'
 import {
 	Modal,
@@ -17,7 +17,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import {
 	Alert,
@@ -32,13 +32,14 @@ import {
 	FormHelperText,
 	FormLabel,
 	Input,
-	Textarea
+	Textarea,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { useWizard } from 'react-wizard-primitive'
+import { AppTopbar } from '../../../components/common/AppTopbar'
 import { MenuIcon } from '../../../components/common/icons/MenuIcon'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import { OrderItemList } from '../../../components/OrderItemsList'
@@ -48,7 +49,7 @@ import { MenusProvider } from '../../../context/Menus'
 import {
 	OrderingProvider,
 	OrderTypeEnum,
-	useOrdering
+	useOrdering,
 } from '../../../context/Ordering'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
@@ -84,16 +85,8 @@ const NewOrder = () => {
 const Topbar = () => {
 	const router = useRouter()
 	return (
-		<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-			<Flex
-				maxW='container.md'
-				w='full'
-				mx='auto'
-				alignItems='center'
-				justifyContent='space-between'
-				h='14'
-				px='2'
-			>
+		<AppTopbar>
+			<Flex w='full' alignItems='center' justifyContent='space-between'>
 				<Flex alignItems='center' wrap='wrap'>
 					<Flex alignItems='center'>
 						<MenuIcon mr='2' flex='1' w='6' h='6' />
@@ -107,7 +100,7 @@ const Topbar = () => {
 					icon={<ArrowBackIcon w='6' h='6' />}
 				/>
 			</Flex>
-		</Flex>
+		</AppTopbar>
 	)
 }
 
@@ -297,7 +290,7 @@ const OrderCard = ({ order, total }) => {
 			borderColor='gray.700'
 			overflow='hidden'
 		>
-			<Box p='2' bg='gray.900' w='100%'>
+			<Box p='2' w='100%'>
 				<HStack mb='1' w='full' alignItems='center'>
 					<Text fontSize='lg' fontWeight='bold'>
 						Order #{order.no}
@@ -322,7 +315,7 @@ const OrderCard = ({ order, total }) => {
 				</HStack>
 			</Box>
 
-			<Flex p='2' flexDir='column' bg='gray.900' w='100%'>
+			<Flex p='2' flexDir='column' w='100%'>
 				<Text mb='2' fontSize='lg' fontWeight='bold'>
 					Total Bayar : {formatPrice(total)}
 				</Text>

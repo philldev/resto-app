@@ -14,18 +14,20 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import Image from 'next/image'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
+import { AppTopbar } from '../../../components/common/AppTopbar'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { MenuCategoryForm } from '../../../components/MenuCategoryForm'
 import { MenuForm } from '../../../components/MenuForm'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
+import { More } from '../../../components/More'
 import {
 	MenuCategoryProvider,
-	useMenuCategory
+	useMenuCategory,
 } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
@@ -45,17 +47,8 @@ const Menus = () => {
 						w='full'
 						overflow='hidden'
 					>
-						<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-							<Flex
-								alignItems='center'
-								justifyContent='space-between'
-								h='14'
-								px='2'
-								flexWrap='wrap'
-								maxW='container.md'
-								mx='auto'
-								w='full'
-							>
+						<AppTopbar>
+							<Flex justifyContent='space-between' maxW='container.md' w='full'>
 								<Flex alignItems='center'>
 									<Image
 										width='32px'
@@ -71,8 +64,9 @@ const Menus = () => {
 										Menu
 									</Text>
 								</Flex>
+								<More />
 							</Flex>
-						</Flex>
+						</AppTopbar>
 						<TabsProvider>
 							<MenuTabs />
 						</TabsProvider>

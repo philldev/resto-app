@@ -11,7 +11,7 @@ export const OverviewToday = () => {
 					Overview Hari ini
 				</Text>
 				<Text fontSize='sm'>
-					<strong>{moment().format('dddd/MM/yy')}</strong>
+					<strong>{moment().format('LL')}</strong>
 				</Text>
 			</Flex>
 			<Grid templateColumns='1fr max-content' gap='2'>

@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 import { BackButton } from '../../../components/BackButton'
 import { AppPage } from '../../../components/common/AppPage'
+import { AppTopbar } from '../../../components/common/AppTopbar'
 import { DataDisplay } from '../../../components/DataDisplay'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { useUserResto } from '../../../context/Resto'
@@ -19,24 +20,16 @@ import { useUserResto } from '../../../context/Resto'
 const Restaurant = () => {
 	return (
 		<AppPage displayHeader={false}>
-			<Flex bg='gray.900' direction='column' w='100vw' h='100vh'>
-				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-					<Flex
-						maxW='375px'
-						w='full'
-						mx='auto'
-						alignItems='center'
-						justifyContent='space-between'
-						h='14'
-						px='2'
-					>
+			<Flex direction='column' w='100vw' h='100vh'>
+				<AppTopbar>
+					<Flex w='full' alignItems='center' justifyContent='space-between'>
 						<Text fontSize='xl' fontWeight='bold'>
 							Profil Restoran
 						</Text>
 						<BackButton href='/app' />
 					</Flex>
-				</Flex>
-				<Flex bg='gray.900' flex='1' p='4'>
+				</AppTopbar>
+				<Flex flex='1' p='4'>
 					<Box rounded='md' h='full' maxW='container.md' w='full' mx='auto'>
 						<RestaurantProfile />
 					</Box>

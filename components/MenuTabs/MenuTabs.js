@@ -2,12 +2,12 @@ import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
 import {
 	Menu,
 	MenuButton,
 	MenuItem as MenuItemChakra,
-	MenuList,
+	MenuList
 } from '@chakra-ui/menu'
 import {
 	AlertDialog,
@@ -21,7 +21,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Image from 'next/image'
@@ -33,7 +33,6 @@ import { useTabs } from '../../context/Tabs'
 import { formatPrice } from '../../utils/formatPrice'
 import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
 import { DotsHorizontal } from '../common/icons/DotsHorizontal'
-import { SortIcon } from '../common/icons/SortIcon'
 import { MenuCategoryForm } from '../MenuCategoryForm'
 import { MenuForm } from '../MenuForm'
 
@@ -75,7 +74,11 @@ const MenuPanels = ({ isOrdering }) => {
 					</Text>
 				)}
 				<Grid
-					gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }}
+					gridTemplateColumns={{
+						base: '1fr',
+						sm: '1fr 1fr',
+						md: '1fr 1fr 1fr',
+					}}
 					gridGap='4'
 				>
 					{searchQuery.length === 0
@@ -90,19 +93,19 @@ const MenuPanels = ({ isOrdering }) => {
 				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat, index) => (
-				<TabPanel p='2' pt='0' maxW='container.md' mx='auto' w='full' key={index}>
-					<Flex justifyContent='space-between' alignItems='center' mb='4'>
+				<TabPanel
+					p='2'
+					pt='0'
+					maxW='container.md'
+					mx='auto'
+					w='full'
+					key={index}
+				>
+					<Flex justifyContent='space-between' alignItems='center' mb='2'>
 						<Box fontSize='2xl' fontWeight='bold' textTransform='uppercase'>
 							{cat.name}
 						</Box>
 						<HStack spacing='2'>
-							<Button
-								variant='ghost'
-								rightIcon={<SortIcon w='4' h='4' />}
-								size='sm'
-							>
-								Urutkan
-							</Button>
 							{!isOrdering && <CategorySettings category={cat} />}
 						</HStack>
 					</Flex>
@@ -319,15 +322,8 @@ const MenuItem = ({ menu, isOrdering }) => {
 const MenuDetail = ({ menu }) => {
 	return (
 		<Flex pb='4' flexDir='column'>
-			<Flex mb='4'>
-				<Box
-					w='30%'
-					mr='4'
-					h='20'
-					pos='relative'
-					rounded='xl'
-					overflow='hidden'
-				>
+			<Flex flexDir='column' mb='4'>
+				<Box mr='4' h='32' pos='relative' rounded='xl' overflow='hidden'>
 					<Image
 						layout='fill'
 						objectFit='cover'
@@ -335,7 +331,7 @@ const MenuDetail = ({ menu }) => {
 						alt={menu.name}
 					/>
 				</Box>
-				<Box>
+				<Box py='2'>
 					<Text fontWeight='bold' textAlign='left'>
 						{menu.name}
 					</Text>
@@ -443,8 +439,19 @@ const EditMenu = ({ menu }) => {
 
 const MenuCard = ({ menu, ...props }) => {
 	return (
-		<Flex cursor='pointer' flexDir='column' textAlign='center' rounded='xl' overflow='hidden' {...props} shadow='xl'>
-			<Box pos='relative' h='28'>
+		<Grid
+			border='1px solid var(--chakra-colors-gray-800)'
+			cursor='pointer'
+			flexDir='column'
+			rounded='xl'
+			overflow='hidden'
+			shadow='xl'
+			p='2'
+			templateColumns={{ base: '65px 1fr' }}
+			gap='2'
+			{...props}
+		>
+			<Box pos='relative' h='65px' overflow='hidden' rounded='md'>
 				<Image
 					layout='fill'
 					objectFit='cover'
@@ -452,11 +459,17 @@ const MenuCard = ({ menu, ...props }) => {
 					alt={menu.name}
 				/>
 			</Box>
-			<Flex flexDir='column' flex='1' py='5' px='4' roundedBottom='xl' justifyContent='space-between' border='1px solid var(--chakra-colors-gray-700)' borderTop='none'>
-				<Text mb='2' fontWeight='bold'>{menu.name}</Text>
+			<Flex
+				flexDir='column'
+				flex='1'
+				roundedBottom='xl'
+				borderTop='none'
+				fontSize='sm'
+			>
+				<Text fontWeight='bold'>{menu.name}</Text>
 				<Text>{formatPrice(menu.price)}</Text>
 			</Flex>
-		</Flex>
+		</Grid>
 	)
 }
 
@@ -474,11 +487,11 @@ const OrderMenuCard = ({ menu }) => {
 			borderColor='gray.700'
 			p='2'
 		>
-			<Flex flexDir='column'>
+			<Grid templateColumns={{base:'65px 1fr'}} gap='2'>
 				<Box
 					flexShrink='0'
 					pos='relative'
-					h='20'
+					h='65px'
 					overflow='hidden'
 					rounded='xl'
 				>
@@ -489,33 +502,27 @@ const OrderMenuCard = ({ menu }) => {
 						alt={menu.name}
 					/>
 				</Box>
-				<Box flex='1' mt='2'>
+				<Box>
 					<Text fontWeight='bold'>{menu.name}</Text>
 					<Text>{formatPrice(menu.price)}</Text>
 				</Box>
-			</Flex>
-			<VStack alignItems='stretch' mt='2'>
-				<HStack>
-					<Button
-						onClick={() => decrementItemQty(orderItem)}
-						flex='1'
-						size='sm'
-					>
-						-
-					</Button>
-					<Text textAlign='center' flex='1'>
-						{orderItem.qty}
-					</Text>
-					<Button
-						onClick={() => incrementItemQty(orderItem)}
-						flex='1'
-						size='sm'
-						colorScheme='teal'
-					>
-						+
-					</Button>
-				</HStack>
-			</VStack>
+			</Grid>
+			<HStack mt='2'>
+				<Button onClick={() => decrementItemQty(orderItem)} flex='1' size='sm'>
+					-
+				</Button>
+				<Text textAlign='center' flex='1'>
+					{orderItem.qty}
+				</Text>
+				<Button
+					onClick={() => incrementItemQty(orderItem)}
+					flex='1'
+					size='sm'
+					colorScheme='teal'
+				>
+					+
+				</Button>
+			</HStack>
 		</Box>
 	)
 }

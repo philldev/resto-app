@@ -1,4 +1,4 @@
-import { Flex, Grid, Text } from '@chakra-ui/layout'
+import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
 import { Tooltip } from '@chakra-ui/tooltip'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -6,23 +6,28 @@ import { ClipboardListIcon } from './icons/ClipboardListIcon'
 import { DashboardIcon } from './icons/DashboarIcon'
 import { HomeIcon } from './icons/HomeIcon'
 import { MenuIcon } from './icons/MenuIcon'
-import { MoreIcon } from './icons/MoreIcon'
+import { TransactionsIcon } from './icons/TransactionIcon'
 import Page from './Page'
 
 export const AppPage = ({ children }) => {
 	return (
 		<Page>
-			<Flex flexDir={{ base: 'column', md: 'row-reverse' }} h='100vh' w='100vw'>
+			<Flex
+				bg='gray.900'
+				flexDir={{ base: 'column', md: 'row-reverse' }}
+				h='100vh'
+				w='100vw'
+			>
 				<Flex flex='1 0' overflow='hidden'>
 					{children}
 				</Flex>
 				<Flex
+					bg='gray.800'
 					alignItems='center'
 					borderTop={{ base: '1px solid', md: 'none' }}
 					borderTopColor={{ base: 'gray.700', md: 'none' }}
 					borderRight={{
 						base: 'none',
-						md: '1px solid var(--chakra-colors-gray-700)',
 					}}
 					h={{ base: '16', md: 'full' }}
 				>
@@ -47,7 +52,7 @@ export const AppPage = ({ children }) => {
 						/>
 						<BottomNavItem
 							href='/app/transactions'
-							Icon={MoreIcon}
+							Icon={TransactionsIcon}
 							label='Transaksi'
 						/>
 					</Grid>
@@ -68,22 +73,25 @@ const BottomNavItem = ({ label, Icon, href, isRoot }) => {
 			label={label}
 			placement='right'
 		>
-			<Link href={href} passHref>
-				<Flex
-					fontSize='xs'
-					color={isActive ? 'teal.500' : undefined}
-					as='button'
-					flexDir='column'
-					alignItems='center'
-					justifyContent='center'
-					h={{ base: 'auto', md: '16' }}
-				>
-					<Icon w='6' h='6' mb='1' display='block' />
-					<Text as='span' d={{ base: 'inline', md: 'none' }}>
-						{label}
-					</Text>
-				</Flex>
-			</Link>
+			<Box>
+				<Link href={href} passHref>
+					<Flex
+						fontSize='xs'
+						color={isActive ? 'teal.500' : undefined}
+						as='button'
+						flexDir='column'
+						alignItems='center'
+						justifyContent='center'
+						h={{ base: 'auto', md: '16' }}
+						w='full'
+					>
+						<Icon w='6' h='6' mb='1' display='block' />
+						<Text as='span' d={{ base: 'inline', md: 'none' }}>
+							{label}
+						</Text>
+					</Flex>
+				</Link>
+			</Box>
 		</Tooltip>
 	)
 }

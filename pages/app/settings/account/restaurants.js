@@ -12,6 +12,7 @@ import {
 import { useRouter } from 'next/router'
 import { BackButton } from '../../../../components/BackButton'
 import { AppPage } from '../../../../components/common/AppPage'
+import { AppTopbar } from '../../../../components/common/AppTopbar'
 import withProtectedRoute from '../../../../components/hoc/withProtectedRoute'
 import { RestoForm } from '../../../../components/RestoForm'
 import { useUserResto } from '../../../../context/Resto'
@@ -19,27 +20,17 @@ import { useUserResto } from '../../../../context/Resto'
 const Restaurants = () => {
 	return (
 		<AppPage displayHeader={false}>
-			<Flex direction='column' bg='gray.900' w='100vw' h='100vh'>
-
-				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-					<Flex
-						maxW='container.md'
-						w='full'
-						mx='auto'
-						alignItems='center'
-						justifyContent='space-between'
-						h='14'
-						px='2'
-					>
+			<Flex direction='column' w='100vw' h='100vh'>
+				<AppTopbar>
+					<Flex w='full' alignItems='center' justifyContent='space-between'>
 						<Text fontSize='xl' fontWeight='bold'>
 							Pilih Restoran
 						</Text>
 						<BackButton href='/app' />
 					</Flex>
-				</Flex>
+				</AppTopbar>
 				<Flex
 					flexDir='column'
-					bg='gray.900'
 					flex='1'
 					maxW='container.md'
 					mx='auto'

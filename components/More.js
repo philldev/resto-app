@@ -48,7 +48,6 @@ export const More = () => {
 				<DrawerContent bg='gray.900'>
 					<DrawerCloseButton />
 					<DrawerHeader>Lainnya</DrawerHeader>
-
 					<DrawerBody>
 						<Box>
 							<Grid templateColumns={'1fr'} gap='2'>

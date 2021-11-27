@@ -1,6 +1,8 @@
 import { Divider, Flex, Text } from '@chakra-ui/layout'
 import Image from 'next/image'
 import { AppPage } from '../../../components/common/AppPage'
+import { AppTopbar } from '../../../components/common/AppTopbar'
+import { More } from '../../../components/More'
 import { useUserResto } from '../../../context/Resto'
 
 const Transactions = () => {
@@ -16,27 +18,19 @@ const Transactions = () => {
 const Topbar = () => {
 	const { currentResto } = useUserResto()
 	return (
-		<Flex
-			alignItems='center'
-			justifyContent='space-between'
-			p='4'
-			pb='2'
-			flexWrap='wrap'
-			maxW='container.md'
-			mx='auto'
-			w='full'
-		>
+		<AppTopbar>
 			<Flex alignItems='center'>
 				<Image width='32px' height='32px' alt='logo' src='/logo.png' />
 				<Text fontSize='lg' ml='2'>
-					{currentResto.name}
+					{currentResto?.name}
 				</Text>
 				<Divider h='24px' orientation='vertical' mx='2' />
 				<Text fontSize='lg' fontWeight='bold'>
 					Transaksi
 				</Text>
 			</Flex>
-		</Flex>
+			<More />
+		</AppTopbar>
 	)
 }
 

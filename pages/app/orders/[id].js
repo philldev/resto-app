@@ -23,6 +23,7 @@ import { Radio, RadioGroup } from '@chakra-ui/react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import { AppTopbar } from '../../../components/common/AppTopbar'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import { OrderItemList } from '../../../components/OrderItemsList'
@@ -52,16 +53,8 @@ const Order = () => {
 const Topbar = () => {
 	const router = useRouter()
 	return (
-		<Box borderBottom='1px solid var(--chakra-colors-gray-700)'>
-			<Flex
-				maxW='container.md'
-				w='full'
-				mx='auto'
-				alignItems='center'
-				justifyContent='space-between'
-				h='14'
-				px='2'
-			>
+		<AppTopbar>
+			<Flex w='full' alignItems='center' justifyContent='space-between'>
 				<Text fontWeight='bold' fontSize='xl'>
 					Detail Pesanan
 				</Text>
@@ -71,7 +64,7 @@ const Topbar = () => {
 					icon={<ArrowBackIcon w='6' h='6' />}
 				/>
 			</Flex>
-		</Box>
+		</AppTopbar>
 	)
 }
 

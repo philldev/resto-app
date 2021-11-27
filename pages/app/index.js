@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
 import { AppPage } from '../../components/common/AppPage'
+import { AppTopbar } from '../../components/common/AppTopbar'
 import { OverviewBox } from '../../components/common/OverviewBox'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
 import { More } from '../../components/More'
@@ -18,26 +19,16 @@ const Home = () => {
 	if (!currentResto) return null
 	return (
 		<AppPage displayHeader={false}>
-			<Flex bg='gray.900' flexDir='column' flex='1'>
-				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-					<Flex
-						maxW='container.md'
-						w='full'
-						mx='auto'
-						alignItems='center'
-						justifyContent='space-between'
-						h='14'
-						px='2'
-					>
-						<Flex alignItems='center'>
-							<Image width='32px' height='32px' alt='logo' src='/logo.png' />
-							<Text fontSize='lg' ml='2'>
-								Home
-							</Text>
-						</Flex>
-						<More />
+			<Flex flexDir='column' flex='1'>
+				<AppTopbar>
+					<Flex alignItems='center'>
+						<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+						<Text fontWeight='bold' fontSize='lg' ml='2'>
+							Home
+						</Text>
 					</Flex>
-				</Flex>
+					<More />
+				</AppTopbar>
 				<Flex overflowY='auto' flexDir='column' flex='1'>
 					<Flex
 						maxWidth='container.md'

@@ -1,20 +1,14 @@
 import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon } from '@chakra-ui/icons'
-import {
-	Box,
-	Divider,
-	Flex,
-	Grid, Text,
-	VStack
-} from '@chakra-ui/layout'
+import { Box, Divider, Flex, Grid, Text, VStack } from '@chakra-ui/layout'
 import {
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
 	DrawerHeader,
-	DrawerOverlay
+	DrawerOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import moment from 'moment'
@@ -22,7 +16,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
 import { AppPage } from '../../../components/common/AppPage'
+import { AppTopbar } from '../../../components/common/AppTopbar'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { More } from '../../../components/More'
 import { OrderCard } from '../../../components/OrderCard'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
@@ -31,7 +27,7 @@ import { useOrderItems } from '../../../hooks/order/useOrderItems'
 const Orders = () => {
 	return (
 		<AppPage displayHeader={false}>
-			<Flex bg='gray.900' flex='1' flexDir='column' w='full' overflow='hidden'>
+			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
 				<Topbar />
 				<TabsProvider>
 					<OrderTabs />
@@ -45,16 +41,8 @@ const Orders = () => {
 const Topbar = () => {
 	const { currentResto } = useUserResto()
 	return (
-		<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
-			<Flex
-				maxW='container.md'
-				w='full'
-				mx='auto'
-				alignItems='center'
-				justifyContent='space-between'
-				h='14'
-				px='2'
-			>
+		<AppTopbar>
+			<Flex w='full' alignItems='center' justifyContent='space-between'>
 				<Flex alignItems='center'>
 					<Image width='32px' height='32px' alt='logo' src='/logo.png' />
 					<Text fontSize='lg' ml='2'>
@@ -65,8 +53,9 @@ const Topbar = () => {
 						Pesanan
 					</Text>
 				</Flex>
+				<More />
 			</Flex>
-		</Flex>
+		</AppTopbar>
 	)
 }
 
@@ -125,6 +114,7 @@ const OrderTabs = () => {
 			flex='1'
 			overflow='hidden'
 			isLazy
+			p='2'
 			lazyBehavior='keepMounted'
 		>
 			<OrderTabList />
@@ -140,8 +130,8 @@ const OrderTabList = () => {
 			flex='0'
 			overflowX='auto'
 			overflowY='hidden'
-			p='2'
-			pt='4'
+			px='0'
+			py='4'
 			pos='relative'
 			maxW='container.md'
 			w='full'
@@ -176,7 +166,6 @@ const OrderPanels = () => {
 	]
 	return (
 		<TabPanels
-			bg='gray.900'
 			d='flex'
 			h='calc(100% - 56px)'
 			flexDir='column'
