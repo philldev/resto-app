@@ -19,14 +19,16 @@ import { useUserResto } from '../../../context/Resto'
 const Restaurant = () => {
 	return (
 		<AppPage displayHeader={false}>
-			<Flex direction='column' w='100vw' h='100vh'>
-				<Flex bg='gray.800' alignItems='center' p='4'>
+			<Flex bg='gray.900' direction='column' w='100vw' h='100vh'>
+				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
 					<Flex
-						maxW='container.md'
-						mx='auto'
-						justifyContent='space-between'
+						maxW='375px'
 						w='full'
+						mx='auto'
 						alignItems='center'
+						justifyContent='space-between'
+						h='14'
+						px='2'
 					>
 						<Text fontSize='xl' fontWeight='bold'>
 							Profil Restoran
@@ -37,10 +39,6 @@ const Restaurant = () => {
 				<Flex bg='gray.900' flex='1' p='4'>
 					<Box rounded='md' h='full' maxW='container.md' w='full' mx='auto'>
 						<RestaurantProfile />
-
-						<Box mt='4'>
-							<DeleteResto />
-						</Box>
 					</Box>
 				</Flex>
 			</Flex>
@@ -124,11 +122,19 @@ const RestaurantProfile = () => {
 	return (
 		<Grid
 			gap='4'
-			templateColumns={{ base: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
+			templateColumns={'1fr'}
+			maxW='375px'
+			w='full'
+			border='1px solid var(--chakra-colors-gray-700)'
+			p='4'
+			mx='auto'
 		>
 			<DataDisplay label='Nama' data={currentResto.name} />
 			<DataDisplay label='Alamat' data={currentResto.address} />
 			<DataDisplay label='No Handphone' data={currentResto.dob} />
+			<Box mt='2'>
+				<DeleteResto />
+			</Box>
 		</Grid>
 	)
 }

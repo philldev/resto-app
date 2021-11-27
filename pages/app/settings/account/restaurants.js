@@ -19,31 +19,36 @@ import { useUserResto } from '../../../../context/Resto'
 const Restaurants = () => {
 	return (
 		<AppPage displayHeader={false}>
-			<Flex direction='column' w='100vw' h='100vh'>
-				<Flex flexDir='column' bg='gray.800' alignItems='center' p='4'>
+			<Flex direction='column' bg='gray.900' w='100vw' h='100vh'>
+
+				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
 					<Flex
 						maxW='container.md'
-						mx='auto'
-						justifyContent='space-between'
 						w='full'
+						mx='auto'
 						alignItems='center'
+						justifyContent='space-between'
+						h='14'
+						px='2'
 					>
 						<Text fontSize='xl' fontWeight='bold'>
 							Pilih Restoran
 						</Text>
 						<BackButton href='/app' />
 					</Flex>
-					<Flex
-						maxW='container.md'
-						mx='auto'
-						justifyContent='space-between'
-						w='full'
-						alignItems='center'
-					>
+				</Flex>
+				<Flex
+					flexDir='column'
+					bg='gray.900'
+					flex='1'
+					maxW='container.md'
+					mx='auto'
+					w='full'
+					py='4'
+				>
+					<Flex mb='4'>
 						<AddResto />
 					</Flex>
-				</Flex>
-				<Flex bg='gray.900' flex='1' p='4'>
 					<RestoList />
 				</Flex>
 			</Flex>
@@ -54,7 +59,7 @@ const Restaurants = () => {
 const RestoList = () => {
 	const { restoList } = useUserResto()
 	return (
-		<Grid w='full' gridAutoRows='max-content' gap='2'>
+		<Grid w='full' gridAutoRows='max-content' gap='2' templateColumns='1fr'>
 			{restoList.map((resto, index) => (
 				<RestoItem key={index} {...{ resto }} />
 			))}
@@ -67,16 +72,18 @@ const RestoItem = ({ resto }) => {
 	const { selectResto } = useUserResto()
 	const onClick = () => {
 		selectResto(resto)
-		router.push('/app/more')
+		router.push('/app')
 	}
 	return (
 		<Box
+			cursor='pointer'
 			onClick={onClick}
-			p='2'
 			rounded='md'
 			border='1px solid var(--chakra-colors-gray-600)'
+			p='2'
+			px='4'
 			fontWeight='bold'
-			textAlign='center'
+			fontSize='4xl'
 		>
 			{resto.name}
 		</Box>
