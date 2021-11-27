@@ -1,22 +1,20 @@
 import { Button } from '@chakra-ui/button'
-import Link from 'next/link'
-import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
-import { BackButton } from '../../../../components/BackButton'
-import { AppPage } from '../../../../components/common/AppPage'
-import withProtectedRoute from '../../../../components/hoc/withProtectedRoute'
-import { useUserResto } from '../../../../context/Resto'
-import { useRouter } from 'next/router'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { AddIcon } from '@chakra-ui/icons'
+import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
 import {
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
+import { useRouter } from 'next/router'
+import { BackButton } from '../../../../components/BackButton'
+import { AppPage } from '../../../../components/common/AppPage'
+import withProtectedRoute from '../../../../components/hoc/withProtectedRoute'
 import { RestoForm } from '../../../../components/RestoForm'
+import { useUserResto } from '../../../../context/Resto'
 
 function Restaurants() {
 	return (

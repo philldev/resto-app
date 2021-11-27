@@ -1,14 +1,13 @@
 import { Button } from '@chakra-ui/button'
-import { CalendarIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
 import {
-	Badge,
 	Box,
 	Divider,
 	Flex,
 	Grid,
 	HStack,
-	Text,
+	Text
 } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import moment from 'moment'
@@ -16,11 +15,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
+import { OrderCard } from '../../../components/OrderCard'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
-import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
-import { formatPrice } from '../../../utils/formatPrice'
 
 function Orders() {
 	return (
@@ -209,59 +207,6 @@ const OrderPanel = ({ type, label }) => {
 				))}
 			</Grid>
 		</Box>
-	)
-}
-
-const OrderCard = ({ order }) => {
-	return (
-		<Link passHref href={`/app/orders/${order.id}`}>
-			<Flex
-				flexDir='column'
-				pos='relative'
-				borderRadius='xl'
-				border='1px solid'
-				borderColor='gray.700'
-				overflow='hidden'
-				p='2'
-				color='gray.200'
-				cursor='pointer'
-				_hover={{ bg: 'gray.800' }}
-			>
-				<Box w='100%'>
-					<Flex mb='1' justifyContent='space-between'>
-						<Flex w='full' alignItems='center' justifyContent='space-between'>
-							<Flex alignItems='center'>
-								<Text fontSize='lg' fontWeight='bold'>
-									Order #{order.no}
-								</Text>
-								<Divider orientation='vertical' h='6' mx='2' />
-								{order.status === 'on_progress' ? (
-									<Badge colorScheme='yellow'>Dalam Proses</Badge>
-								) : order.status === 'completed' ? (
-									<Badge colorScheme='green'>Selesai</Badge>
-								) : (
-									<Badge colorScheme='red'>Dibatalkan</Badge>
-								)}
-							</Flex>
-							<Flex alignItems='center'>
-								<CalendarIcon color='gray.400' mr='1' w='4' h='4' />
-								<Text textAlign='right' fontSize='sm' color='gray.400'>
-									{moment(order.createdAt.toDate()).format('d/mm/yy')}
-								</Text>
-							</Flex>
-						</Flex>
-					</Flex>
-				</Box>
-				<Flex flexDir='column' w='100%'>
-					<Flex justifyContent='space-between' fontSize='sm'>
-						<Text>Total Bayar : {formatPrice(getTotal(order.items))}</Text>
-						<Text textAlign='right'>
-							Jumlah Item : {getTotalQty(order.items)}
-						</Text>
-					</Flex>
-				</Flex>
-			</Flex>
-		</Link>
 	)
 }
 

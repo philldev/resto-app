@@ -1,5 +1,4 @@
 import { Button } from '@chakra-ui/button'
-import { DeleteIcon } from '@chakra-ui/icons'
 import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
 import {
 	AlertDialog,
@@ -7,8 +6,9 @@ import {
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogHeader,
-	AlertDialogOverlay,
+	AlertDialogOverlay
 } from '@chakra-ui/modal'
+import { useRouter } from 'next/router'
 import * as React from 'react'
 import { BackButton } from '../../../components/BackButton'
 import { AppPage } from '../../../components/common/AppPage'
@@ -53,14 +53,17 @@ const DeleteResto = ({ resto }) => {
 	const onClose = () => setIsOpen(false)
 	const onOpen = () => setIsOpen(true)
 	const cancelRef = React.useRef()
-	const { deleteUserResto, currentResto } = useUserResto()
+	const { deleteUserResto } = useUserResto()
 	const [isLoading, setIsLoading] = React.useState(false)
+
+	const router = useRouter()
 
 	const onDelete = async () => {
 		setIsLoading(true)
 		try {
 			await deleteUserResto(resto.id)
-			if (currentResto.id !== resto.id) onClose()
+
+			router.push('/app/account/restaurants')			
 		} catch (error) {
 			console.log(error)
 			setIsLoading(false)

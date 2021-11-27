@@ -41,8 +41,8 @@ const UserProfile = () => {
 			<DataDisplay label='Kata Sandi' data={'**********'} />
 			<DataDisplay label='Nama' data={user.name} />
 			<DataDisplay label='Alamat' data={user.address} />
-			<DataDisplay label='Tanggal Lahir' data={user.dob} />
-			<DataDisplay label='No Handphone' data={user.dob} />
+			{/* <DataDisplay label='Tanggal Lahir' data={user.dob} />
+			<DataDisplay label='No Handphone' data={user.dob} /> */}
 		</Grid>
 	)
 }
