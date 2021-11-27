@@ -1,39 +1,19 @@
 import { Button } from '@chakra-ui/button'
 import { Flex, Grid, HStack, Text } from '@chakra-ui/layout'
 import { Timestamp } from '@firebase/firestore'
-import Link from 'next/link'
-import {
-	CategoryScale,
-	Chart as ChartJS,
-	Legend,
-	LinearScale,
-	LineElement,
-	PointElement,
-	Title,
-	Tooltip,
-} from 'chart.js'
 import Image from 'next/image'
+import Link from 'next/link'
 import * as React from 'react'
 import { AppPage } from '../../components/common/AppPage'
 import { OverviewBox } from '../../components/common/OverviewBox'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
+import { More } from '../../components/More'
 import { OrderCard } from '../../components/OrderCard'
 import { OverviewMonth } from '../../components/OverviewMonth'
 import { OverviewToday } from '../../components/OverviewToday'
 import { useUserResto } from '../../context/Resto'
-import { More } from '../../components/More'
 
-ChartJS.register(
-	CategoryScale,
-	LinearScale,
-	PointElement,
-	LineElement,
-	Title,
-	Tooltip,
-	Legend
-)
-
-function Home() {
+const  Home = () => {
 	const { currentResto } = useUserResto()
 	if (!currentResto) return null
 	return (

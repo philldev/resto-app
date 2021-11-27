@@ -7,7 +7,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import { useRouter } from 'next/router'
 import { BackButton } from '../../../../components/BackButton'
@@ -16,7 +16,7 @@ import withProtectedRoute from '../../../../components/hoc/withProtectedRoute'
 import { RestoForm } from '../../../../components/RestoForm'
 import { useUserResto } from '../../../../context/Resto'
 
-function Restaurants() {
+const Restaurants = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex direction='column' w='100vw' h='100vh'>

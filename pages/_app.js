@@ -3,7 +3,7 @@ import { AuthProvider } from '../context/auth'
 import { UserRestoProvider } from '../context/Resto'
 import { theme } from '../styles/theme'
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
 	return (
 		<ChakraProvider theme={theme}>
 			<AuthProvider>

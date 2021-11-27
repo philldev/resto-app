@@ -37,7 +37,7 @@ import useQuery from '../../../hooks/useQuery'
 import { getTotal, getTotalQty } from '../../../utils/calculateTotal'
 import { formatPrice } from '../../../utils/formatPrice'
 
-function Order() {
+const Order = () => {
 	return (
 		<Flex flexDir='column' w='100vw' h='100vh' overflow='hidden'>
 			<Topbar />
@@ -252,7 +252,7 @@ const AddItem = ({ order, setOrder }) => {
 			<Button onClick={onOpen} size='xs' ml='2'>
 				Tambah Item
 			</Button>
-			<Modal  isCentered isOpen={isOpen} onClose={onClose}>
+			<Modal isCentered isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent maxW='container.md' bg='gray.900' mx='4'>
 					<ModalHeader>Tambah Item Pesanan #{order.no}</ModalHeader>

@@ -8,7 +8,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import Image from 'next/image'
 import * as React from 'react'
@@ -19,13 +19,13 @@ import { MenuForm } from '../../../components/MenuForm'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import {
 	MenuCategoryProvider,
-	useMenuCategory
+	useMenuCategory,
 } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
 
-function Menus() {
+const Menus = () => {
 	const { currentResto } = useUserResto()
 	if (!currentResto) return null
 	return (
@@ -44,20 +44,15 @@ function Menus() {
 							w='full'
 						>
 							<Flex alignItems='center'>
-									<Image
-										width='32px'
-										height='32px'
-										alt='logo'
-										src='/logo.png'
-									/>
-									{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
-									<Text fontSize='lg' ml='2'>
-										{currentResto.name}
-									</Text>
-									<Divider h='24px' orientation='vertical' mx='2' />
-									<Text fontSize='lg' fontWeight='bold'>
-										Menu
-									</Text>
+								<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+								{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
+								<Text fontSize='lg' ml='2'>
+									{currentResto.name}
+								</Text>
+								<Divider h='24px' orientation='vertical' mx='2' />
+								<Text fontSize='lg' fontWeight='bold'>
+									Menu
+								</Text>
 							</Flex>
 						</Flex>
 						<HStack

@@ -6,7 +6,7 @@ import Page from '../components/common/Page'
 import SignupForm from '../components/SignupForm'
 import useAuthRoute from '../hooks/useAuthRoute'
 
-export default function SignupPage() {
+const SignupPage = () => {
 	const user = useAuthRoute()
 	if (user === undefined) return <LoaderPage />
 	if (user) return null
@@ -36,3 +36,5 @@ export default function SignupPage() {
 		</>
 	)
 }
+
+export default SignupPage

@@ -6,7 +6,7 @@ import {
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogHeader,
-	AlertDialogOverlay
+	AlertDialogOverlay,
 } from '@chakra-ui/modal'
 import { useRouter } from 'next/router'
 import * as React from 'react'
@@ -16,7 +16,7 @@ import { DataDisplay } from '../../../components/DataDisplay'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { useUserResto } from '../../../context/Resto'
 
-function Restaurant() {
+const Restaurant = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex direction='column' w='100vw' h='100vh'>
@@ -63,7 +63,7 @@ const DeleteResto = ({ resto }) => {
 		try {
 			await deleteUserResto(resto.id)
 
-			router.push('/app/account/restaurants')			
+			router.push('/app/account/restaurants')
 		} catch (error) {
 			console.log(error)
 			setIsLoading(false)

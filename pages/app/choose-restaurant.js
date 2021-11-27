@@ -22,7 +22,7 @@ import { RestoForm } from '../../components/RestoForm'
 import { useAuth } from '../../context/auth'
 import { useUserResto } from '../../context/Resto'
 
-function ChooseRestaurant() {
+const ChooseRestaurant = () => {
 	const { user } = useAuth()
 	const { restoList, selectResto } = useUserResto()
 	const router = useRouter()

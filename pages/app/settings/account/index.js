@@ -5,7 +5,7 @@ import { DataDisplay } from '../../../components/DataDisplay'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { useAuth } from '../../../context/auth'
 
-function Account() {
+const Account = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex direction='column' w='100vw' h='100vh'>
@@ -36,13 +36,16 @@ function Account() {
 const UserProfile = () => {
 	const { user } = useAuth()
 	return (
-		<Grid gap='4' templateColumns={{ base: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}>
+		<Grid
+			gap='4'
+			templateColumns={{ base: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
+		>
 			<DataDisplay label='Email' data={user.email} />
 			<DataDisplay label='Kata Sandi' data={'**********'} />
 			<DataDisplay label='Nama' data={user.name} />
 			<DataDisplay label='Alamat' data={user.address} />
-			<DataDisplay label='Tanggal Lahir' data={user.dob} />
-			<DataDisplay label='No Handphone' data={user.dob} />
+			{/* <DataDisplay label='Tanggal Lahir' data={user.dob} />
+			<DataDisplay label='No Handphone' data={user.dob} /> */}
 		</Grid>
 	)
 }

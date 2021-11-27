@@ -1,14 +1,7 @@
 import { Button } from '@chakra-ui/button'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import {
-	Box,
-	Divider,
-	Flex,
-	Grid,
-	HStack,
-	Text
-} from '@chakra-ui/layout'
+import { Box, Divider, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import moment from 'moment'
 import Image from 'next/image'
@@ -20,7 +13,7 @@ import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
 
-function Orders() {
+const Orders = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex flex='1' flexDir='column' w='full' overflow='hidden'>

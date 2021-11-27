@@ -6,7 +6,7 @@ import Page from '../components/common/Page'
 import LoginForm from '../components/LoginForm'
 import useAuthRoute from '../hooks/useAuthRoute'
 
-export default function LoginPage() {
+const LoginPage = () => {
 	const user = useAuthRoute()
 	if (user === undefined) return <LoaderPage />
 	if (user) return null
@@ -36,3 +36,5 @@ export default function LoginPage() {
 		</>
 	)
 }
+
+export default LoginPage

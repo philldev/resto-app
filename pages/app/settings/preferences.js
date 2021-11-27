@@ -3,7 +3,7 @@ import { BackButton } from '../../../components/BackButton'
 import { AppPage } from '../../../components/common/AppPage'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 
-function Profile() {
+const Profile = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex direction='column' w='100vw' h='100vh'>

@@ -58,7 +58,7 @@ import { getTotal } from '../../../utils/calculateTotal'
 import { formatPrice } from '../../../utils/formatPrice'
 import { getOrderResolver } from '../../../utils/formSchema/orderSchema'
 
-function NewOrder() {
+const NewOrder = () => {
 	const { currentResto } = useUserResto()
 	if (!currentResto) return null
 	return (
@@ -84,7 +84,15 @@ function NewOrder() {
 const Topbar = () => {
 	const router = useRouter()
 	return (
-		<Flex maxW='container.md' w='full' mx='auto' alignItems='center' justifyContent='space-between' p='4' pb='2'>
+		<Flex
+			maxW='container.md'
+			w='full'
+			mx='auto'
+			alignItems='center'
+			justifyContent='space-between'
+			p='4'
+			pb='2'
+		>
 			<Flex alignItems='center' wrap='wrap'>
 				<Flex alignItems='center'>
 					<MenuIcon mr='2' flex='1' w='6' h='6' />
@@ -179,7 +187,14 @@ const OrderTypeDialog = () => {
 const BottomInfo = () => {
 	const { getTotal, getTotalQty } = useOrdering()
 	return (
-		<Box mx='auto' maxW='container.md' w='full' p='4' bg='gray.800' fontSize='sm'>
+		<Box
+			mx='auto'
+			maxW='container.md'
+			w='full'
+			p='4'
+			bg='gray.800'
+			fontSize='sm'
+		>
 			<VStack alignItems='stretch'>
 				<Flex justifyContent='space-between' w='full'>
 					<Text>Total : {formatPrice(getTotal())}</Text>

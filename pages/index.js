@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 
-export default function HomePage() {
+const HomePage = () => {
 	return (
 		<>
 			<Head>
@@ -40,3 +40,5 @@ export default function HomePage() {
 		</>
 	)
 }
+
+export default HomePage
