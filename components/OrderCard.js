@@ -49,7 +49,7 @@ export const OrderCard = ({ order }) => {
 					<Flex justifyContent='space-between' fontSize='sm'>
 						<Text>Total Bayar : {formatPrice(getTotal(order.items))}</Text>
 						<Text textAlign='right'>
-							Jumlah Item : {getTotalQty(order.items)}
+							Item : {getTotalQty(order.items)}
 						</Text>
 					</Flex>
 				</Flex>

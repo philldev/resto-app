@@ -6,40 +6,61 @@ import {
 	AccordionPanel,
 } from '@chakra-ui/accordion'
 import { Avatar } from '@chakra-ui/avatar'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { IconButton } from '@chakra-ui/button'
+import { useDisclosure } from '@chakra-ui/hooks'
+import { ChevronRightIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
+import {
+	Drawer,
+	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerHeader,
+	DrawerOverlay,
+} from '@chakra-ui/modal'
 import { chakra } from '@chakra-ui/system'
-import { AppPage } from '../../components/common/AppPage'
-import withProtectedRoute from '../../components/hoc/withProtectedRoute'
-import { useAuth } from '../../context/auth'
-import { useUserResto } from '../../context/Resto'
-import Link from 'next/link'
 import { Tag } from '@chakra-ui/tag'
+import * as React from 'react'
+import { useAuth } from '../context/auth'
+import { useUserResto } from '../context/Resto'
+import Link from 'next/link'
 
-function More() {
-	const { currentResto } = useUserResto()
-	if (!currentResto) return null
+export const More = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const btnRef = React.useRef()
+
 	return (
-		<AppPage displayHeader={false}>
-			<Flex bg='gray.900' flexDir='column' flex='1'>
-				<Flex bg='gray.800' alignItems='center' p='4'>
-					<Flex maxW='container.md' mx='auto' w='full' alignItems='center'>
-						<Text fontSize='xl' fontWeight='bold'>
-							Lainnya
-						</Text>
-					</Flex>
-				</Flex>
-				<Box flex='1' px='4' py='4'>
-					<Box rounded='md' h='full' maxW='container.md' w='full' mx='auto'>
-						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
-							<UserView mb='4' />
-							<RestoView mb='4' />
-						</Grid>
-						<NavList />
-					</Box>
-				</Box>
-			</Flex>
-		</AppPage>
+		<>
+			<IconButton
+				ref={btnRef}
+				size='sm'
+				variant='ghost'
+				icon={<HamburgerIcon w='6' h='6' />}
+				onClick={onOpen}
+			/>
+			<Drawer
+				isOpen={isOpen}
+				placement='left'
+				onClose={onClose}
+				finalFocusRef={btnRef}
+			>
+				<DrawerOverlay />
+				<DrawerContent bg='gray.900'>
+					<DrawerCloseButton />
+					<DrawerHeader>Lainnya</DrawerHeader>
+
+					<DrawerBody>
+						<Box>
+							<Grid templateColumns={'1fr'} gap='2'>
+								<UserView mb='4' />
+								<RestoView mb='4' />
+							</Grid>
+							<NavList />
+						</Box>
+					</DrawerBody>
+				</DrawerContent>
+			</Drawer>
+		</>
 	)
 }
 
@@ -47,7 +68,14 @@ const NavList = () => {
 	const { currentResto } = useUserResto()
 	const { signout } = useAuth()
 	return (
-		<Accordion d='grid' gridTemplateColumns={{md:'1fr 1fr'}} gridColumnGap={{md:'4'}} allowMultiple allowToggle flexDir='column'>
+		<Accordion
+			d='grid'
+			gridTemplateColumns={{ md: '1fr' }}
+			gridColumnGap={{ md: '4' }}
+			allowMultiple
+			allowToggle
+			flexDir='column'
+		>
 			<Link href='/app/settings/account' passHref>
 				<NavItem>Akun</NavItem>
 			</Link>
@@ -97,8 +125,12 @@ const UserView = chakra((props) => {
 		<Flex {...props}>
 			<Box flex='1'>
 				<Flex alignItems='center'>
-					<Text fontWeight='bold' mr='2'>USER</Text>
-					<Tag fontSize='10px' size='sm'>FREE ACCOUNT</Tag>
+					<Text fontWeight='bold' mr='2'>
+						USER
+					</Text>
+					<Tag fontSize='10px' size='sm'>
+						FREE ACCOUNT
+					</Tag>
 				</Flex>
 				<Text color='gray.300'>{user.email}</Text>
 			</Box>
@@ -118,5 +150,3 @@ const RestoView = chakra((props) => {
 		</Flex>
 	)
 })
-
-export default withProtectedRoute(More)

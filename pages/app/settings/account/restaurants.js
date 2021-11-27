@@ -31,7 +31,7 @@ function Restaurants() {
 						<Text fontSize='xl' fontWeight='bold'>
 							Pilih Restoran
 						</Text>
-						<BackButton href='/app/more' />
+						<BackButton href='/app' />
 					</Flex>
 					<Flex
 						maxW='container.md'

@@ -37,7 +37,7 @@ export const AppPage = ({ children, displayHeader = true }) => {
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
 						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
 						<BottomNavItem href='/app/table' Icon={DashboardIcon} label='Meja' />
-						<BottomNavItem href='/app/more' Icon={MoreIcon} label='Lainnya' />
+						<BottomNavItem href='/app/transactions' Icon={MoreIcon} label='Transaksi' />
 					</Grid>
 				</Flex>
 			</Flex>

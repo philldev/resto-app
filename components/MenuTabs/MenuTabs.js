@@ -89,18 +89,20 @@ const MenuPanels = ({ isOrdering }) => {
 								))}
 				</Grid>
 			</TabPanel>
-			{menuCategories.map((cat) => (
-				<TabPanel maxW='container.md' mx='auto' w='full' key={cat.id}>
+			{menuCategories.map((cat, index) => (
+				<TabPanel maxW='container.md' mx='auto' w='full' key={index}>
 					<Flex justifyContent='space-between' alignItems='center' mb='4'>
-						<Box
-							fontSize='2xl'
-							fontWeight='bold'
-							textTransform='uppercase'
-						>
+						<Box fontSize='2xl' fontWeight='bold' textTransform='uppercase'>
 							{cat.name}
 						</Box>
 						<HStack spacing='2'>
-							<Button variant='ghost' rightIcon={<SortIcon w='4' h='4' />} size='sm'>Urutkan</Button>
+							<Button
+								variant='ghost'
+								rightIcon={<SortIcon w='4' h='4' />}
+								size='sm'
+							>
+								Urutkan
+							</Button>
 							{!isOrdering && <CategorySettings category={cat} />}
 						</HStack>
 					</Flex>
@@ -441,8 +443,8 @@ const EditMenu = ({ menu }) => {
 
 const MenuCard = ({ menu, ...props }) => {
 	return (
-		<Box as='button' textAlign='left' rounded='xl' overflow='hidden' {...props}>
-			<Box pos='relative' h='20'>
+		<Flex cursor='pointer' flexDir='column' textAlign='center' rounded='xl' overflow='hidden' {...props} shadow='xl'>
+			<Box pos='relative' h='28'>
 				<Image
 					layout='fill'
 					objectFit='cover'
@@ -450,11 +452,11 @@ const MenuCard = ({ menu, ...props }) => {
 					alt={menu.name}
 				/>
 			</Box>
-			<Box py='2' px='4' bg='gray.800'>
-				<Text fontWeight='bold'>{menu.name}</Text>
+			<Flex flexDir='column' flex='1' py='5' px='4' roundedBottom='xl' justifyContent='space-between' border='1px solid var(--chakra-colors-gray-700)' borderTop='none'>
+				<Text mb='2' fontWeight='bold'>{menu.name}</Text>
 				<Text>{formatPrice(menu.price)}</Text>
-			</Box>
-		</Box>
+			</Flex>
+		</Flex>
 	)
 }
 
@@ -501,14 +503,6 @@ const OrderMenuCard = ({ menu }) => {
 					>
 						-
 					</Button>
-					{/* <Input
-						value={orderItem.qty}
-						flex='1'
-						size='sm'
-						type='number'
-						rounded='md'
-						textAlign='center'
-					/> */}
 					<Text textAlign='center' flex='1'>
 						{orderItem.qty}
 					</Text>

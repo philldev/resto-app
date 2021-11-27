@@ -31,7 +31,7 @@ function Restaurant() {
 						<Text fontSize='xl' fontWeight='bold'>
 							Profil Restoran
 						</Text>
-						<BackButton href='/app/more' />
+						<BackButton href='/app' />
 					</Flex>
 				</Flex>
 				<Flex bg='gray.900' flex='1' p='4'>

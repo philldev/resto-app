@@ -18,7 +18,7 @@ function Profile() {
 						<Text fontSize='xl' fontWeight='bold'>
 							Pengaturan Aplikasi
 						</Text>
-						<BackButton href='/app/more' />
+						<BackButton href='/app' />
 					</Flex>
 				</Flex>
 			</Flex>

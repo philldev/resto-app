@@ -20,7 +20,7 @@ function Account() {
 						<Text fontSize='xl' fontWeight='bold'>
 							Akun
 						</Text>
-						<BackButton href='/app/more' />
+						<BackButton href='/app' />
 					</Flex>
 				</Flex>
 				<Box bg='gray.900' flex='1' px='4' py='4'>
