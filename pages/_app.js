@@ -5,7 +5,6 @@ import { theme } from '../styles/theme'
 import Head from 'next/head'
 
 const MyApp = ({ Component, pageProps }) => {
-	console.log(Component.title)
 	return (
 		<>
 			{Component.title && (
