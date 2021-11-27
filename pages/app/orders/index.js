@@ -39,6 +39,8 @@ const Orders = () => {
 	)
 }
 
+Orders.title = 'Pesanan'
+
 const Topbar = () => {
 	const { currentResto } = useUserResto()
 	return (

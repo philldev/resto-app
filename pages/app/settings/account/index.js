@@ -28,6 +28,8 @@ const Account = () => {
 	)
 }
 
+Account.title = 'Pengaturan | Akun'
+
 const UserProfile = () => {
 	const { user } = useAuth()
 	return (

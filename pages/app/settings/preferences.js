@@ -4,7 +4,7 @@ import { AppPage } from '../../../components/common/AppPage'
 import { AppTopbar } from '../../../components/common/AppTopbar'
 import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 
-const Profile = () => {
+const Preferences = () => {
 	return (
 		<AppPage displayHeader={false}>
 			<Flex direction='column' w='100vw' h='100vh'>
@@ -21,4 +21,6 @@ const Profile = () => {
 	)
 }
 
-export default withProtectedRoute(Profile)
+Preferences.title = 'Pengaturan | Aplikasi'
+
+export default withProtectedRoute(Preferences)

@@ -16,6 +16,8 @@ const Table = () => {
 	)
 }
 
+Table.title = 'Meja'
+
 const Topbar = () => {
 	const { currentResto } = useUserResto()
 	return (

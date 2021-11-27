@@ -78,6 +78,8 @@ const Menus = () => {
 	)
 }
 
+Menus.title = 'Menu'
+
 const ActionsDrawer = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = React.useRef()

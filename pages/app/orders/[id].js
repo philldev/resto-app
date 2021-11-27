@@ -50,6 +50,8 @@ const Order = () => {
 	)
 }
 
+Order.title = 'Detail Pesanan'
+
 const Topbar = () => {
 	const router = useRouter()
 	return (

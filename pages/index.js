@@ -10,7 +10,7 @@ const HomePage = () => {
 	return (
 		<>
 			<Head>
-				<title>Relio - POST App</title>
+				<title>Relio - POS App</title>
 			</Head>
 			<Box w='full' h='100vh' bg='gray.800'>
 				<Header />

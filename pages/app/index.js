@@ -134,4 +134,6 @@ const Home = () => {
 	)
 }
 
+Home.title = 'Home'
+
 export default withProtectedRoute(Home)

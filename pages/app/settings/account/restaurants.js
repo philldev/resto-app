@@ -47,6 +47,8 @@ const Restaurants = () => {
 	)
 }
 
+Restaurants.title = 'Pengaturan | Pilih Restoran'
+
 const RestoList = () => {
 	const { restoList } = useUserResto()
 	return (

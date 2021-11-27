@@ -2,6 +2,7 @@ import { Divider, Flex, Text } from '@chakra-ui/layout'
 import Image from 'next/image'
 import { AppPage } from '../../../components/common/AppPage'
 import { AppTopbar } from '../../../components/common/AppTopbar'
+import withProtectedRoute from '../../../components/hoc/withProtectedRoute'
 import { More } from '../../../components/More'
 import { useUserResto } from '../../../context/Resto'
 
@@ -34,4 +35,6 @@ const Topbar = () => {
 	)
 }
 
-export default Transactions
+Transactions.title = 'Transaksi'
+
+export default withProtectedRoute(Transactions)

@@ -81,6 +81,7 @@ const NewOrder = () => {
 		</OrderingProvider>
 	)
 }
+NewOrder.title = 'Pesanan Baru'
 
 const Topbar = () => {
 	const router = useRouter()

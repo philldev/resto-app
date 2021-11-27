@@ -39,6 +39,8 @@ const Restaurant = () => {
 	)
 }
 
+Restaurant.title = 'Pengaturan | Restorant'
+
 const DeleteResto = ({ resto }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
 	const onClose = () => setIsOpen(false)
