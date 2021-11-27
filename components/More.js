@@ -3,12 +3,12 @@ import {
 	AccordionButton,
 	AccordionIcon,
 	AccordionItem,
-	AccordionPanel,
+	AccordionPanel
 } from '@chakra-ui/accordion'
 import { Avatar } from '@chakra-ui/avatar'
 import { IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
-import { ChevronRightIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { ChevronRightIcon, SettingsIcon } from '@chakra-ui/icons'
 import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
 import {
 	Drawer,
@@ -16,14 +16,14 @@ import {
 	DrawerCloseButton,
 	DrawerContent,
 	DrawerHeader,
-	DrawerOverlay,
+	DrawerOverlay
 } from '@chakra-ui/modal'
 import { chakra } from '@chakra-ui/system'
 import { Tag } from '@chakra-ui/tag'
+import Link from 'next/link'
 import * as React from 'react'
 import { useAuth } from '../context/auth'
 import { useUserResto } from '../context/Resto'
-import Link from 'next/link'
 
 export const More = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
@@ -35,7 +35,7 @@ export const More = () => {
 				ref={btnRef}
 				size='sm'
 				variant='ghost'
-				icon={<HamburgerIcon w='6' h='6' />}
+				icon={<SettingsIcon w='4' h='4' />}
 				onClick={onOpen}
 			/>
 			<Drawer

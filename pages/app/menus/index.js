@@ -1,14 +1,20 @@
-import { Button } from '@chakra-ui/button'
+import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { AddIcon } from '@chakra-ui/icons'
-import { Divider, Flex, HStack, Text } from '@chakra-ui/layout'
+import { Divider, Flex, Text, VStack } from '@chakra-ui/layout'
 import {
+	Drawer,
+	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerHeader,
+	DrawerOverlay,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
 import Image from 'next/image'
 import * as React from 'react'
@@ -19,7 +25,7 @@ import { MenuForm } from '../../../components/MenuForm'
 import { MenuTabs } from '../../../components/MenuTabs/MenuTabs'
 import {
 	MenuCategoryProvider,
-	useMenuCategory,
+	useMenuCategory
 } from '../../../context/MenuCategory'
 import { MenusProvider } from '../../../context/Menus'
 import { useUserResto } from '../../../context/Resto'
@@ -32,47 +38,91 @@ const Menus = () => {
 		<AppPage displayHeader={false}>
 			<MenuCategoryProvider>
 				<MenusProvider>
-					<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
-						<Flex
-							alignItems='center'
-							justifyContent='space-between'
-							p='4'
-							pb='2'
-							flexWrap='wrap'
-							maxW='container.md'
-							mx='auto'
-							w='full'
-						>
-							<Flex alignItems='center'>
-								<Image width='32px' height='32px' alt='logo' src='/logo.png' />
-								{/* <ClipboardListIcon mr='2' flex='1' w='6' h='6' /> */}
-								<Text fontSize='lg' ml='2'>
-									{currentResto.name}
-								</Text>
-								<Divider h='24px' orientation='vertical' mx='2' />
-								<Text fontSize='lg' fontWeight='bold'>
-									Menu
-								</Text>
+					<Flex
+						bg='gray.900'
+						flex='1'
+						flexDir='column'
+						w='full'
+						overflow='hidden'
+					>
+						<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
+							<Flex
+								alignItems='center'
+								justifyContent='space-between'
+								h='14'
+								px='2'
+								flexWrap='wrap'
+								maxW='container.md'
+								mx='auto'
+								w='full'
+							>
+								<Flex alignItems='center'>
+									<Image
+										width='32px'
+										height='32px'
+										alt='logo'
+										src='/logo.png'
+									/>
+									<Text fontSize='lg' ml='2'>
+										{currentResto.name}
+									</Text>
+									<Divider h='24px' orientation='vertical' mx='2' />
+									<Text fontSize='lg' fontWeight='bold'>
+										Menu
+									</Text>
+								</Flex>
 							</Flex>
 						</Flex>
-						<HStack
-							maxW='container.md'
-							mx='auto'
-							w='full'
-							p='4'
-							py='2'
-							overflowX='auto'
-						>
-							<AddMenu />
-							<AddMenuCategory />
-						</HStack>
 						<TabsProvider>
 							<MenuTabs />
 						</TabsProvider>
+						<ActionsDrawer />
 					</Flex>
 				</MenusProvider>
 			</MenuCategoryProvider>
 		</AppPage>
+	)
+}
+
+const ActionsDrawer = () => {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const btnRef = React.useRef()
+
+	return (
+		<>
+			<IconButton
+				ref={btnRef}
+				onClick={onOpen}
+				position='fixed'
+				bottom='84px'
+				right='16px'
+				zIndex={10}
+				colorScheme='blue'
+				icon={<AddIcon />}
+				rounded='full'
+				size='lg'
+				shadow='dark-lg'
+			/>
+
+			<Drawer
+				isOpen={isOpen}
+				placement='right'
+				onClose={onClose}
+				finalFocusRef={btnRef}
+			>
+				<DrawerOverlay />
+				<DrawerContent bg='gray.900'>
+					<DrawerCloseButton />
+					<DrawerHeader>Pilih Aksi</DrawerHeader>
+					<DrawerBody>
+						<VStack alignItems='stretch'>
+							<AddMenu />
+							<AddMenuCategory />
+						</VStack>
+					</DrawerBody>
+				</DrawerContent>
+			</Drawer>
+		</>
 	)
 }
 

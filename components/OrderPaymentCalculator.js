@@ -1,7 +1,8 @@
 import { Button } from '@chakra-ui/button'
 import { FormControl, FormLabel } from '@chakra-ui/form-control'
 import { Input } from '@chakra-ui/input'
-import { Box, HStack, VStack } from '@chakra-ui/layout'
+import { Box, HStack, Text, VStack } from '@chakra-ui/layout'
+import moment from 'moment'
 import * as React from 'react'
 import NumberFormat from 'react-number-format'
 import { formatPrice } from '../utils/formatPrice'
@@ -15,6 +16,7 @@ export const OrderPaymentCalculator = ({
 	isLoading,
 	orderTotal,
 	orderItems,
+	order,
 }) => {
 	const [showOrderItems, setShowOrderItems] = React.useState(false)
 
@@ -38,7 +40,11 @@ export const OrderPaymentCalculator = ({
 
 	return (
 		<VStack spacing='12' pb='4' alignItems='stretch'>
-			<VStack spacing='2' alignItems='stretch'>
+			<VStack spacing='3' alignItems='stretch'>
+				<FormControl>
+					<FormLabel mb='1'>Tanggal Pesanan</FormLabel>
+					<Text>{moment(order.createdAt.toDate()).format('LL')}</Text>
+				</FormControl>
 				<FormControl>
 					<FormLabel>Item Pesanan</FormLabel>
 					<Button

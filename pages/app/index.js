@@ -13,30 +13,32 @@ import { OverviewMonth } from '../../components/OverviewMonth'
 import { OverviewToday } from '../../components/OverviewToday'
 import { useUserResto } from '../../context/Resto'
 
-const  Home = () => {
+const Home = () => {
 	const { currentResto } = useUserResto()
 	if (!currentResto) return null
 	return (
 		<AppPage displayHeader={false}>
-			<Flex flexDir='column' flex='1'>
-				<Flex
-					maxW='container.md'
-					mx='auto'
-					w='full'
-					alignItems='center'
-					p='4'
-					fontSize='xl'
-					justifyContent='space-between'
-				>
-					<Flex alignItems='center'>
-						<Image width='32px' height='32px' alt='logo' src='/logo.png' />
-						<Text fontSize='lg' ml='2'>
-							Home
-						</Text>
+			<Flex bg='gray.900' flexDir='column' flex='1'>
+				<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
+					<Flex
+						maxW='container.md'
+						w='full'
+						mx='auto'
+						alignItems='center'
+						justifyContent='space-between'
+						h='14'
+						px='2'
+					>
+						<Flex alignItems='center'>
+							<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+							<Text fontSize='lg' ml='2'>
+								Home
+							</Text>
+						</Flex>
+						<More />
 					</Flex>
-					<More />
 				</Flex>
-				<Flex overflowY='auto' flexDir='column' flex='1' bg='gray.900'>
+				<Flex overflowY='auto' flexDir='column' flex='1'>
 					<Flex
 						maxWidth='container.md'
 						w='full'

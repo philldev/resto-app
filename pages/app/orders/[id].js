@@ -39,7 +39,7 @@ import { formatPrice } from '../../../utils/formatPrice'
 
 const Order = () => {
 	return (
-		<Flex flexDir='column' w='100vw' h='100vh' overflow='hidden'>
+		<Flex bg='gray.900' flexDir='column' w='100vw' h='100vh' overflow='hidden'>
 			<Topbar />
 			<Flex alignItems='center' flex='1' flexDir='column' overflowY='auto'>
 				<OrderDetail />
@@ -52,22 +52,26 @@ const Order = () => {
 const Topbar = () => {
 	const router = useRouter()
 	return (
-		<Flex
-			alignItems='center'
-			p='4'
-			justifyContent='space-between'
-			borderBottom='1px solid'
-			borderBottomColor='gray.700'
-		>
-			<Text fontWeight='bold' fontSize='xl'>
-				Detail Pesanan
-			</Text>
-			<IconButton
-				variant='ghost'
-				onClick={() => router.back()}
-				icon={<ArrowBackIcon w='6' h='6' />}
-			/>
-		</Flex>
+		<Box borderBottom='1px solid var(--chakra-colors-gray-700)'>
+			<Flex
+				maxW='container.md'
+				w='full'
+				mx='auto'
+				alignItems='center'
+				justifyContent='space-between'
+				h='14'
+				px='2'
+			>
+				<Text fontWeight='bold' fontSize='xl'>
+					Detail Pesanan
+				</Text>
+				<IconButton
+					variant='ghost'
+					onClick={() => router.back()}
+					icon={<ArrowBackIcon w='6' h='6' />}
+				/>
+			</Flex>
+		</Box>
 	)
 }
 
@@ -92,7 +96,8 @@ const OrderDetail = () => {
 	return (
 		<Box
 			alignItems='stretch'
-			p='4'
+			p='2'
+			py='4'
 			w='100%'
 			maxW='container.md'
 			overflowY='auto'
@@ -417,10 +422,11 @@ const PayNow = ({ order, setOrder }) => {
 			<Modal isCentered isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent bg='gray.800' mx='4'>
-					<ModalHeader>Status Bayar</ModalHeader>
+					<ModalHeader>Invoice Pesanan</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
 						<OrderPaymentCalculator
+							order={order}
 							onPay={onPayClick}
 							onBack={onClose}
 							isLoading={isLoading}

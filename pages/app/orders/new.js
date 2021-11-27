@@ -9,7 +9,7 @@ import {
 	Grid,
 	HStack,
 	Text,
-	VStack,
+	VStack
 } from '@chakra-ui/layout'
 import {
 	Modal,
@@ -17,7 +17,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay,
+	ModalOverlay
 } from '@chakra-ui/modal'
 import {
 	Alert,
@@ -32,7 +32,7 @@ import {
 	FormHelperText,
 	FormLabel,
 	Input,
-	Textarea,
+	Textarea
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -48,7 +48,7 @@ import { MenusProvider } from '../../../context/Menus'
 import {
 	OrderingProvider,
 	OrderTypeEnum,
-	useOrdering,
+	useOrdering
 } from '../../../context/Ordering'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider } from '../../../context/Tabs'
@@ -64,7 +64,7 @@ const NewOrder = () => {
 	return (
 		<OrderingProvider>
 			<OrderTypeDialog />
-			<Flex flexDir='column' w='100vw' h='100vh'>
+			<Flex bg='gray.900' flexDir='column' w='100vw' h='100vh'>
 				<Flex flex='1' flexDir='column' w='full' overflow='hidden'>
 					<Topbar />
 					<MenuCategoryProvider>
@@ -84,28 +84,29 @@ const NewOrder = () => {
 const Topbar = () => {
 	const router = useRouter()
 	return (
-		<Flex
-			maxW='container.md'
-			w='full'
-			mx='auto'
-			alignItems='center'
-			justifyContent='space-between'
-			p='4'
-			pb='2'
-		>
-			<Flex alignItems='center' wrap='wrap'>
-				<Flex alignItems='center'>
-					<MenuIcon mr='2' flex='1' w='6' h='6' />
-					<Text fontSize='xl'>Pesanan Baru</Text>
+		<Flex borderBottom='1px solid var(--chakra-colors-gray-700)'>
+			<Flex
+				maxW='container.md'
+				w='full'
+				mx='auto'
+				alignItems='center'
+				justifyContent='space-between'
+				h='14'
+				px='2'
+			>
+				<Flex alignItems='center' wrap='wrap'>
+					<Flex alignItems='center'>
+						<MenuIcon mr='2' flex='1' w='6' h='6' />
+						<Text fontSize='xl'>Pesanan Baru</Text>
+					</Flex>
+					<Divider orientation='vertical' mx='1' />
 				</Flex>
-				<Divider orientation='vertical' mx='1' />
-				<OrderTypeLabel />
+				<IconButton
+					variant='ghost'
+					onClick={() => router.back()}
+					icon={<ArrowBackIcon w='6' h='6' />}
+				/>
 			</Flex>
-			<IconButton
-				variant='ghost'
-				onClick={() => router.back()}
-				icon={<ArrowBackIcon w='6' h='6' />}
-			/>
 		</Flex>
 	)
 }
@@ -383,6 +384,7 @@ const NewOrderPayNow = ({ goBack, goNext }) => {
 			orderItems={orderItems}
 			orderTotal={getTotal()}
 			isLoading={isLoading}
+			order={order}
 			onBack={goBack}
 		/>
 	)

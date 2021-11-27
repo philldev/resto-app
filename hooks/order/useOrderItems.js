@@ -7,8 +7,6 @@ export const useOrderItems = (type) => {
 	const [isLoading, setIsloading] = React.useState(false)
 	const [items, setItems] = React.useState([])
 
-	console.log(items);
-
 	React.useEffect(() => {
 		let mounted = true
 

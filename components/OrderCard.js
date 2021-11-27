@@ -1,4 +1,3 @@
-import { CalendarIcon } from '@chakra-ui/icons'
 import { Badge, Box, Divider, Flex, Text } from '@chakra-ui/layout'
 import moment from 'moment'
 import Link from 'next/link'
@@ -37,8 +36,7 @@ export const OrderCard = ({ order }) => {
 								)}
 							</Flex>
 							<Flex alignItems='center'>
-								<CalendarIcon color='gray.400' mr='1' w='4' h='4' />
-								<Text textAlign='right' fontSize='sm' color='gray.400'>
+								<Text textAlign='right' fontSize='xs' color='gray.400'>
 									{moment(order.createdAt.toDate()).format('d/mm/yy')}
 								</Text>
 							</Flex>

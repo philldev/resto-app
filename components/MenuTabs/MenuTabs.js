@@ -67,7 +67,7 @@ const MenuPanels = ({ isOrdering }) => {
 			flex='1'
 			overflowY='auto'
 		>
-			<TabPanel maxW='container.md' mx='auto' w='full'>
+			<TabPanel p='2' maxW='container.md' mx='auto' w='full'>
 				{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
 				{searchQuery.length > 0 && (
 					<Text color='gray.500' mb='4'>
@@ -90,7 +90,7 @@ const MenuPanels = ({ isOrdering }) => {
 				</Grid>
 			</TabPanel>
 			{menuCategories.map((cat, index) => (
-				<TabPanel maxW='container.md' mx='auto' w='full' key={index}>
+				<TabPanel p='2' pt='0' maxW='container.md' mx='auto' w='full' key={index}>
 					<Flex justifyContent='space-between' alignItems='center' mb='4'>
 						<Box fontSize='2xl' fontWeight='bold' textTransform='uppercase'>
 							{cat.name}
@@ -134,7 +134,7 @@ const MenuTabList = () => {
 			overflowX='auto'
 			overflowY='hidden'
 			p='2'
-			px='4'
+			pt='4'
 			pos='relative'
 			maxW='container.md'
 			w='full'

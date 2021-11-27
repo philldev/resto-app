@@ -1,4 +1,5 @@
-import { Box, Flex, Grid } from '@chakra-ui/layout'
+import { Flex, Grid, Text } from '@chakra-ui/layout'
+import { Tooltip } from '@chakra-ui/tooltip'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ClipboardListIcon } from './icons/ClipboardListIcon'
@@ -8,36 +9,47 @@ import { MenuIcon } from './icons/MenuIcon'
 import { MoreIcon } from './icons/MoreIcon'
 import Page from './Page'
 
-export const AppPage = ({ children, displayHeader = true }) => {
+export const AppPage = ({ children }) => {
 	return (
 		<Page>
-			<Flex flexDir='column' h='100vh' w='100vw'>
-				{displayHeader && (
-					<Flex
-						alignItems='center'
-						borderBottom='1px solid'
-						borderBottomColor='gray.700'
-						h='14'
-						px='4'
-					>
-						<Box fontSize='xl'>Resto Name</Box>
-					</Flex>
-				)}
+			<Flex flexDir={{ base: 'column', md: 'row-reverse' }} h='100vh' w='100vw'>
 				<Flex flex='1 0' overflow='hidden'>
 					{children}
 				</Flex>
 				<Flex
 					alignItems='center'
-					borderTop='1px solid'
-					borderTopColor='gray.700'
-					h='16'
+					borderTop={{ base: '1px solid', md: 'none' }}
+					borderTopColor={{ base: 'gray.700', md: 'none' }}
+					borderRight={{
+						base: 'none',
+						md: '1px solid var(--chakra-colors-gray-700)',
+					}}
+					h={{ base: '16', md: 'full' }}
 				>
-					<Grid maxW='container.md' mx='auto' fontSize='sm' w='full' templateColumns='repeat(5,1fr)'>
+					<Grid
+						maxW='container.md'
+						mx='auto'
+						fontSize='sm'
+						w={{ base: 'full', md: '16' }}
+						templateColumns={{ base: 'repeat(5,1fr)', md: '1fr' }}
+					>
 						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
 						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
-						<BottomNavItem href='/app/orders' Icon={ClipboardListIcon} label='Pesanan' />
-						<BottomNavItem href='/app/table' Icon={DashboardIcon} label='Meja' />
-						<BottomNavItem href='/app/transactions' Icon={MoreIcon} label='Transaksi' />
+						<BottomNavItem
+							href='/app/orders'
+							Icon={ClipboardListIcon}
+							label='Pesanan'
+						/>
+						<BottomNavItem
+							href='/app/table'
+							Icon={DashboardIcon}
+							label='Meja'
+						/>
+						<BottomNavItem
+							href='/app/transactions'
+							Icon={MoreIcon}
+							label='Transaksi'
+						/>
 					</Grid>
 				</Flex>
 			</Flex>
@@ -47,13 +59,31 @@ export const AppPage = ({ children, displayHeader = true }) => {
 
 const BottomNavItem = ({ label, Icon, href, isRoot }) => {
 	const router = useRouter()
-	const isActive = isRoot ? href === router.pathname : router.pathname.includes(href)
+	const isActive = isRoot
+		? href === router.pathname
+		: router.pathname.includes(href)
 	return (
-		<Link href={href} passHref>
-			<Flex  fontSize='xs' color={isActive ? 'teal.500' : undefined} as='button' flexDir='column' alignItems='center'>
-				<Icon w='6' h='6' mb='1' />
-				<span>{label}</span>
-			</Flex>
-		</Link>
+		<Tooltip
+			display={{ base: 'none', md: 'block' }}
+			label={label}
+			placement='right'
+		>
+			<Link href={href} passHref>
+				<Flex
+					fontSize='xs'
+					color={isActive ? 'teal.500' : undefined}
+					as='button'
+					flexDir='column'
+					alignItems='center'
+					justifyContent='center'
+					h={{ base: 'auto', md: '16' }}
+				>
+					<Icon w='6' h='6' mb='1' display='block' />
+					<Text as='span' d={{ base: 'inline', md: 'none' }}>
+						{label}
+					</Text>
+				</Flex>
+			</Link>
+		</Tooltip>
 	)
 }
