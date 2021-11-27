@@ -1,3 +1,4 @@
+import { Avatar } from '@chakra-ui/avatar'
 import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
@@ -486,12 +487,13 @@ const MenuCard = ({ menu, ...props }) => {
 			{...props}
 		>
 			<Box pos='relative' h='65px' overflow='hidden' rounded='md'>
-				<Image
+				{/* <Image
 					layout='fill'
 					objectFit='cover'
 					src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
 					alt={menu.name}
-				/>
+				/> */}
+				<Avatar w='65px' rounded='md' h='65px' name={menu.name} />
 			</Box>
 			<Flex
 				flexDir='column'
@@ -529,12 +531,13 @@ const OrderMenuCard = ({ menu }) => {
 					overflow='hidden'
 					rounded='xl'
 				>
-					<Image
+					{/* <Image
 						layout='fill'
 						objectFit='cover'
 						src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
 						alt={menu.name}
-					/>
+					/> */}
+					<Avatar name={orderItem.name} />
 				</Box>
 				<Box>
 					<Text fontWeight='bold'>{menu.name}</Text>

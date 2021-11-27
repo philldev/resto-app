@@ -88,8 +88,8 @@ const ActionsDrawer = () => {
 				ref={btnRef}
 				onClick={onOpen}
 				position='fixed'
-				bottom='84px'
-				right='16px'
+				bottom={{ base: '84px', md: '24px' }}
+				right={{ base: '16px', md: '24px' }}
 				zIndex={10}
 				colorScheme='blue'
 				icon={<AddIcon />}

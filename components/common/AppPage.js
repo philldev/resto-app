@@ -1,4 +1,5 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
+import Image from 'next/image'
 import { Tooltip } from '@chakra-ui/tooltip'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -29,33 +30,40 @@ export const AppPage = ({ children }) => {
 					borderRight={{
 						base: 'none',
 					}}
+					flexDir='column'
 					h={{ base: '16', md: 'full' }}
 				>
-					<Grid
-						maxW='container.md'
-						mx='auto'
-						fontSize='sm'
-						w={{ base: 'full', md: '16' }}
-						templateColumns={{ base: 'repeat(5,1fr)', md: '1fr' }}
-					>
-						<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
-						<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
-						<BottomNavItem
-							href='/app/orders'
-							Icon={ClipboardListIcon}
-							label='Pesanan'
-						/>
-						<BottomNavItem
-							href='/app/table'
-							Icon={DashboardIcon}
-							label='Meja'
-						/>
-						<BottomNavItem
-							href='/app/transactions'
-							Icon={TransactionsIcon}
-							label='Transaksi'
-						/>
-					</Grid>
+					<Box pt='4' display={['none', 'none', 'block']}>
+						<Image width='32px' height='32px' alt='logo' src='/logo.png' />
+					</Box>
+					<Flex alignItems='center' flex='1' w='full'>
+						<Grid
+							maxW='container.md'
+							mx='auto'
+							
+							fontSize='sm'
+							w={{ base: 'full', md: '16' }}
+							templateColumns={{ base: 'repeat(5,1fr)', md: '1fr' }}
+						>
+							<BottomNavItem href='/app' isRoot Icon={HomeIcon} label='Home' />
+							<BottomNavItem href='/app/menus' Icon={MenuIcon} label='Menu' />
+							<BottomNavItem
+								href='/app/orders'
+								Icon={ClipboardListIcon}
+								label='Pesanan'
+							/>
+							<BottomNavItem
+								href='/app/table'
+								Icon={DashboardIcon}
+								label='Meja'
+							/>
+							<BottomNavItem
+								href='/app/transactions'
+								Icon={TransactionsIcon}
+								label='Transaksi'
+							/>
+						</Grid>
+					</Flex>
 				</Flex>
 			</Flex>
 		</Page>

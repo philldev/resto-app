@@ -1,7 +1,6 @@
+import { Avatar } from '@chakra-ui/avatar'
 import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
-import Image from 'next/image'
 import { formatPrice } from '../utils/formatPrice'
-import { PLACEHOLDER_MENU_IMG } from '../utils/imagePlaceholders'
 
 export const OrderItemList = ({ orderItems }) => {
 	return (
@@ -15,7 +14,7 @@ export const OrderItemList = ({ orderItems }) => {
 					py='2'
 					borderBottomColor='gray.700'
 				>
-					<Box
+					{/* <Box
 						flexShrink='0'
 						pos='relative'
 						w='45px'
@@ -29,7 +28,8 @@ export const OrderItemList = ({ orderItems }) => {
 							src={item.imageURL ?? PLACEHOLDER_MENU_IMG}
 							alt={'Order'}
 						/>
-					</Box>
+					</Box> */}
+					<Avatar rounded='md' name={item.name} flexShrink='0' w='45px' h='45px' />
 					<Flex
 						alignItems='center'
 						w='full'

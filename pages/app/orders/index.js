@@ -11,6 +11,7 @@ import {
 	DrawerOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
+import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
@@ -69,8 +70,8 @@ const ActionsDrawer = () => {
 				ref={btnRef}
 				onClick={onOpen}
 				position='fixed'
-				bottom='84px'
-				right='16px'
+				bottom={{ base: '84px', md: '24px' }}
+				right={{ base: '16px', md: '24px' }}
 				zIndex={10}
 				colorScheme='blue'
 				icon={<AddIcon />}
@@ -179,6 +180,15 @@ const OrderPanels = () => {
 
 const OrderPanel = ({ type }) => {
 	const { items, isLoading } = useOrderItems(type)
+	const todayItems = items.filter((i) =>
+		moment(i.createdAt.toDate()).isSame(moment(), 'date')
+	)
+	const yesterdayItems = items.filter((i) =>
+		moment(i.createdAt.toDate()).isSame(moment().set('day', -1), 'date')
+	)
+	const thisMonthItems = items.filter((i) =>
+		moment(i.createdAt.toDate()).isSame(moment(), 'month')
+	)
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
 			{items.length === 0 && !isLoading && (
@@ -186,11 +196,52 @@ const OrderPanel = ({ type }) => {
 					Belum ada pesanan
 				</Text>
 			)}
-			<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
-				{items.map((i, idx) => (
-					<OrderCard key={idx} order={i} />
-				))}
-			</Grid>
+			{items.length > 0 && (
+				<VStack alignItems='stretch' spacing='4'>
+					<Box>
+						<Box fontSize='sm' mb='2'>
+							Hari ini {moment().format('LL')}
+						</Box>
+						{todayItems.length === 0 ? (
+							<Link passHref href='/app/orders/new'>
+								<Button as={'a'} variant='outline' size='sm'>
+									+ Tambah Pesanan
+								</Button>
+							</Link>
+						) : (
+							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+								{todayItems.map((i, idx) => (
+									<OrderCard key={idx} order={i} />
+								))}
+							</Grid>
+						)}
+					</Box>
+					{yesterdayItems.length > 0 && (
+						<Box>
+							<Box fontSize='sm' mb='2'>
+								Kemarin {moment().set('day', -1).format('LL')}
+							</Box>
+							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+								{yesterdayItems.map((i, idx) => (
+									<OrderCard key={idx} order={i} />
+								))}
+							</Grid>
+						</Box>
+					)}
+					{thisMonthItems.length > 0 && (
+						<Box>
+							<Box fontSize='sm' mb='2'>
+								{moment().format('MMMM YYYY')}
+							</Box>
+							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+								{thisMonthItems.map((i, idx) => (
+									<OrderCard key={idx} order={i} />
+								))}
+							</Grid>
+						</Box>
+					)}
+				</VStack>
+			)}
 		</Box>
 	)
 }

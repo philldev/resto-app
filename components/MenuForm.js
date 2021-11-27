@@ -122,11 +122,11 @@ export const MenuForm = ({ isEditing, menu, onSuccess, onCancel }) => {
 							/>
 						</Box>
 					) : (
-						<Button w='full' variant='outline'>
+						<Button disabled w='full' variant='outline'>
 							Upload Foto
 						</Button>
 					)}
-					<FormHelperText fontSize='sm' color='red.400' mt='2'></FormHelperText>
+					<FormHelperText fontSize='sm' color='gray.400' mt='2'>Coming Soon</FormHelperText>
 				</FormControl>
 			</VStack>
 			<VStack>
