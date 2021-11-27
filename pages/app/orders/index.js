@@ -11,7 +11,6 @@ import {
 	DrawerOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
-import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
@@ -23,6 +22,7 @@ import { OrderCard } from '../../../components/OrderCard'
 import { useUserResto } from '../../../context/Resto'
 import { TabsProvider, useTabs } from '../../../context/Tabs'
 import { useOrderItems } from '../../../hooks/order/useOrderItems'
+import { useIsMdSize } from '../../../hooks/windowSize'
 
 const Orders = () => {
 	return (
@@ -106,15 +106,19 @@ const ActionsDrawer = () => {
 
 const OrderTabs = () => {
 	const { tabIndex, handleTabsChange } = useTabs()
+	const isMdSize = useIsMdSize()
 	return (
 		<Tabs
+			size={isMdSize ? 'md' : 'sm'}
 			index={tabIndex}
 			onChange={handleTabsChange}
 			variant='soft-rounded'
 			flex='1'
 			overflow='hidden'
 			isLazy
+			colorScheme='teal'
 			p='2'
+			pt='0'
 			lazyBehavior='keepMounted'
 		>
 			<OrderTabList />
@@ -137,10 +141,9 @@ const OrderTabList = () => {
 			w='full'
 			mx='auto'
 		>
-			<Tab flexShrink='0'>Hari Ini</Tab>
-			<Tab flexShrink='0'>Minggu Ini</Tab>
-			<Tab flexShrink='0'>Bulan Ini</Tab>
-			<Tab flexShrink='0'>Semua</Tab>
+			<Tab flexShrink='0'>Dalam Proses</Tab>
+			<Tab flexShrink='0'>Selesai</Tab>
+			<Tab flexShrink='0'>Di Batalkan</Tab>
 		</TabList>
 	)
 }
@@ -148,20 +151,13 @@ const OrderTabList = () => {
 const OrderPanels = () => {
 	const orderPanels = [
 		{
-			type: 'today',
-			label: moment().format('dddd'),
+			type: 'on_progress',
 		},
 		{
-			type: 'this_week',
-			label: 'Minggu Ini',
+			type: 'completed',
 		},
 		{
-			type: 'this_month',
-			label: 'Bulan Ini',
-		},
-		{
-			type: 'all',
-			label: 'Semua',
+			type: 'canceled',
 		},
 	]
 	return (
@@ -173,7 +169,7 @@ const OrderPanels = () => {
 			overflowY='hidden'
 		>
 			{orderPanels.map((item, index) => (
-				<TabPanel p='2' pt='0' key={index} overflowY='auto'>
+				<TabPanel p='0' pb='20' key={index} overflowY='auto'>
 					<OrderPanel {...item} />
 				</TabPanel>
 			))}
@@ -181,13 +177,15 @@ const OrderPanels = () => {
 	)
 }
 
-const OrderPanel = ({ type, label }) => {
-	const { items } = useOrderItems(type)
+const OrderPanel = ({ type }) => {
+	const { items, isLoading } = useOrderItems(type)
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
-			<Text mb='2' fontSize='lg' fontWeight='bold'>
-				Pesanan {label}
-			</Text>
+			{items.length === 0 && !isLoading && (
+				<Text textAlign='center' color='gray.400'>
+					Belum ada pesanan
+				</Text>
+			)}
 			<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
 				{items.map((i, idx) => (
 					<OrderCard key={idx} order={i} />

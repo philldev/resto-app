@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useUserResto } from '../../context/Resto'
 import * as OrderApi from '../../firebase/order'
 
-export const useOrderItems = (type) => {
+export const useOrderItems = (status) => {
 	const { currentResto } = useUserResto()
 	const [isLoading, setIsloading] = React.useState(false)
 	const [items, setItems] = React.useState([])
@@ -13,7 +13,7 @@ export const useOrderItems = (type) => {
 		const fetchItems = async () => {
 			setIsloading(true)
 			try {
-				const orderItems = await OrderApi.getOrders(currentResto.id, type)
+				const orderItems = await OrderApi.getOrders(currentResto.id, status)
 				if (mounted) setItems(orderItems)
 			} catch (error) {
 				console.log(error)
@@ -27,9 +27,7 @@ export const useOrderItems = (type) => {
 		return () => {
 			mounted = false
 		}
-	}, [type, currentResto.id])
+	}, [status, currentResto.id])
 
-	return {items, isLoading}
+	return { items, isLoading }
 }
-
-

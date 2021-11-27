@@ -2,12 +2,12 @@ import { Button, IconButton } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks'
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/layout'
+import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/layout'
 import {
 	Menu,
 	MenuButton,
 	MenuItem as MenuItemChakra,
-	MenuList
+	MenuList,
 } from '@chakra-ui/menu'
 import {
 	AlertDialog,
@@ -21,7 +21,7 @@ import {
 	ModalCloseButton,
 	ModalContent,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
 import Image from 'next/image'
@@ -30,6 +30,7 @@ import { useMenuCategory } from '../../context/MenuCategory'
 import { useMenus } from '../../context/Menus'
 import { useOrdering } from '../../context/Ordering'
 import { useTabs } from '../../context/Tabs'
+import { useIsMdSize } from '../../hooks/windowSize'
 import { formatPrice } from '../../utils/formatPrice'
 import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
 import { DotsHorizontal } from '../common/icons/DotsHorizontal'
@@ -38,12 +39,14 @@ import { MenuForm } from '../MenuForm'
 
 export const MenuTabs = ({ isOrdering }) => {
 	const { tabIndex, handleTabsChange } = useTabs()
+	const isMdSize = useIsMdSize()
 	return (
 		<Tabs
 			index={tabIndex}
 			onChange={handleTabsChange}
 			variant='soft-rounded'
 			flex='1'
+			size={isMdSize ? 'md' : 'sm'}
 			overflow='hidden'
 		>
 			<MenuTabList />
@@ -66,31 +69,58 @@ const MenuPanels = ({ isOrdering }) => {
 			flex='1'
 			overflowY='auto'
 		>
-			<TabPanel p='2' maxW='container.md' mx='auto' w='full'>
+			<TabPanel p='0' pb='24' px='2' maxW='container.md' mx='auto' w='full'>
 				{menus.length === 0 && <Text color='gray.500'>Belum ada menu</Text>}
-				{searchQuery.length > 0 && (
-					<Text color='gray.500' mb='4'>
-						Pencarian : {searchQuery}
-					</Text>
-				)}
-				<Grid
-					gridTemplateColumns={{
-						base: '1fr',
-						sm: '1fr 1fr',
-						md: '1fr 1fr 1fr',
-					}}
-					gridGap='4'
-				>
-					{searchQuery.length === 0
-						? menus.map((menu) => (
-								<MenuItem {...{ isOrdering, menu }} key={menu.id} />
-						  ))
-						: menus
+				{searchQuery.length > 0 ? (
+					<>
+						<Text color='gray.500' mb='4'>
+							Pencarian : {searchQuery}
+						</Text>
+						<Grid
+							gridTemplateColumns={{
+								base: '1fr',
+								sm: '1fr 1fr',
+								md: '1fr 1fr 1fr',
+							}}
+							gridGap='4'
+						>
+							{menus
 								.filter((m) => m.name.includes(searchQuery))
 								.map((menu) => (
 									<MenuItem {...{ isOrdering, menu }} key={menu.id} />
 								))}
-				</Grid>
+						</Grid>
+					</>
+				) : (
+					<VStack spacing='3' alignItems='stretch'>
+						{menuCategories.map((cat, index) => (
+							<Box key={index}>
+								<Box
+									fontSize='sm'
+									mb='2'
+									fontWeight='bold'
+									textTransform='uppercase'
+								>
+									{cat.name}
+								</Box>
+								<Grid
+									gridTemplateColumns={{
+										base: '1fr',
+										sm: '1fr 1fr',
+										md: '1fr 1fr 1fr',
+									}}
+									gridGap='4'
+								>
+									{menus
+										.filter((m) => m.categoryId === cat.id)
+										.map((menu) => (
+											<MenuItem {...{ isOrdering, menu }} key={menu.id} />
+										))}
+								</Grid>
+							</Box>
+						))}
+					</VStack>
+				)}
 			</TabPanel>
 			{menuCategories.map((cat, index) => (
 				<TabPanel
@@ -102,7 +132,7 @@ const MenuPanels = ({ isOrdering }) => {
 					key={index}
 				>
 					<Flex justifyContent='space-between' alignItems='center' mb='2'>
-						<Box fontSize='2xl' fontWeight='bold' textTransform='uppercase'>
+						<Box fontSize='sm' fontWeight='bold' textTransform='uppercase'>
 							{cat.name}
 						</Box>
 						<HStack spacing='2'>
@@ -110,7 +140,11 @@ const MenuPanels = ({ isOrdering }) => {
 						</HStack>
 					</Flex>
 					<Grid
-						gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }}
+						gridTemplateColumns={{
+							base: '1fr',
+							sm: '1fr 1fr',
+							md: '1fr 1fr 1fr',
+						}}
 						gridGap='4'
 					>
 						{menus
@@ -440,7 +474,7 @@ const EditMenu = ({ menu }) => {
 const MenuCard = ({ menu, ...props }) => {
 	return (
 		<Grid
-			border='1px solid var(--chakra-colors-gray-800)'
+			border='1px solid var(--chakra-colors-gray-700)'
 			cursor='pointer'
 			flexDir='column'
 			rounded='xl'
@@ -487,7 +521,7 @@ const OrderMenuCard = ({ menu }) => {
 			borderColor='gray.700'
 			p='2'
 		>
-			<Grid templateColumns={{base:'65px 1fr'}} gap='2'>
+			<Grid templateColumns={{ base: '65px 1fr' }} gap='2'>
 				<Box
 					flexShrink='0'
 					pos='relative'

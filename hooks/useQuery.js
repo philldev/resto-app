@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-const cache = {}
-
 function useQuery(key, fetcher) {
-	const [data, setData] = React.useState(cache[key] ?? null)
+	const [data, setData] = React.useState(null)
 	const [error, setError] = React.useState(null)
 	const [isLoading, setIsLoading] = React.useState(false)
 	const [isError, setIsError] = React.useState(false)
@@ -12,7 +10,6 @@ function useQuery(key, fetcher) {
 		try {
 			const data = await fetcher()
 			setData(data)
-			cache[key] = data
 		} catch (error) {
 			setIsError(true)
 			setError(error)
@@ -22,20 +19,18 @@ function useQuery(key, fetcher) {
 	React.useEffect(() => {
 		let mounted = true
 		const fetchData = async () => {
-			if (!cache[key])
-				try {
-					setIsLoading(true)
-					const data = await fetcher()
-					if (mounted) {
-						setData(data)
-						cache[key] = data
-					}
-				} catch (error) {
-					setIsError(true)
-					setError(error)
-				} finally {
-					if (mounted) setIsLoading(false)
+			try {
+				setIsLoading(true)
+				const data = await fetcher()
+				if (mounted) {
+					setData(data)
 				}
+			} catch (error) {
+				setIsError(true)
+				setError(error)
+			} finally {
+				if (mounted) setIsLoading(false)
+			}
 		}
 		fetchData()
 
@@ -51,7 +46,7 @@ function useQuery(key, fetcher) {
 		isLoading,
 		isError,
 		refetch,
-		setData
+		setData,
 	}
 }
 

@@ -82,7 +82,6 @@ const OrderDetail = () => {
 			}
 		}
 	)
-
 	if (isLoading) return <Box>Loading ...</Box>
 	if (isError) return <Box>error ...</Box>
 	if (!data) return <Box>no data</Box>

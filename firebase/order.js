@@ -34,42 +34,16 @@ const getOrder = async (restoId, id) => {
 	}
 }
 
-const getOrders = async (restoId, time = 'today') => {
-	let q
-	if (time === 'today') {
-		const currDate = new Date() // get current date
-		q = query(
-			orderCollection(restoId),
-			where('createdAt', '>=', new Date(currDate.setHours(0))),
-			where('createdAt', '<=', new Date(currDate.setHours(24)))
-		)
-	} else if (time === 'this_week') {
-		const currDate = new Date() // get current date
-		const first = currDate.getDate() - currDate.getDay() // First day is the day of the month - the day of the week
-		const last = first + 6 // last day is the first day + 6
-		const firstday = new Date(currDate.setDate(first))
-		const lastday = new Date(currDate.setDate(last))
-		q = query(
-			orderCollection(restoId),
-			where('createdAt', '>=', firstday),
-			where('createdAt', '<=', lastday)
-		)
-	} else if (time === 'this_month') {
-		const currDate = new Date() // get current date
-		const firstday = new Date(currDate.getFullYear(), currDate.getMonth(), 1)
-		const lastday = new Date(currDate.getFullYear(), currDate.getMonth() + 1, 0)
-		q = query(
-			orderCollection(restoId),
-			where('createdAt', '>=', firstday),
-			where('createdAt', '<=', lastday),
-			orderBy('createdAt', 'asc')
-		)
-	} else {
-		q = query(orderCollection(restoId), orderBy('createdAt', 'asc'))
-	}
+const getOrders = async (restoId, status) => {
 	try {
 		const orders = []
-		const snap = await getDocs(q)
+		const snap = await getDocs(
+			query(
+				orderCollection(restoId),
+				where('status', '==', status),
+				orderBy('createdAt', 'asc')
+			)
+		)
 		snap.forEach((doc) => {
 			orders.push(doc.data())
 		})
