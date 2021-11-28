@@ -96,7 +96,7 @@ const OrderDetail = () => {
 			maxW='container.md'
 			overflowY='auto'
 		>
-			<Flex alignItems='center' mb='2' justifyContent='space-between'>
+			<Flex alignItems='center' mb='4' justifyContent='space-between'>
 				<HStack alignItems='center'>
 					<Text fontSize='lg' fontWeight='bold'>
 						Order #{data.no}
@@ -112,16 +112,13 @@ const OrderDetail = () => {
 				</HStack>
 			</Flex>
 
-			<Grid mb='4' gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='4'>
-				<Box flex='1'>
-					<Flex alignItems='center'>
-						<Text fontSize='sm' color='gray.200'>
-							Item Pesanan :
-						</Text>
-						<AddItem order={data} setOrder={setData} />
-					</Flex>
-					<OrderItemList orderItems={data.items} />
-				</Box>
+			<HStack mb='4' overflowX='auto' maxW='full' pr='2'>
+				<Button minW='max-content'  colorScheme='green' size='sm' variant='outline'>Tandai Selesai</Button>
+				<Button minW='max-content' size='sm' variant='outline'>Bayar Sekarang</Button>
+				<Button minW='max-content' size='sm' variant='outline'>Tandai Selesai & Bayar</Button>
+			</HStack>
+
+			<Grid mb='4' gridTemplateColumns={{ base: '1fr' }} gap='4'>
 				<Grid
 					autoRows='max-content'
 					gridTemplateColumns={{ base: '1fr', sm: '1fr 1fr' }}
@@ -197,6 +194,18 @@ const OrderDetail = () => {
 						</Flex>
 					</Box>
 				</Grid>
+				<Box flex='1'>
+					<Flex alignItems='center'>
+						<Text fontSize='sm' color='gray.400'>
+							Item Pesanan :
+						</Text>
+						<AddItem order={data} setOrder={setData} />
+					</Flex>
+					<OrderItemList
+						gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
+						orderItems={data.items}
+					/>
+				</Box>
 			</Grid>
 			<Box>
 				<Text mb='2' fontSize='sm' color='gray.400'>
