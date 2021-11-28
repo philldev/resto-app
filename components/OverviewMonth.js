@@ -1,4 +1,5 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/layout'
+import * as OrderApi from '../firebase/order'
 import { Select } from '@chakra-ui/select'
 import {
 	CategoryScale,
@@ -8,13 +9,17 @@ import {
 	LineElement,
 	PointElement,
 	Title,
-	Tooltip
+	Tooltip,
 } from 'chart.js'
 import moment from 'moment'
 import * as React from 'react'
 import { Line } from 'react-chartjs-2'
+import { useUserResto } from '../context/Resto'
 import { OverviewBox } from './common/OverviewBox'
 import StatDisplay from './StatDisplay'
+import useQuery from '../hooks/useQuery'
+import { getTotal } from '../utils/calculateTotal'
+import { formatPrice } from '../utils/formatPrice'
 
 ChartJS.register(
 	CategoryScale,
@@ -43,6 +48,27 @@ export const OverviewMonth = () => {
 	const days = React.useMemo(
 		() => getDaysArray(selectedM.toDate(), selectedM.endOf('month').toDate()),
 		[selectedM]
+	)
+	const { currentResto } = useUserResto()
+	const { data, isLoading } = useQuery(
+		'overview-month',
+		async () => {
+			try {
+				let startDate = selectedM.startOf('month').toDate()
+				let endDate = selectedM.endOf('month').toDate()
+				const data = await OrderApi.getRangeOfOrders(
+					currentResto.id,
+					'completed',
+					startDate,
+					endDate
+				)
+				return data
+			} catch (error) {
+				console.log(error)
+				throw error
+			}
+		},
+		[val]
 	)
 
 	return (
@@ -75,44 +101,69 @@ export const OverviewMonth = () => {
 					</Select>
 				</HStack>
 			</Flex>
-			<Line
-				data={{
-					labels: days.map((i) => i.getDate()),
-					datasets: [
-						{
-							fill: false,
-							lineTension: 0.1,
-							backgroundColor: 'rgba(75,192,192,0.4)',
-							borderColor: 'rgba(75,192,192,1)',
-							borderCapStyle: 'butt',
-							borderDash: [],
-							cubicInterpolationMode: 'monotone',
-							borderDashOffset: 0.0,
-							borderJoinStyle: 'miter',
-							pointBorderColor: 'rgba(75,192,192,1)',
-							pointBackgroundColor: '#fff',
-							pointBorderWidth: 1,
-							pointHoverRadius: 5,
-							pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-							pointHoverBorderColor: 'rgba(220,220,220,1)',
-							pointHoverBorderWidth: 2,
-							pointRadius: 1,
-							pointHitRadius: 10,
-							data: [100000, 45000, 250000],
+			{data?.length > 0 && (
+				<Line
+					data={{
+						labels: days.map((i) => i.getDate()),
+						datasets: [
+							{
+								fill: false,
+								lineTension: 0.1,
+								backgroundColor: 'rgba(75,192,192,0.4)',
+								borderColor: 'rgba(75,192,192,1)',
+								borderCapStyle: 'butt',
+								borderDash: [],
+								cubicInterpolationMode: 'monotone',
+								borderDashOffset: 0.0,
+								borderJoinStyle: 'miter',
+								pointBorderColor: 'rgba(75,192,192,1)',
+								pointBackgroundColor: '#fff',
+								pointBorderWidth: 1,
+								pointHoverRadius: 5,
+								pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+								pointHoverBorderColor: 'rgba(220,220,220,1)',
+								pointHoverBorderWidth: 2,
+								pointRadius: 1,
+								pointHitRadius: 10,
+								data: data
+									? days.map((d) =>
+											data?.reduce(
+												(prev, curr) =>
+													moment(d).isSame(
+														moment(curr.createdAt.toDate()),
+														'date'
+													)
+														? prev + getTotal(curr.items)
+														: prev,
+												0
+											)
+									  )
+									: [],
+							},
+						],
+					}}
+					options={{
+						plugins: {
+							legend: {
+								display: false,
+							},
 						},
-					],
-				}}
-				options={{
-					plugins: {
-						legend: {
-							display: false,
-						},
-					},
-				}}
-			/>
+					}}
+				/>
+			)}
 			<Grid mt='2' templateColumns='1fr max-content' gap='2'>
-				<StatDisplay value={'Rp 25,000,000'} label='Penjualan' />
-				<StatDisplay label='Pesanan' value='x 20' />
+				<StatDisplay
+					isLoading={isLoading}
+					value={formatPrice(
+						data?.reduce((prev, curr) => prev + getTotal(curr.items), 0)
+					)}
+					label='Penjualan'
+				/>
+				<StatDisplay
+					isLoading={isLoading}
+					label='Pesanan'
+					value={data?.length}
+				/>
 			</Grid>
 		</OverviewBox>
 	)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-function useQuery(key, fetcher) {
+function useQuery(key, fetcher, deps = []) {
 	const [data, setData] = React.useState(null)
 	const [error, setError] = React.useState(null)
 	const [isLoading, setIsLoading] = React.useState(false)
@@ -38,7 +38,7 @@ function useQuery(key, fetcher) {
 			mounted = false
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [key])
+	}, [key, ...deps])
 
 	return {
 		data,

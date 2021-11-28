@@ -34,14 +34,15 @@ const getOrder = async (restoId, id) => {
 	}
 }
 
-const getOrders = async (restoId, status) => {
+const getOrders = async (restoId, status, itemsLimit = 999) => {
 	try {
 		const orders = []
 		const snap = await getDocs(
 			query(
 				orderCollection(restoId),
 				where('status', '==', status),
-				orderBy('createdAt', 'asc')
+				limit(itemsLimit),
+				orderBy('createdAt', 'desc')
 			)
 		)
 		snap.forEach((doc) => {
@@ -49,6 +50,27 @@ const getOrders = async (restoId, status) => {
 		})
 		return orders
 	} catch (error) {
+		throw error
+	}
+}
+
+const getRangeOfOrders = async (restoId, status, startDate, endDate) => {
+	try {
+		const orders = []
+		const snap = await getDocs(
+			query(
+				orderCollection(restoId),
+				where('createdAt', '>=', startDate),
+				where('createdAt', '<=', endDate),
+				where('status', '==', status)
+			)
+		)
+		snap.forEach((doc) => {
+			orders.push(doc.data())
+		})
+		return orders
+	} catch (error) {
+		console.log(error)
 		throw error
 	}
 }
@@ -109,4 +131,11 @@ const deleteOrder = async ({ restoId, order }) => {
 	}
 }
 
-export { getOrders, updateOrder, createOrder, deleteOrder, getOrder }
+export {
+	getOrders,
+	getRangeOfOrders,
+	updateOrder,
+	createOrder,
+	deleteOrder,
+	getOrder,
+}

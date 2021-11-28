@@ -31,7 +31,7 @@ export const OrderCard = ({ order }) => {
 								</Text>
 								<Divider orientation='vertical' h='6' mx='2' />
 								<Text textAlign='right' fontSize='xs' color='gray.400'>
-									{moment(order.createdAt.toDate()).format('d/mm/yy')}
+									{moment(order.createdAt.toDate()).format('LL')}
 								</Text>
 							</Flex>
 							<Flex alignItems='center'>

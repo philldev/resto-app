@@ -1,15 +1,11 @@
-import { Button } from '@chakra-ui/button'
-import { Flex, Grid, HStack, Text } from '@chakra-ui/layout'
-import { Timestamp } from '@firebase/firestore'
+import { Flex, Text } from '@chakra-ui/layout'
 import Image from 'next/image'
-import Link from 'next/link'
 import * as React from 'react'
 import { AppPage } from '../../components/common/AppPage'
 import { AppTopbar } from '../../components/common/AppTopbar'
-import { OverviewBox } from '../../components/common/OverviewBox'
 import withProtectedRoute from '../../components/hoc/withProtectedRoute'
+import { LastOrders } from '../../components/LastOrders'
 import { More } from '../../components/More'
-import { OrderCard } from '../../components/OrderCard'
 import { OverviewMonth } from '../../components/OverviewMonth'
 import { OverviewToday } from '../../components/OverviewToday'
 import { useUserResto } from '../../context/Resto'
@@ -40,93 +36,7 @@ const Home = () => {
 					>
 						<OverviewToday />
 						<OverviewMonth />
-						<OverviewBox>
-							<Text fontSize='sm' fontWeight='bold' color='gray.300' mb='2'>
-								Pesanan terakhir
-							</Text>
-							<Grid mb='2' gap='2' templateColumns={{ md: '1fr 1fr' }}>
-								<OrderCard
-									order={{
-										notes: 'asd',
-										table: 1,
-										updatedAt: {
-											seconds: 1637645647,
-											nanoseconds: 376000000,
-										},
-										id: 'p2SGrSBbi2CLTFYkUSoyh',
-										payAmount: 10000,
-										status: 'on_progress',
-										items: [
-											{
-												categoryId: 'Do1PnbgmtguwI5WKqE786',
-												price: '234',
-												id: 'RkrjT6yQUp_H0Jxha5n9r',
-												qty: 1,
-												name: 'janji jiwa',
-											},
-											{
-												name: 'mie',
-												qty: 1,
-												price: '2000',
-												id: 'LnQeXLRqU-8xHJxAm-1VJ',
-												categoryId: 'Do1PnbgmtguwI5WKqE786',
-											},
-										],
-										isPaid: true,
-										no: 0,
-										costumer: 'Deddy',
-										type: 'DINE_IN',
-										createdAt: Timestamp.now(),
-									}}
-								/>
-								<OrderCard
-									order={{
-										notes: 'asd',
-										table: 1,
-										updatedAt: {
-											seconds: 1637645647,
-											nanoseconds: 376000000,
-										},
-										id: 'p2SGrSBbi2CLTFYkUSoyh',
-										payAmount: 10000,
-										status: 'on_progress',
-										items: [
-											{
-												categoryId: 'Do1PnbgmtguwI5WKqE786',
-												price: '234',
-												id: 'RkrjT6yQUp_H0Jxha5n9r',
-												qty: 1,
-												name: 'janji jiwa',
-											},
-											{
-												name: 'mie',
-												qty: 1,
-												price: '2000',
-												id: 'LnQeXLRqU-8xHJxAm-1VJ',
-												categoryId: 'Do1PnbgmtguwI5WKqE786',
-											},
-										],
-										isPaid: true,
-										no: 0,
-										costumer: 'Deddy',
-										type: 'DINE_IN',
-										createdAt: Timestamp.now(),
-									}}
-								/>
-							</Grid>
-							<HStack>
-								<Link href='/app/orders/new' passHref>
-									<Button size='sm' variant='outline'>
-										+ Pesanan Baru
-									</Button>
-								</Link>
-								<Link passHref href='/app/orders'>
-									<Button size='sm' variant='outline'>
-										Lihat Semua
-									</Button>
-								</Link>
-							</HStack>
-						</OverviewBox>
+						<LastOrders />
 					</Flex>
 				</Flex>
 			</Flex>

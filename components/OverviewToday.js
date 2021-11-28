@@ -1,9 +1,32 @@
 import { Flex, Grid, Text } from '@chakra-ui/layout'
 import moment from 'moment'
+import { useUserResto } from '../context/Resto'
+import * as OrderApi from '../firebase/order'
+import useQuery from '../hooks/useQuery'
+import { getTotal } from '../utils/calculateTotal'
+import { formatPrice } from '../utils/formatPrice'
 import { OverviewBox } from './common/OverviewBox'
 import StatDisplay from './StatDisplay'
 
+
 export const OverviewToday = () => {
+	const { currentResto } = useUserResto()
+	const { data, isLoading } = useQuery('overview-today', async () => {
+		try {
+			let startDate = moment().set('hour', 0).toDate()
+			let endDate = moment().set('hour', 24).toDate()
+			const data = await OrderApi.getRangeOfOrders(
+				currentResto.id,
+				'completed',
+				startDate,
+				endDate
+			)
+			return data
+		} catch (error) {
+			throw error
+		}
+	})
+
 	return (
 		<OverviewBox mb='4'>
 			<Flex justifyContent='space-between' h='8'>
@@ -15,8 +38,18 @@ export const OverviewToday = () => {
 				</Text>
 			</Flex>
 			<Grid templateColumns='1fr max-content' gap='2'>
-				<StatDisplay label='Penjualan' value='Rp 10,000,000.00' />
-				<StatDisplay label='Pesanan' value='x 20' />
+				<StatDisplay
+					isLoading={isLoading}
+					label='Penjualan'
+					value={formatPrice(
+						data?.reduce((prev, curr) => prev + getTotal(curr.items), 0)
+					)}
+				/>
+				<StatDisplay
+					isLoading={isLoading}
+					label='Pesanan'
+					value={`x ${data?.length}`}
+				/>
 			</Grid>
 		</OverviewBox>
 	)
