@@ -1,10 +1,11 @@
 import { Avatar } from '@chakra-ui/avatar'
-import { Box, Flex, Text, VStack } from '@chakra-ui/layout'
+import { Box, Flex, Grid, Text } from '@chakra-ui/layout'
+import { chakra } from '@chakra-ui/system'
 import { formatPrice } from '../utils/formatPrice'
 
-export const OrderItemList = ({ orderItems }) => {
+export const OrderItemList = chakra(({ orderItems, ...props }) => {
 	return (
-		<VStack alignItems='stretch'>
+		<Grid gap='2' alignItems='stretch' {...props}>
 			{orderItems.map((item, index) => (
 				<Flex
 					fontSize='sm'
@@ -14,22 +15,13 @@ export const OrderItemList = ({ orderItems }) => {
 					py='2'
 					borderBottomColor='gray.700'
 				>
-					{/* <Box
+					<Avatar
+						rounded='md'
+						name={item.name}
 						flexShrink='0'
-						pos='relative'
 						w='45px'
 						h='45px'
-						rounded='lg'
-						overflow='hidden'
-					>
-						<Image
-							layout='fill'
-							objectFit='cover'
-							src={item.imageURL ?? PLACEHOLDER_MENU_IMG}
-							alt={'Order'}
-						/>
-					</Box> */}
-					<Avatar rounded='md' name={item.name} flexShrink='0' w='45px' h='45px' />
+					/>
 					<Flex
 						alignItems='center'
 						w='full'
@@ -44,6 +36,6 @@ export const OrderItemList = ({ orderItems }) => {
 					</Flex>
 				</Flex>
 			))}
-		</VStack>
+		</Grid>
 	)
-}
+})

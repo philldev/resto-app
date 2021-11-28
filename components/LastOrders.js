@@ -32,7 +32,7 @@ export const LastOrders = () => {
 			</Grid>
 			<HStack>
 				<Link href='/app/orders/new' passHref>
-					<Button size='sm' variant='outline'>
+					<Button colorScheme='teal' size='sm' variant='outline'>
 						+ Pesanan Baru
 					</Button>
 				</Link>

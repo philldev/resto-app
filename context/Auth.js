@@ -2,7 +2,6 @@ import { onAuthStateChanged } from '@firebase/auth'
 import * as React from 'react'
 import * as AuthApi from '../firebase/auth'
 import * as UserApi from '../firebase/user'
-import * as RestoApi from '../firebase/resto'
 
 const AuthContext = React.createContext(null)
 

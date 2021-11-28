@@ -181,69 +181,72 @@ const OrderPanels = () => {
 }
 
 const OrderPanel = ({ type }) => {
-	const { items, isLoading } = useOrderItems(type)
+	const { items } = useOrderItems(type)
 	const todayItems = items.filter((i) =>
 		moment(i.createdAt.toDate()).isSame(moment(), 'date')
 	)
 	const yesterdayItems = items.filter((i) =>
 		moment(i.createdAt.toDate()).isSame(moment().set('day', -1), 'date')
 	)
-	const thisMonthItems = items.filter((i) =>
-		moment(i.createdAt.toDate()).isSame(moment(), 'month')
+	const thisMonthItems = items.filter(
+		(i) =>
+			moment(i.createdAt.toDate()).isSame(moment(), 'month') &&
+			moment(i.createdAt.toDate()).isBefore(moment().set('day', -1), 'date')
 	)
+
 	return (
 		<Box w='100%' maxW='container.md' mx='auto'>
-			{items.length === 0 && !isLoading && (
-				<Text textAlign='center' color='gray.400'>
-					Belum ada pesanan
-				</Text>
-			)}
-			{items.length > 0 && (
-				<VStack alignItems='stretch' spacing='4'>
+			<VStack alignItems='stretch' spacing='4'>
+				<Box>
+					<Box fontSize='sm' mb='2'>
+						Hari ini {moment().format('LL')}
+					</Box>
+					<Box mb='2'>
+						<Link passHref href='/app/orders/new'>
+							<Button as={'a'} variant='outline' size='sm'>
+								+ Tambah Pesanan
+							</Button>
+						</Link>
+					</Box>
+					{todayItems.length === 0 ? (
+						<Box>
+							<Text fontSize='xs' mb='1' color='gray.500'>
+								Belum ada pesanan
+							</Text>
+						</Box>
+					) : (
+						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+							{todayItems.map((i, idx) => (
+								<OrderCard key={idx} order={i} />
+							))}
+						</Grid>
+					)}
+				</Box>
+				{yesterdayItems.length > 0 && (
 					<Box>
 						<Box fontSize='sm' mb='2'>
-							Hari ini {moment().format('LL')}
+							Kemarin {moment().set('day', -1).format('LL')}
 						</Box>
-						{todayItems.length === 0 ? (
-							<Link passHref href='/app/orders/new'>
-								<Button as={'a'} variant='outline' size='sm'>
-									+ Tambah Pesanan
-								</Button>
-							</Link>
-						) : (
-							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
-								{todayItems.map((i, idx) => (
-									<OrderCard key={idx} order={i} />
-								))}
-							</Grid>
-						)}
+						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+							{yesterdayItems.map((i, idx) => (
+								<OrderCard key={idx} order={i} />
+							))}
+						</Grid>
 					</Box>
-					{yesterdayItems.length > 0 && (
-						<Box>
-							<Box fontSize='sm' mb='2'>
-								Kemarin {moment().set('day', -1).format('LL')}
-							</Box>
-							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
-								{yesterdayItems.map((i, idx) => (
-									<OrderCard key={idx} order={i} />
-								))}
-							</Grid>
+				)}
+				{thisMonthItems.length > 0 && (
+					<Box>
+						<Box fontSize='sm' mb='2'>
+							{moment().format('MMMM YYYY')}
 						</Box>
-					)}
-					{thisMonthItems.length > 0 && (
-						<Box>
-							<Box fontSize='sm' mb='2'>
-								{moment().format('MMMM YYYY')}
-							</Box>
-							<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
-								{thisMonthItems.map((i, idx) => (
-									<OrderCard key={idx} order={i} />
-								))}
-							</Grid>
-						</Box>
-					)}
-				</VStack>
-			)}
+						<Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap='2'>
+							{thisMonthItems.map((i, idx) => (
+								<OrderCard key={idx} order={i} />
+							))}
+						</Grid>
+					</Box>
+				)}
+			</VStack>
 		</Box>
 	)
 }

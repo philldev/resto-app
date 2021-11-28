@@ -25,7 +25,6 @@ import {
 	ModalOverlay,
 } from '@chakra-ui/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs'
-import Image from 'next/image'
 import * as React from 'react'
 import { useMenuCategory } from '../../context/MenuCategory'
 import { useMenus } from '../../context/Menus'
@@ -33,7 +32,6 @@ import { useOrdering } from '../../context/Ordering'
 import { useTabs } from '../../context/Tabs'
 import { useIsMdSize } from '../../hooks/windowSize'
 import { formatPrice } from '../../utils/formatPrice'
-import { PLACEHOLDER_MENU_IMG } from '../../utils/imagePlaceholders'
 import { DotsHorizontal } from '../common/icons/DotsHorizontal'
 import { MenuCategoryForm } from '../MenuCategoryForm'
 import { MenuForm } from '../MenuForm'
@@ -357,15 +355,8 @@ const MenuItem = ({ menu, isOrdering }) => {
 const MenuDetail = ({ menu }) => {
 	return (
 		<Flex pb='4' flexDir='column'>
-			<Flex flexDir='column' mb='4'>
-				<Box mr='4' h='32' pos='relative' rounded='xl' overflow='hidden'>
-					<Image
-						layout='fill'
-						objectFit='cover'
-						src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
-						alt={menu.name}
-					/>
-				</Box>
+			<Flex mb='4'>
+				<Avatar mr='2' name={menu.name} h='32' w='32' rounded='md' />
 				<Box py='2'>
 					<Text fontWeight='bold' textAlign='left'>
 						{menu.name}
@@ -487,12 +478,6 @@ const MenuCard = ({ menu, ...props }) => {
 			{...props}
 		>
 			<Box pos='relative' h='65px' overflow='hidden' rounded='md'>
-				{/* <Image
-					layout='fill'
-					objectFit='cover'
-					src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
-					alt={menu.name}
-				/> */}
 				<Avatar w='65px' rounded='md' h='65px' name={menu.name} />
 			</Box>
 			<Flex
@@ -524,34 +509,21 @@ const OrderMenuCard = ({ menu }) => {
 			p='2'
 		>
 			<Grid templateColumns={{ base: '65px 1fr' }} gap='2'>
-				<Box
-					flexShrink='0'
-					pos='relative'
-					h='65px'
-					overflow='hidden'
-					rounded='xl'
-				>
-					{/* <Image
-						layout='fill'
-						objectFit='cover'
-						src={menu.imageURL ?? PLACEHOLDER_MENU_IMG}
-						alt={menu.name}
-					/> */}
-					<Avatar name={orderItem.name} />
-				</Box>
+				<Avatar rounded='md' w='65px' h='65px' name={orderItem.name} />
 				<Box>
 					<Text fontWeight='bold'>{menu.name}</Text>
 					<Text>{formatPrice(menu.price)}</Text>
 				</Box>
 			</Grid>
 			<HStack mt='2'>
-				<Button onClick={() => decrementItemQty(orderItem)} flex='1' size='sm'>
+				<Button variant='ghost' onClick={() => decrementItemQty(orderItem)} flex='1' size='sm'>
 					-
 				</Button>
 				<Text textAlign='center' flex='1'>
 					{orderItem.qty}
 				</Text>
 				<Button
+				variant='ghost'
 					onClick={() => incrementItemQty(orderItem)}
 					flex='1'
 					size='sm'
